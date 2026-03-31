@@ -1,15 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from services.otp_service import generate_otp, verify_otp
+from app.models.auth_models import RequestOTPPayload, VerifyOTPPayload
+from app.services.auth.auth_service import generate_otp, verify_otp
 
 router = APIRouter()
-
-class RequestOTPPayload(BaseModel):
-    phone_number: str
-
-class VerifyOTPPayload(BaseModel):
-    phone_number: str
-    user_otp: str
 
 @router.post("/request-otp")
 def request_otp(payload: RequestOTPPayload):
