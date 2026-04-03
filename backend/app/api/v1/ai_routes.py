@@ -1,52 +1,83 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from fastapi.responses import Response, JSONResponse
-from app.services.ai.speech_service import transcribe_audio
-from app.services.ai.agent_service import process_voice_agent_text
-from app.services.ai.tts_service import synthesize_speech
+from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi.responses import Response
+from app.models.ai_models import VoicePromptPayload, HealthQueryResponse
+from app.services.ai.llm_service import process_voice_with_llm
+from app.services.ai.voice_service import transcribe_audio, text_to_indian_voice
 from app.core.config import settings
-import io
+import tempfile, os
+import logging
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@router.post("/process")
-async def process_voice_pipeline(
-    audio: UploadFile = File(...),
-    session_id: str = Form("default_session")
-):
+
+@router.post("/process", response_model=HealthQueryResponse)
+def process_voice_prompt(payload: VoicePromptPayload):
     """
-    Complete Pipeline:
-    1. Whisper extracts text from uploaded audio file.
-    2. LangGraph Agent (GPT + RAG Memory) processes context.
-    3. Sarvam outputs final Indian Language TTS Audio.
+    Takes transcribed text + optional context,
+    runs RAG retrieval + Gemini generation,
+    returns text response.
     """
     try:
-        # 1. Read Audio File
-        audio_content = await audio.read()
-        audio_stream = io.BytesIO(audio_content)
-        
-        # 2. Whisper (Speech to Text)
-        transcript = transcribe_audio(audio_stream, audio.filename)
-        
-        # 3. LangGraph Agent + RAG Memory (Text Processing)
-        gpt_response_text = process_voice_agent_text(transcript, session_id=session_id)
-        
-        # 4. Sarvam AI (Text to Speech)
-        # In a real app, detect the user's language via frontend metadata or LLM detection.
-        audio_bytes = synthesize_speech(gpt_response_text, language_code="hi-IN")
-        
-        # If no keys or TTS failed, fallback to returning JSON so the app doesn't crash completely.
-        if not audio_bytes:
-            return JSONResponse({
-                "response_text": gpt_response_text,
-                "status": "warning_no_audio",
-                "transcript": transcript,
-                "session_id": session_id
-            })
-            
-        # 5. Native Audio Stream Output
-        return Response(content=audio_bytes, media_type="audio/mpeg", headers={
-            "X-Conversation-Session": session_id
-        })
-        
+        response_text = process_voice_with_llm(
+            payload.text,
+            payload.context,
+            payload.language
+        )
+
+        return HealthQueryResponse(
+            response=response_text,
+            status="success" if settings.GEMINI_API_KEY else "warning",
+            language=payload.language,
+            rag_context_used=True
+        )
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Voice pipeline failed: {str(e)}")
+        logger.error(f"Error in /process: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/voice-query")
+async def full_voice_pipeline(
+    audio: UploadFile = File(...),
+    language_code: str = "hi-IN"
+):
+    """
+    Full pipeline endpoint:
+    Audio file → Whisper → RAG + Gemini → Sarvam TTS → Audio response
+    """
+    try:
+        # Save uploaded audio to temp file
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=f".{audio.filename.split('.')[-1]}"
+        ) as tmp:
+            tmp.write(await audio.read())
+            tmp_path = tmp.name
+
+        # Step 1: Whisper transcription
+        transcribed_text = transcribe_audio(tmp_path)
+        os.unlink(tmp_path)  # clean up temp file
+
+        # Step 2: RAG + Gemini
+        answer_text = process_voice_with_llm(
+            transcribed_text,
+            language=language_code
+        )
+
+        # Step 3: Sarvam TTS
+        audio_bytes = text_to_indian_voice(answer_text, language_code)
+
+        # Return audio directly
+        return Response(
+            content=audio_bytes,
+            media_type="audio/wav",
+            headers={
+                "X-Transcription": transcribed_text,
+                "X-Answer-Text": answer_text
+            }
+        )
+
+    except Exception as e:
+        logger.error(f"Error in /voice-query: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
