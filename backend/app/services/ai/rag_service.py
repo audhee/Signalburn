@@ -1,35 +1,72 @@
-import chromadb
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain.schema import Document
+from app.knowledge_base.health_data import HEALTH_KNOWLEDGE_BASE
+import logging
 
-# Mock setup: In production, you would point this to a persistent directory
-# client = chromadb.PersistentClient(path="./data/chroma_db")
-# For testing our AI voice pipeline without keys/documents, we use an ephemeral one:
+logger = logging.getLogger(__name__)
 
-client = chromadb.Client()
+class RAGService:
+    """
+    RAG (Retrieval Augmented Generation) service for Arohan health assistant.
+    Embeds the health knowledge base and retrieves relevant context for queries.
+    """
 
-# Initialize a collection for Indian Emergency Protocols
-try:
-    collection = client.get_or_create_collection("emergency_protocols")
-except Exception:
-    collection = None
+    def __init__(self):
+        self.db = None
+        self.embedding_model = None
+        self._initialize()
 
-def get_rag_context(query_text: str) -> str:
-    """Fetches relevant context from ChromaDB based on user transcript."""
-    if not collection:
-        return ""
-        
-    try:
-        # Mocking empty count for now. Will execute true search later.
-        if collection.count() == 0:
+    def _initialize(self):
+        """Load embedding model and build ChromaDB from health knowledge base."""
+        try:
+            logger.info("Initializing RAG service — loading embedding model...")
+
+            self.embedding_model = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2"
+            )
+
+            # Convert plain strings to LangChain Document objects
+            documents = [
+                Document(
+                    page_content=text,
+                    metadata={"source": "arohan_health_kb"}
+                )
+                for text in HEALTH_KNOWLEDGE_BASE
+            ]
+
+            # Build ChromaDB vector store in memory
+            self.db = Chroma.from_documents(
+                documents,
+                self.embedding_model,
+                collection_name="arohan_health_knowledge"
+            )
+
+            logger.info(f"RAG service ready — {len(documents)} documents embedded.")
+
+        except Exception as e:
+            logger.error(f"Failed to initialize RAG service: {e}")
+            raise
+
+    def retrieve_context(self, query: str, k: int = 3) -> str:
+        """
+        Retrieve top-k relevant chunks for a given query.
+        Returns them as a single joined context string for the LLM.
+        """
+        if not self.db:
+            logger.warning("RAG DB not initialized, returning empty context.")
             return ""
-            
-        results = collection.query(
-            query_texts=[query_text],
-            n_results=2
-        )
-        
-        # Merge documents if any were found
-        if results['documents'] and len(results['documents']) > 0:
-            return " ".join(results['documents'][0])
-    except Exception as e:
-        print(f"RAG Error: {e}")
-        return ""
+
+        try:
+            results = self.db.similarity_search(query, k=k)
+            context = "\n\n".join([doc.page_content for doc in results])
+            logger.info(f"Retrieved {len(results)} chunks for query: '{query[:50]}'")
+            return context
+
+        except Exception as e:
+            logger.error(f"Retrieval failed: {e}")
+            return ""
+
+
+# Singleton instance — initialized once when server starts
+rag_service = RAGService()

@@ -10,11 +10,7 @@ class Settings:
     SARVAM_API_KEY: str = os.getenv("SARVAM_API_KEY", "")
 
     def __init__(self):
-        # Configure SDK for Gemini if present
         if self.GEMINI_API_KEY:
             genai.configure(api_key=self.GEMINI_API_KEY)
-            
-        # OpenAI automatically picks up os.environ["OPENAI_API_KEY"] 
-        # as long as load_dotenv() pulled it into the environment.
 
 settings = Settings()
