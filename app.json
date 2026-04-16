@@ -31,8 +31,11 @@
       "permissions": [
         "LOCATION",
         "SMS",
-        "CALL_PHONE"
+        "CALL_PHONE",
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS"
       ],
+      "usesCleartextTraffic": true,
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
