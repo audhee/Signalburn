@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 pydantic
-google-generativeai==0.3.1
+google-generativeai
 python-dotenv
 python-multipart
 langchain
