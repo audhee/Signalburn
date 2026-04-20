@@ -29,6 +29,10 @@ async function clearToken(): Promise<void> {
     }
 }
 
+import { apiClient } from './apiClient';
+
+// ... (existing saveToken/clearToken functions) ...
+
 export const AuthService = {
     /**
      * Request a real OTP via Twilio SMS.
@@ -36,29 +40,14 @@ export const AuthService = {
      */
     async sendOTP(phoneNumber: string): Promise<{ success: boolean; error?: string }> {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/auth/request-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone_number: phoneNumber }),
-            });
-
-            if (response.ok) {
-                return { success: true };
-            } else {
-                const text = await response.text();
-                let errorMsg = 'Failed to send OTP';
-                try {
-                    const data = JSON.parse(text);
-                    errorMsg = data.detail ?? errorMsg;
-                } catch {
-                    // Fallback if ngrok or proxy returns non-JSON (like "Too Many Requests")
-                    errorMsg = text || errorMsg;
-                }
-                return { success: false, error: errorMsg };
-            }
-        } catch (e) {
+            await apiClient.post('/api/v1/auth/request-otp', 
+                { phone_number: phoneNumber },
+                { includeAuth: false }
+            );
+            return { success: true };
+        } catch (e: any) {
             console.error('AuthService.sendOTP error:', e);
-            return { success: false, error: 'Cannot reach the server. Check your network.' };
+            return { success: false, error: e.message || 'Cannot reach the server.' };
         }
     },
 
@@ -72,31 +61,16 @@ export const AuthService = {
         otp: string
     ): Promise<{ success: boolean; error?: string }> {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone_number: phoneNumber, user_otp: otp }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                // Persist the session token securely
-                await saveToken(data.token, phoneNumber);
-                return { success: true };
-            } else {
-                const text = await response.text();
-                let errorMsg = 'Incorrect OTP. Please try again.';
-                try {
-                    const data = JSON.parse(text);
-                    errorMsg = data.detail ?? errorMsg;
-                } catch {
-                    errorMsg = text || errorMsg;
-                }
-                return { success: false, error: errorMsg };
-            }
-        } catch (e) {
+            const data = await apiClient.post('/api/v1/auth/verify-otp',
+                { phone_number: phoneNumber, user_otp: otp },
+                { includeAuth: false }
+            );
+            // Persist the session token securely
+            await saveToken(data.access_token, phoneNumber);
+            return { success: true };
+        } catch (e: any) {
             console.error('AuthService.verifyOTP error:', e);
-            return { success: false, error: 'Cannot reach the server. Check your network.' };
+            return { success: false, error: e.message || 'Incorrect OTP.' };
         }
     },
 

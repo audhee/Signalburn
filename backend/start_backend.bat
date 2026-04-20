@@ -2,6 +2,7 @@
 echo Starting Arohan Enterprise Backend Development Server...
 echo =========================================================
 echo Binding to 0.0.0.0 (Accessible to Expo, Ngrok, and LAN devices)
+echo Built By Dheeraj A U 
 
 :: Change to the directory where this script sits
 cd /d "%~dp0"

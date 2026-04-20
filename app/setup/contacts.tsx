@@ -1,6 +1,7 @@
 import { rf } from '@/constants/responsive';
 import { COLORS, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { StorageService } from '@/services/storage';
+import { apiClient } from '@/services/apiClient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -51,6 +52,18 @@ export default function EmergencyContacts() {
         setContacts(next);
         try {
             await StorageService.saveEmergencyContacts(next);
+            
+            // Sync to PostgreSQL backend via PUT /contacts
+            try {
+                const apiPayload = next.map(c => ({
+                    name: c.name,
+                    phone_number: c.phone,
+                    relationship: c.relation
+                }));
+                await apiClient.put('/api/v1/user/contacts', apiPayload);
+            } catch (e) {
+                console.error('Failed to sync contacts to backend:', e);
+            }
         } catch {
             // Persist failure shouldn't block UI, but warn so user knows it may not save.
             Alert.alert('Not saved', 'Your contacts could not be saved on this device. Please try again.');

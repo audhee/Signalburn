@@ -13,3 +13,7 @@ openai
 requests
 twilio
 redis
+sqlalchemy
+psycopg2-binary
+alembic
+PyJWT

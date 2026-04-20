@@ -72,11 +72,18 @@ Arohan/
 
 You will need to open **4 separate terminal windows** to launch the full environment:
 
-**1. Start the Database (Redis)**
-The authentication flow requires Redis. If using Docker Desktop:
+**1. Start the Databases (Redis & PostgreSQL)**
+The backend now requires both Redis (for OTPs) and PostgreSQL (for persistent user data). If using Docker Desktop, open two separate terminals or run them sequentially:
 ```bash
 docker run -d -p 6379:6379 --name local-redis redis
+docker run -d --name local-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=arohan_db -p 5433:5432 postgres
 ```
+
+> **Note on Migrations**: If this is your first time starting PostgreSQL, you must push the schema via Alembic. Open a new terminal:
+> ```bash
+> cd backend
+> venv\Scripts\alembic.exe upgrade head
+> ```
 
 **2. Start the Backend API**
 Use the provided batch script to automatically activate the environment and bind the server globally.

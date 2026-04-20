@@ -1,10 +1,7 @@
 import { Audio } from 'expo-av';
 import { useState, useRef, useEffect } from 'react';
 import { Platform } from 'react-native';
-import { API_BASE_URL } from '@/constants/api';
-
-// Backend voice endpoint — uses the shared API_BASE_URL from constants/api.ts
-const BACKEND_URL = `${API_BASE_URL}/api/v1/ai/process`;
+import { apiClient } from '@/services/apiClient';
 
 export type VoiceState = 'idle' | 'recording' | 'processing' | 'playing' | 'error';
 
@@ -15,7 +12,13 @@ export const useVoiceAgent = () => {
     const recordingRef = useRef<Audio.Recording | null>(null);
     const soundRef = useRef<Audio.Sound | null>(null);
     const isProcessingRef = useRef<boolean>(false);
-    const sessionId = useRef<string>(`session-${Date.now()}`);
+    const [sessionId, setSessionId] = useState<string>(`session-${Date.now()}`);
+
+    const resetSession = () => {
+        const newId = `session-${Date.now()}`;
+        setSessionId(newId);
+        console.log('New session started:', newId);
+    };
 
     useEffect(() => {
         async function getPermissions() {
@@ -118,25 +121,16 @@ export const useVoiceAgent = () => {
                 });
             }
             
-            formData.append('session_id', sessionId.current);
+            formData.append('session_id', sessionId);
 
-            console.log('Sending to backend:', BACKEND_URL);
-            const response = await fetch(BACKEND_URL, {
+            console.log('Sending to backend via apiClient...');
+            const blob = await apiClient.request('/api/v1/ai/process', {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Accept': 'application/json',
-                    // IMPORTANT: Do NOT set Content-Type here, fetch will set it with the correct boundary
-                },
+                isFormData: true,
             });
 
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`Backend error: ${response.status} - ${errText}`);
-            }
-
             // Convert Response Blob to Base64 for Native Playback
-            const blob = await response.blob();
             const base64Audio = await new Promise<string>((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolve(reader.result as string);
@@ -176,5 +170,7 @@ export const useVoiceAgent = () => {
         isRecording: state === 'recording',
         isProcessing: state === 'processing',
         isPlaying: state === 'playing',
+        sessionId,
+        resetSession,
     };
 };
