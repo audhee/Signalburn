@@ -16,6 +16,8 @@ const LANGUAGE_DETECTOR = {
     type: 'languageDetector',
     async: true,
     detect: async (callback: (lang: string) => void) => {
+        if (typeof window === 'undefined') return callback('en');
+
         try {
             const savedLanguage = await AsyncStorage.getItem('user-language');
             if (savedLanguage) {
@@ -37,6 +39,7 @@ const LANGUAGE_DETECTOR = {
     },
     init: () => { },
     cacheUserLanguage: async (language: string) => {
+        if (typeof window === 'undefined') return;
         try {
             await AsyncStorage.setItem('user-language', language);
         } catch (error) {

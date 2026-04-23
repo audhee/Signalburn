@@ -5,6 +5,7 @@ import * as Linking from 'expo-linking';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StorageService } from '@/services/storage';
 import { Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 
 export default function LocationScreen() {
@@ -12,10 +13,21 @@ export default function LocationScreen() {
     const { t } = useTranslation();
     const [eta, setEta] = useState(285); // 4:45 in seconds
 
+    const [contacts, setContacts] = useState<any[]>([]);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setEta((prev) => (prev > 0 ? prev - 1 : 0));
         }, 1000);
+
+        async function loadContacts() {
+            const saved = await StorageService.getEmergencyContacts();
+            if (saved && Array.isArray(saved)) {
+                setContacts(saved);
+            }
+        }
+        loadContacts();
+
         return () => clearInterval(interval);
     }, []);
 
@@ -75,30 +87,37 @@ export default function LocationScreen() {
                     </View>
 
                     <Text style={{ fontSize: rf(12), fontWeight: '700', color: COLORS.muted, marginBottom: SPACING.m }}>NOTIFIED CONTACTS</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: SPACING.xl }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={{ uri: 'https://i.pravatar.cc/150?img=12' }} style={{ width: rf(40), height: rf(40), borderRadius: rf(20), marginRight: SPACING.s }} />
-                            <View>
-                                <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text }}>Son</Text>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={{ width: rf(6), height: rf(6), borderRadius: rf(3), backgroundColor: COLORS.success, marginRight: SPACING.xs }} />
-                                    <Text style={{ fontSize: rf(12), color: COLORS.muted }}>Seen</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: SPACING.l, marginBottom: SPACING.xl }}>
+                        {/* Always show Emergency Services first */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#FEF2F2', padding: SPACING.s, borderRadius: RADIUS.m, borderWidth: 1, borderColor: '#FEE2E2' }}>
                             <View style={{ width: rf(40), height: rf(40), borderRadius: rf(20), backgroundColor: COLORS.error, alignItems: 'center', justifyContent: 'center', marginRight: SPACING.s }}>
-                                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: rf(14) }}>911</Text>
+                                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: rf(12) }}>108</Text>
                             </View>
                             <View>
-                                <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text }}>911</Text>
+                                <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text }}>Ambulance</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <View style={{ width: rf(6), height: rf(6), borderRadius: rf(3), backgroundColor: COLORS.success, marginRight: SPACING.xs }} />
                                     <Text style={{ fontSize: rf(12), color: COLORS.muted }}>On way</Text>
                                 </View>
                             </View>
                         </View>
-                    </View>
+
+                        {/* Map over real user contacts */}
+                        {contacts.map((contact, idx) => (
+                            <View key={contact.id || idx} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.card, padding: SPACING.s, borderRadius: RADIUS.m, borderWidth: 1, borderColor: COLORS.border }}>
+                                <View style={{ width: rf(40), height: rf(40), borderRadius: rf(20), backgroundColor: '#E0E7FF', alignItems: 'center', justifyContent: 'center', marginRight: SPACING.s }}>
+                                    <Ionicons name="person" size={rf(20)} color={COLORS.primary} />
+                                </View>
+                                <View>
+                                    <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text }}>{contact.name || contact.relation}</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <View style={{ width: rf(6), height: rf(6), borderRadius: rf(3), backgroundColor: COLORS.success, marginRight: SPACING.xs }} />
+                                        <Text style={{ fontSize: rf(12), color: COLORS.muted }}>Alerted</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        ))}
+                    </ScrollView>
 
                     <View style={{ flexDirection: 'row', gap: SPACING.m }}>
                         <TouchableOpacity

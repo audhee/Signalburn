@@ -62,23 +62,27 @@ export default function OTPScreen() {
         }
 
         setLoading(true);
-        const success = await AuthService.verifyOTP(phoneNumber as string, otpValue);
+        const result = await AuthService.verifyOTP(phoneNumber as string, otpValue);
         setLoading(false);
 
-        if (success) {
+        if (result.success) {
             router.replace('/setup/profile');
         } else {
-            setError(t('wrong_otp', 'Incorrect OTP. Use 123456 for testing.'));
+            setError(result.error ?? t('wrong_otp', 'Incorrect OTP. Please try again.'));
         }
     };
 
     const handleResend = async () => {
         if (timer > 0) return;
         setLoading(true);
-        await AuthService.sendOTP(phoneNumber as string);
+        const result = await AuthService.sendOTP(phoneNumber as string);
         setLoading(false);
-        setTimer(30);
-        setError(null);
+        if (result.success) {
+            setTimer(30);
+            setError(null);
+        } else {
+            setError(result.error ?? t('resend_failed', 'Failed to resend OTP. Try again.'));
+        }
     };
 
     return (

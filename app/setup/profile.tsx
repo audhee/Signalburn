@@ -1,6 +1,7 @@
 import { rf } from '@/constants/responsive';
 import { COLORS, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { StorageService } from '@/services/storage';
+import { apiClient } from '@/services/apiClient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -147,6 +148,24 @@ export default function ProfileSetup() {
                             }
                             const profile = { name, age, conditions: selectedConditions, other: otherCondition };
                             await StorageService.saveUserProfile(profile);
+
+                            // Sync to backend PostgreSQL
+                            try {
+                                await apiClient.patch('/api/v1/user/profile', {
+                                    full_name: name,
+                                    age: age ? parseInt(age, 10) : null
+                                });
+
+                                await apiClient.put('/api/v1/user/medical', {
+                                    conditions: selectedConditions,
+                                    other: otherCondition || null
+                                });
+                            } catch (e) {
+                                console.error('Failed to sync profile to backend:', e);
+                                Alert.alert('Backend Sync Failed', 'Check your Ngrok URL or Network Connection. Data saved locally only.');
+                                // Continues to fallback gracefully offline
+                            }
+
                             router.push('/setup/contacts' as any);
                         }}
                     >

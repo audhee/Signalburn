@@ -1,36 +1,68 @@
 import os
 import requests
 import logging
-from openai import OpenAI
+from google import genai
+from google.genai import types
 
 logger = logging.getLogger(__name__)
 
-# --- Whisper: Speech to Text ---
+# --- Gemini 2.0 Flash: Speech to Text (Free tier, new google-genai SDK) ---
 
 def transcribe_audio(audio_file_path: str) -> str:
     """
-    Transcribes audio file to text using OpenAI Whisper.
-    Supports all Indian languages automatically.
+    Transcribes audio file to text using Google Gemini 2.0 Flash.
+    Uses the new google-genai SDK (v1 API — not the deprecated google.generativeai).
+    Supports Indian languages: Hindi, Kannada, Telugu, Tamil, Malayalam, English.
     """
     try:
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        gemini_api_key = os.getenv("GEMINI_API_KEY")
+        if not gemini_api_key:
+            raise ValueError("GEMINI_API_KEY not set in environment")
 
-        with open(audio_file_path, "rb") as audio_file:
-            transcript = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file,
-                # No language specified — Whisper auto-detects Indian languages
-            )
+        client = genai.Client(api_key=gemini_api_key)
 
-        logger.info(f"Whisper transcription: {transcript.text[:100]}")
-        return transcript.text
+        # Determine MIME type from file extension
+        ext = audio_file_path.split(".")[-1].lower()
+        mime_map = {
+            "m4a":  "audio/mp4",
+            "mp4":  "audio/mp4",
+            "mp3":  "audio/mpeg",
+            "wav":  "audio/wav",
+            "ogg":  "audio/ogg",
+            "webm": "audio/webm",
+        }
+        mime_type = mime_map.get(ext, "audio/mp4")
+
+        with open(audio_file_path, "rb") as f:
+            audio_bytes = f.read()
+
+        prompt = (
+            "Listen to this audio carefully. "
+            "Transcribe EXACTLY what is spoken — in the original language "
+            "(Hindi, Kannada, Telugu, Tamil, Malayalam, or English). "
+            "Output ONLY the spoken words in plain text. "
+            "No translation, no formatting, no explanation."
+        )
+
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                prompt,
+                types.Part.from_bytes(data=audio_bytes, mime_type=mime_type),
+            ],
+        )
+
+        transcript = response.text.strip()
+        logger.info(f"Gemini STT transcription: {transcript[:100]}")
+        return transcript
 
     except Exception as e:
-        logger.error(f"Whisper transcription failed: {e}")
+        logger.error(f"Gemini transcription failed: {e}")
         raise
 
 
 # --- Sarvam AI: Text to Indian Voice ---
+
 
 def text_to_indian_voice(text: str, language_code: str = "hi-IN") -> bytes:
     """
