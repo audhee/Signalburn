@@ -59,6 +59,7 @@ This section guides you through submitting an enhancement suggestion for Arohan,
 Please refer to the [README.md](README.md) for detailed instructions on setting up the frontend and backend environments.
 
 Quick Checklist:
+
 1. Clone the repo.
 2. Install Node dependencies: `npm install`.
 3. Set up Python virtual environment in `backend/` and install `requirements.txt`.
@@ -101,4 +102,4 @@ Quick Checklist:
 
 ---
 
-Thank you for contributing to Arohan!
+Thank you for contributing to Arohan! 💝
