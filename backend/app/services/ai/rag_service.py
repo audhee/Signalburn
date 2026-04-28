@@ -2,6 +2,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from app.knowledge_base.health_data import HEALTH_KNOWLEDGE_BASE
+from app.knowledge_base.first_aid_data import FIRST_AID_DOCUMENTS
 import logging
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,26 @@ class RAGService:
                 for text in HEALTH_KNOWLEDGE_BASE
             ]
 
+            # Convert first aid records to LangChain Document objects
+            first_aid_documents = [
+                Document(
+                    page_content=doc["content"],
+                    metadata={
+                        "source":   "arohan_first_aid_kb",
+                        "id":       doc["id"],
+                        "title":    doc["title"],
+                        "category": doc["category"],
+                        "severity": doc.get("severity_applicable", "minor"),
+                        "tags":     ", ".join(doc.get("tags", [])),
+                    }
+                )
+                for doc in FIRST_AID_DOCUMENTS
+            ]
+
+            # Combine both knowledge bases
+            documents = documents + first_aid_documents
+
+            # Build ChromaDB vector store in memory
             self.db = Chroma.from_documents(
                 documents,
                 self.embedding_model,
