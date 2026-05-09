@@ -1,9 +1,11 @@
 """
 llm_service.py - Arohan AI Text Generation
-Uses Groq llama-3.3-70b-versatile with emergency detection
+Uses Groq llama-3.3-70b-versatile
+Responds in SAME language as user query.
 """
 
 import os
+import re
 import logging
 from groq import Groq
 from app.services.ai.rag_service import rag_service
@@ -14,39 +16,44 @@ logger = logging.getLogger(__name__)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
+# Only block truly unsupported scripts — NOT Hindi/Kannada
+UNSUPPORTED_SCRIPTS = re.compile(
+    r'[\u0600-\u06FF'   # Arabic/Urdu
+    r'\u0A80-\u0AFF'    # Gujarati
+    r'\u0980-\u09FF'    # Bengali
+    r'\u0B00-\u0B7F'    # Oriya
+    r'\u0B80-\u0BFF'    # Tamil
+    r'\u0C00-\u0C7F'    # Telugu
+    r'\u4E00-\u9FFF'    # Chinese
+    r'\u3040-\u309F'    # Japanese
+    r'\u0400-\u04FF'    # Cyrillic
+    r'\u0590-\u05FF]'   # Hebrew
+)
+
+
+def has_unsupported_script(text: str) -> bool:
+    return bool(UNSUPPORTED_SCRIPTS.search(text))
+
 
 def process_voice_with_llm(text: str, context: str = "", language: str = "en") -> dict:
 
-    # Step 1: Detect language + emergency
     lang_info     = detect_language(text)
     language_code = lang_info["language_code"]
     language_name = lang_info["language_name"]
-    instruction   = lang_info["instruction"]
     is_emergency  = lang_info["is_emergency"]
 
-    logger.info(f"🌐 Language: {language_name} | Emergency: {is_emergency}")
+    logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
-    # Step 2: Get RAG context — more chunks, more detail
     rag_context_raw = rag_service.retrieve_context(text, k=5)
     rag_context     = rag_context_raw[:2000] if rag_context_raw else ""
 
-    logger.info(f"📚 RAG context: {len(rag_context)} chars")
-
     if not groq_client:
-        logger.error("❌ GROQ_API_KEY not configured")
-        return fallback_response(language_name, rag_context, is_emergency)
+        logger.error("GROQ_API_KEY not configured")
+        return fallback_response(language_code, is_emergency)
 
-    # Step 3: Build prompt
-    system_prompt = build_system_prompt(
-        language_name, instruction, rag_context, context, is_emergency
-    )
+    system_prompt = build_system_prompt(language_name, rag_context, is_emergency)
 
-    logger.info(f"📋 Prompt: {len(system_prompt)} chars | Query: {text[:50]}")
-
-    # Step 4: Call Groq
     try:
-        logger.info("🤖 Calling Groq llama-3.3-70b-versatile...")
-
         response = groq_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
@@ -61,9 +68,15 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en") -
         )
 
         response_text = response.choices[0].message.content.strip()
-        response_text = post_process(response_text, language_name, is_emergency)
 
-        logger.info(f"✅ Groq response: {response_text[:100]}...")
+        # Only retry if unsupported script found (Urdu, Chinese etc.)
+        # Hindi and Kannada scripts are ALLOWED
+        if has_unsupported_script(response_text):
+            logger.warning("Unsupported script in response. Retrying...")
+            response_text = force_language_retry(text, rag_context, language_name, is_emergency)
+
+        response_text = post_process(response_text, is_emergency)
+        logger.info(f"Response: {response_text[:100]}...")
 
         return {
             "response_text": response_text,
@@ -71,190 +84,272 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en") -
         }
 
     except Exception as e:
-        logger.error(f"❌ Groq failed: {type(e).__name__}: {e}")
+        logger.error(f"Groq failed: {e}")
+        return fallback_response(language_code, is_emergency)
 
-        # Retry with shorter context
-        try:
-            short_prompt = build_system_prompt(
-                language_name, instruction, rag_context[:500], "", is_emergency
-            )
-            retry = groq_client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "system", "content": short_prompt},
-                    {"role": "user",   "content": text}
-                ],
-                temperature=0.1,
-                max_tokens=600,
-            )
-            response_text = retry.choices[0].message.content.strip()
-            response_text = post_process(response_text, language_name, is_emergency)
-            logger.info(f"✅ Groq retry succeeded: {response_text[:80]}")
-            return {
-                "response_text": response_text,
-                "language_code": language_code
-            }
 
-        except Exception as retry_error:
-            logger.error(f"❌ Groq retry also failed: {retry_error}")
-            return fallback_response(language_name, rag_context, is_emergency)
+def force_language_retry(text: str, rag_context: str, language_name: str, is_emergency: bool) -> str:
+    try:
+        strict_prompt = f"""You are a medical assistant.
+CRITICAL: Respond ONLY in {language_name}.
+Do NOT use Arabic, Urdu, Gujarati, Bengali, Chinese or any unsupported script.
+Only use English, Hindi (Devanagari), or Kannada scripts.
+
+Medical knowledge:
+{rag_context[:500] if rag_context else 'Use general first aid knowledge.'}
+
+Give 6 to 8 numbered first aid steps in {language_name}."""
+
+        retry = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": strict_prompt},
+                {"role": "user",   "content": f"Patient complaint: {text}"}
+            ],
+            temperature=0.0,
+            max_tokens=700,
+        )
+        result = retry.choices[0].message.content.strip()
+
+        if has_unsupported_script(result):
+            return get_hardcoded_response(is_emergency, language_name)
+
+        return result
+
+    except Exception as e:
+        logger.error(f"Force retry failed: {e}")
+        return get_hardcoded_response(is_emergency, language_name)
+
+
+def get_hardcoded_response(is_emergency: bool, language_name: str = "English") -> str:
+    if language_name == "Hindi":
+        if is_emergency:
+            return (
+                "यह एक medical emergency है।\n"
+                "1. व्यक्ति को शांत रखें।\n"
+                "2. खाना या पानी न दें।\n"
+                "3. कपड़े ढीले करें।\n"
+                "4. तुरंत 112 या 108 पर call करें।"
+            )
+        return (
+            "प्राथमिक चिकित्सा के लिए:\n"
+            "1. व्यक्ति को शांत रखें।\n"
+            "2. सांस सही है या नहीं देखें।\n"
+            "3. बिना doctor की सलाह के कोई दवा न दें।\n"
+            "4. स्थिति खराब हो तो 112 पर call करें।"
+        )
+    elif language_name == "Kannada":
+        if is_emergency:
+            return (
+                "Idu medical emergency.\n"
+                "1. Vyaktiya shanta madi.\n"
+                "2. Yenu tinisabedi, kudisabedi.\n"
+                "3. Bagge hetige madi.\n"
+                "4. Turant 112 ge call madi."
+            )
+        return (
+            "Prathama chikitse:\n"
+            "1. Vyaktiya shanta madi.\n"
+            "2. Ushiraadu sari ide nodko.\n"
+            "3. Doctor heli bedada madhu tinisabedi.\n"
+            "4. Sthiti ketta aadare 112 ge call madi."
+        )
+    elif language_name == "Hinglish":
+        if is_emergency:
+            return (
+                "Yeh ek medical emergency hai.\n"
+                "1. Person ko shant rakho.\n"
+                "2. Kuch khilao ya pilao mat.\n"
+                "3. Kapde dhile karo.\n"
+                "4. Turant 112 ya 108 pe call karo."
+            )
+        return (
+            "First aid ke liye:\n"
+            "1. Person ko shant rakho.\n"
+            "2. Breathing check karo.\n"
+            "3. Doctor ki salah ke bina koi dawa mat do.\n"
+            "4. Condition kharab ho to 112 call karo."
+        )
+    elif language_name == "Kanglish":
+        if is_emergency:
+            return (
+                "Idu medical emergency.\n"
+                "1. Person shanta iro hage nodi.\n"
+                "2. Yenu tinisabedi.\n"
+                "3. Bagge loose madi.\n"
+                "4. Turant 112 ge call madi."
+            )
+        return (
+            "First aid ge:\n"
+            "1. Person shanta iro hage nodi.\n"
+            "2. Breathing sari ide check madi.\n"
+            "3. Doctor heli bedada medicine tinisabedi.\n"
+            "4. Condition ketta aadare 112 call madi."
+        )
+    else:
+        if is_emergency:
+            return (
+                "This is a medical emergency.\n"
+                "1. Keep the person calm and still.\n"
+                "2. Do not give food or water.\n"
+                "3. Loosen any tight clothing.\n"
+                "4. Stay with the person at all times.\n"
+                "5. Call 112 or 108 immediately.\n"
+                "6. Tell the doctor when symptoms started."
+            )
+        return (
+            "Here is general first aid advice.\n"
+            "1. Keep the person calm and comfortable.\n"
+            "2. Check if they are breathing normally.\n"
+            "3. Do not move if there is a head or neck injury.\n"
+            "4. Apply gentle pressure if there is bleeding.\n"
+            "5. Do not give medicines without doctor advice.\n"
+            "6. Call 112 or 108 if condition gets worse."
+        )
 
 
 def build_system_prompt(
     language_name: str,
-    instruction: str,
     rag_context: str,
-    extra_context: str,
     is_emergency: bool
 ) -> str:
 
     emergency_block = ""
     if is_emergency:
-        emergency_block = """
-╔══════════════════════════════════════════════════════════════════╗
-║  🚨 EMERGENCY DETECTED                                          ║
-║  Give 6-8 detailed first aid steps from the knowledge base      ║
-║  End with: "Call 112 or 108 immediately if condition is severe" ║
-║  NEVER just say "Call 112" — always give first aid steps first  ║
-╚══════════════════════════════════════════════════════════════════╝
-"""
+        emergency_block = (
+            f"EMERGENCY DETECTED: Give 6 to 8 detailed first aid steps in {language_name}. "
+            f"End with: Call 112 or 108 immediately.\n\n"
+        )
 
     return f"""You are Arohan, a health assistant for elderly Indians.
 
 {emergency_block}
+USER LANGUAGE DETECTED: {language_name}
 
-╔══════════════════════════════════════════════════════════════════╗
-║  REPLY IN EXACTLY THIS LANGUAGE: {language_name}                 ║
-╚══════════════════════════════════════════════════════════════════╝
+=== CRITICAL LANGUAGE RULE ===
+The user spoke in {language_name}.
+You MUST reply in EXACTLY {language_name}.
 
-{instruction}
+- If user spoke ENGLISH → reply in English only
+- If user spoke HINDI (Devanagari script) → reply in Hindi only
+- If user spoke KANNADA (Kannada script) → reply in Kannada only
+- If user spoke HINGLISH (like "mera haath is paining") → reply in same Hinglish style
+- If user spoke KANGLISH (like "my kai is paining") → reply in same Kanglish style
 
-═══════════════════════════════════════════════════════════════════
+NEVER switch to a different language than what the user used.
+Do NOT use Arabic, Urdu, Gujarati, Bengali, Chinese scripts.
+==============================
+
+RESPONSE FORMAT:
+- Start directly with first aid advice
+- Give minimum 6 numbered steps, maximum 8 steps
+- Use simple words that elderly people understand
+- End emergencies with: Call 112 or 108 immediately
 
 EXAMPLES:
 
-User: "Oke" or "Ok"
-✅ "Hello! How can I help you today?" (English)
-✅ "Namaste! Aapki kya takleef hai?" (Hinglish)
-
 User (English): "my nose is bleeding"
-✅ CORRECT — Give 6+ steps:
+Response (English):
 "For a nosebleed:
-1. Sit upright, lean slightly forward — never tilt head back.
+1. Sit upright and lean slightly forward.
 2. Pinch the soft part of your nose firmly.
-3. Hold pressure for 10-15 minutes without releasing.
+3. Hold for 10-15 minutes without releasing.
 4. Breathe through your mouth calmly.
-5. Apply a cold cloth or ice pack to the bridge of your nose.
+5. Apply cold cloth to bridge of nose.
 6. Do not blow your nose for 15 minutes after bleeding stops.
 7. Avoid hot drinks or spicy food for several hours.
 Call 112 if bleeding does not stop after 20 minutes."
 
-User (English): "i got stroke"
-✅ CORRECT — Give 6+ steps:
-"🚨 Stroke signs are serious. Act immediately:
-1. Call 112 or 108 right away — every minute matters.
-2. Note the exact time symptoms started.
-3. Help the person lie down safely on their side.
-4. Do not give food, water, or any medicines.
-5. Loosen tight clothing around neck and chest.
-6. Stay with the person and keep them calm.
-7. Do not let the person fall asleep.
-8. Tell the doctor exactly when symptoms started."
+User (Hinglish): "mera naak is bleeding"
+Response (Hinglish):
+"Nosebleed ke liye:
+1. Seedha baitho aur thoda aage jhuko.
+2. Naak ka soft hissa dono ungliyon se dabao.
+3. 10-15 minute tak mat chodo.
+4. Muh se saans lo.
+5. Naak ke upar thanda kapda rakho.
+6. Bleeding band hone ke baad 15 minute tak naak mat dabaao.
+7. Bahut garam cheez mat khaao.
+Call 112 agar bleeding 20 minute mein band na ho."
 
-User (English): "i got cut on my head"
-✅ CORRECT — Give 6+ steps:
-"For a head cut:
-1. Apply firm pressure with a clean cloth for 10-15 minutes.
-2. Do not lift the cloth — add more on top if soaked.
-3. Keep the person sitting or lying still.
-4. Once bleeding slows, gently clean with cool water.
-5. Apply antiseptic like Betadine or Savlon.
-6. Cover with a sterile bandage or gauze.
-7. Check for signs of concussion — dizziness, confusion, vomiting.
-Call 112 if bleeding does not stop or person feels dizzy."
+User (Hinglish): "my haath is paining"
+Response (Hinglish):
+"Haath ke dard ke liye:
+1. Haath ko rest do — use mat karo.
+2. Ice ko kapde mein wrap karke 15 minute lagao.
+3. Haath ko dil se upar uthao.
+4. Zyada dard ho toh paracetamol lo.
+5. Sujan ya ungliyan hilane mein takleef ho toh dhyan do.
+6. 2 din mein theek na ho toh doctor ko dikhaao."
 
-═══════════════════════════════════════════════════════════════════
+User (Kanglish): "my kai is paining"
+Response (Kanglish):
+"Kai novu ge:
+1. Kai rest madi — use madabedi.
+2. Ice cloth nalli sulidu 15 nimisha hachi.
+3. Kai hrudaya matte mele elu.
+4. Thumba novu idre paracetamol tago.
+5. Ulu iro nodko ungalu adisoke kashta agtide nodko.
+6. 2 dina inda mele aagilla andre doctor hatra hogo."
 
-MEDICAL KNOWLEDGE (use as reference, do NOT copy word for word):
+User (Kanglish): "nanna nose is bleeding"
+Response (Kanglish):
+"Nanna nose bleeding ge:
+1. Naer kuto swalpa munde bago.
+2. Nose soft part eradu begalugalinda gattagi hidi.
+3. 10 nimisha bidalagade hidi.
+4. Baya moolaka ushirade.
+5. Nose mele thanda kapada idko.
+6. Bleeding ninthara 15 nimisha nose fulish madabedi.
+7. 20 nimisha mele bleeding ninthilla andre 112 ge call madi."
+
+User (Kannada): "ನನ್ನ ಕೈ ನೋಯುತ್ತಿದೆ"
+Response (Kannada):
+"ಕೈ ನೋವಿಗೆ:
+1. ಕೈಗೆ ವಿಶ್ರಾಂತಿ ಕೊಡಿ.
+2. ಐಸ್ ಅನ್ನು ಬಟ್ಟೆಯಲ್ಲಿ ಸುತ್ತಿ 15 ನಿಮಿಷ ಹಚ್ಚಿ.
+3. ಕೈಯನ್ನು ಎದೆಗಿಂತ ಮೇಲೆ ಎತ್ತಿ.
+4. ನೋವು ಜಾಸ್ತಿ ಇದ್ದರೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ ತೆಗೆದುಕೊಳ್ಳಿ.
+5. ಊತ ಕಾಣಿಸಿದರೆ ವೈದ್ಯರನ್ನು ನೋಡಿ.
+6. 2 ದಿನದಲ್ಲಿ ಸರಿಯಾಗದಿದ್ದರೆ ಆಸ್ಪತ್ರೆಗೆ ಹೋಗಿ."
+
+User (Hindi): "मेरा हाथ दर्द कर रहा है"
+Response (Hindi):
+"हाथ के दर्द के लिए:
+1. हाथ को आराम दें।
+2. बर्फ को कपड़े में लपेटकर 15 मिनट लगाएं।
+3. हाथ को दिल से ऊपर उठाएं।
+4. ज्यादा दर्द हो तो पैरासिटामोल लें।
+5. सूजन या उंगलियां हिलाने में तकलीफ हो तो ध्यान दें।
+6. 2 दिन में ठीक न हो तो डॉक्टर को दिखाएं।"
+
+MEDICAL KNOWLEDGE (rephrase in {language_name}):
 {rag_context if rag_context else 'Use general first aid knowledge.'}
 
 RULES:
-- Reply ONLY in {language_name}
-- NEVER paste raw database text — rephrase it clearly
-- NEVER start with "Based on our database" or "How can I help" for injury queries
-- Give MINIMUM 6 numbered steps for every injury or symptom
-- For emergencies: give all steps first, mention Call 112 at the END
-- Use simple words — no medical jargon
-- Be caring and calm
-- Maximum response: 10 points
+- Reply in {language_name} only — never switch language
+- Minimum 6 steps — maximum 8 steps
+- Simple words — elderly users must understand easily
+- Never paste raw database text
+- No medical jargon
+- Be calm and caring
 """
 
 
-def post_process(response_text: str, language_name: str, is_emergency: bool) -> str:
+def post_process(response_text: str, is_emergency: bool) -> str:
     if is_emergency and not response_text.startswith("🚨"):
         response_text = "🚨 " + response_text
-
-    if "English" not in language_name:
-        response_text = response_text.replace(
-            "Please consult a doctor for confirmation.", ""
-        ).strip()
-        response_text = response_text.replace(
-            "Please consult a doctor.", ""
-        ).strip()
-
     return response_text
 
 
-def fallback_response(language_name: str, rag_context: str, is_emergency: bool) -> dict:
-    responses = {
-        "English": {
-            "emergency": "🚨 This sounds serious. Call 112 or 108 immediately.",
-            "normal":    "Based on our medical database:\n\n"
-        },
-        "Hindi": {
-            "emergency": "🚨 Yeh gambhir hai. Turant 112 ya 108 pe call karein.",
-            "normal":    "Hamare medical database mein yeh mila:\n\n"
-        },
-        "Hindi-English mix": {
-            "emergency": "🚨 Yeh serious hai. Turant 112 call karo.",
-            "normal":    "Hamare database ke hisaab se:\n\n"
-        },
-        "Kannada": {
-            "emergency": "🚨 Idhu gambheera. TURANT 112 annu call maadi.",
-            "normal":    "Namma medical database nalli sikithu:\n\n"
-        },
-        "Kannada-English mix": {
-            "emergency": "🚨 Idhu serious. TURANT 112 call maadi.",
-            "normal":    "Namma database nalli sikithu:\n\n"
-        },
-        "Kannada-Hindi mix": {
-            "emergency": "🚨 Yeh serious hai. Turant 112 call maadi.",
-            "normal":    "Namma database nalli sikithu:\n\n"
-        },
-        "Hindi-Urdu": {
-            "emergency": "🚨 Yeh khatarnak hai. Foran 112 pe call karein.",
-            "normal":    "Hamare database mein yeh mila:\n\n"
-        },
+def fallback_response(language_code: str, is_emergency: bool) -> dict:
+    lang_name_map = {
+        "hi-IN": "Hindi",
+        "kn-IN": "Kannada",
+        "en-IN": "English",
     }
-
-    lang_key      = language_name if language_name in responses else "English"
-    type_key      = "emergency" if is_emergency else "normal"
-    response_text = responses[lang_key][type_key]
-
-    if rag_context and not is_emergency:
-        response_text += rag_context.strip()[:800]
-
-    lang_code_map = {
-        "English":             "en-IN",
-        "Hindi":               "hi-IN",
-        "Hindi-English mix":   "hi-IN",
-        "Hindi-Urdu":          "hi-IN",
-        "Kannada":             "kn-IN",
-        "Kannada-English mix": "kn-IN",
-        "Kannada-Hindi mix":   "kn-IN",
-    }
-
+    lang_name = lang_name_map.get(language_code, "English")
     return {
-        "response_text": response_text,
-        "language_code": lang_code_map.get(language_name, "en-IN")
+        "response_text": get_hardcoded_response(is_emergency, lang_name),
+        "language_code": language_code
     }

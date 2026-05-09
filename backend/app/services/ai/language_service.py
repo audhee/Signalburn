@@ -1,156 +1,80 @@
-"""
-language_service.py - Enhanced Language Detection
-Handles: Hindi, Kannada, English, Hinglish, Kanglish, Urdu, Short inputs
-"""
-
 import re
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Unicode patterns
-KANNADA_PATTERN   = re.compile(r'[\u0C80-\u0CFF]')
-HINDI_PATTERN     = re.compile(r'[\u0900-\u097F]')
-URDU_PATTERN      = re.compile(r'[\u0600-\u06FF]')
-TELUGU_PATTERN    = re.compile(r'[\u0C00-\u0C7F]')
-TAMIL_PATTERN     = re.compile(r'[\u0B80-\u0BFF]')
-MALAYALAM_PATTERN = re.compile(r'[\u0D00-\u0D7F]')
+KANNADA_PATTERN = re.compile(r'[\u0C80-\u0CFF]')
+HINDI_PATTERN   = re.compile(r'[\u0900-\u097F]')
 
-# Common Hinglish words
-HINGLISH_WORDS = {
-    "mujhe", "mere", "meri", "mera", "tum", "tumhara", "aap", "aapka", "main", "mein", "hum",
-    "hai", "hain", "ho", "hua", "hoga", "karo", "karna", "kiya", "bolo", "batao", "samjho",
-    "kya", "kaise", "kab", "kahan", "kyu", "kaun", "kitna", "nahi", "haan", "theek", "accha",
-    "bahut", "thoda", "zyada", "lekin", "par", "aur", "toh", "bhi", "hi", "se", "ko", "ka", "ki",
-    "abhi", "pehle", "baad", "andar", "bahar", "upar", "neeche",
-    "doctor", "dard", "chot", "khoon", "sar", "pet", "haath", "paer", "dawai", "ilaaj", "tabiyat",
-    "saans", "saans lena", "saans nahi", "breathing", "cant", "cannot", "able",
-}
+EMERGENCY_KEYWORDS = [
+    "stroke", "heart attack", "unconscious", "not breathing", "chest pain",
+    "seizure", "fits", "overdose", "poisoning", "severe bleeding", "choking",
+    "drowning", "electric shock", "anaphylaxis", "allergic reaction",
+    "dil ka dora", "behosh", "sans nahi", "hemorrhage", "haemorrhage"
+]
 
-# Common Kanglish words
-KANGLISH_WORDS = {
-    "naanu", "nanna", "nimma", "neenu", "avanu", "avalu", "avaru", "ivaru",
-    "yenu", "enu", "yelli", "elli", "yaake", "yake", "yaavaga", "yaava", "hege",
-    "ide", "illa", "ideya", "alla", "hogu", "banni", "tago", "kodi", "beda", "beku",
-    "chennagide", "chennagidini", "dina", "ratri", "beligge", "sanjee",
-    "thumba", "thumbaa", "swalpa", "jasti", "kasta", "sahaya", "mado", "madu",
-    "gottu", "gottilla", "gotta", "tilidu", "tiliyala",
-    "nodu", "nodri", "kelsa", "oota", "neeru", "hanebaraha",
-    "tale", "talevatu", "jvara", "jwara", "kush", "kushi", "noppi", "noppigalu",
-    "kaalu", "kaal", "aata", "aagide", "aagithu", "mari", "madi", "aayithu",
-}
+HINDI_ROMAN_WORDS = [
+    "mera", "meri", "mere", "aur", "hai", "hain", "nahi", "kya",
+    "kar", "raha", "rahi", "tha", "thi", "woh", "yeh", "tum",
+    "aap", "main", "hum", "uska", "unka", "dard", "bukhar",
+    "haath", "pair", "pet", "sar", "khoon", "dawa", "cheez"
+]
 
-# Emergency keywords (any language)
-EMERGENCY_WORDS = {
-    "cant breathe", "cannot breathe", "not breathing", "choking", "heart attack",
-    "unconscious", "bleeding heavily", "blood everywhere", "dying", "emergency",
-    "112", "108", "ambulance", "hospital", "dying", "critical", "severe",
-    "saans nahi", "saans", "breathing problem", "chest pain", "heart pain",
-    "blood pressure high", "180/120", "stroke", "paralysis",
-}
+KANNADA_ROMAN_WORDS = [
+    "nanna", "nanu", "nimma", "avaru", "illi", "alli", "hogi",
+    "banni", "thumba", "swalpa", "novedu", "novedutte", "kai",
+    "kalu", "tale", "hotte", "bekku", "beda", "ide", "illa",
+    "enu", "yenu", "yaake", "hege", "onde", "eradu", "madappa"
+]
 
 
 def detect_language(text: str) -> dict:
-    """
-    Detects language with better handling for short inputs and emergencies.
-    """
-    if not text or not text.strip():
-        return {
-            "language_code": "en-IN",
-            "language_name": "English",
-            "instruction": "Reply in simple English only.",
-            "is_emergency": False
-        }
+    has_kannada = bool(KANNADA_PATTERN.search(text))
+    has_hindi   = bool(HINDI_PATTERN.search(text))
+    has_english = bool(re.search(r'[a-zA-Z]', text))
+    words_lower = text.lower().split()
+    text_lower  = text.lower()
 
-    text_lower = text.lower().strip()
-    words = set(re.findall(r'\b\w+\b', text_lower))
+    # Emergency detection
+    is_emergency = any(kw in text_lower for kw in EMERGENCY_KEYWORDS)
 
-    # ── Check for EMERGENCY first ─────────────────────────────────────────
-    emergency_hits = words.intersection(EMERGENCY_WORDS)
-    is_emergency = len(emergency_hits) >= 1 or any(word in text_lower for word in EMERGENCY_WORDS)
+    # Language detection
+    if has_kannada and has_english:
+        lang_name = "Kanglish"
+        lang_code = "kn-IN"
+    elif has_hindi and has_english:
+        lang_name = "Hinglish"
+        lang_code = "hi-IN"
+    elif has_kannada:
+        lang_name = "Kannada"
+        lang_code = "kn-IN"
+    elif has_hindi:
+        lang_name = "Hindi"
+        lang_code = "hi-IN"
+    else:
+        hindi_count   = sum(1 for w in words_lower if w in HINDI_ROMAN_WORDS)
+        kannada_count = sum(1 for w in words_lower if w in KANNADA_ROMAN_WORDS)
+        if hindi_count >= 2:
+            lang_name = "Hinglish"
+            lang_code = "hi-IN"
+        elif kannada_count >= 2:
+            lang_name = "Kanglish"
+            lang_code = "kn-IN"
+        else:
+            lang_name = "English"
+            lang_code = "en-IN"
 
-    # ── Check native scripts ────────────────────────────────────────────────
-    if KANNADA_PATTERN.search(text):
-        return {
-            "language_code": "kn-IN",
-            "language_name": "Kannada",
-            "instruction": "Reply in pure Kannada language only. Use Kannada script (ಕನ್ನಡ).",
-            "is_emergency": is_emergency
-        }
+    instruction = (
+        "IMPORTANT: Always write your response in English (Roman alphabet only). "
+        "Never use Devanagari, Kannada, Gujarati, Bengali, Urdu or any other script. "
+        "If user spoke Hinglish or Kanglish, reply in simple friendly English."
+    )
 
-    if HINDI_PATTERN.search(text):
-        return {
-            "language_code": "hi-IN",
-            "language_name": "Hindi",
-            "instruction": "Reply in pure Hindi language only. Use Devanagari script (हिंदी).",
-            "is_emergency": is_emergency
-        }
+    logger.info(f"Language: {lang_name} ({lang_code}) | Emergency: {is_emergency}")
 
-    if URDU_PATTERN.search(text):
-        return {
-            "language_code": "hi-IN",
-            "language_name": "Hindi-Urdu",
-            "instruction": "Reply in Hindi-Urdu mixed language. Use simple words.",
-            "is_emergency": is_emergency
-        }
-
-    # ── Check for mixed languages in English script ───────────────────────
-    kannada_hits = words.intersection(KANGLISH_WORDS)
-    hindi_hits = words.intersection(HINGLISH_WORDS)
-
-    # Pure Kanglish
-    if kannada_hits and len(kannada_hits) >= 2 and not hindi_hits:
-        return {
-            "language_code": "kn-IN",
-            "language_name": "Kannada-English mix",
-            "instruction": (
-                "Reply in Kannada-English mixed language (Kanglish). "
-                "Example: 'Nimage first aid beku, swalpa wait maadi.' "
-                "NEVER use pure English sentences."
-            ),
-            "is_emergency": is_emergency
-        }
-
-    # Pure Hinglish
-    if hindi_hits and len(hindi_hits) >= 2 and not kannada_hits:
-        return {
-            "language_code": "hi-IN",
-            "language_name": "Hindi-English mix",
-            "instruction": (
-                "Reply in Hindi-English mixed language (Hinglish). "
-                "Example: 'Aapko first aid chahiye, thoda rest karo.' "
-                "NEVER use pure English sentences."
-            ),
-            "is_emergency": is_emergency
-        }
-
-    # Mixed Kannada-Hindi
-    if kannada_hits and hindi_hits:
-        return {
-            "language_code": "kn-IN",
-            "language_name": "Kannada-Hindi mix",
-            "instruction": (
-                "Reply in Kannada-Hindi mixed language. "
-                "Example: 'Nanna tale dard ide, yenu madi?' "
-                "NEVER use pure English sentences."
-            ),
-            "is_emergency": is_emergency
-        }
-
-    # ── Short inputs / Acknowledgments ──────────────────────────────────────
-    short_inputs = {"oke", "ok", "okay", "haan", "han", "hmm", "yes", "no", "thanks", "thank you"}
-    if text_lower in short_inputs or len(text_lower) < 10:
-        return {
-            "language_code": "en-IN",
-            "language_name": "English",
-            "instruction": "Reply with a friendly greeting asking how you can help today.",
-            "is_emergency": False
-        }
-
-    # ── Default English ───────────────────────────────────────────────────
     return {
-        "language_code": "en-IN",
-        "language_name": "English",
-        "instruction": "Reply in simple English only.",
-        "is_emergency": is_emergency
+        "language_code": lang_code,
+        "language_name": lang_name,
+        "instruction":   instruction,
+        "is_emergency":  is_emergency,
     }
