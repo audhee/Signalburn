@@ -1,7 +1,6 @@
-import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
-import { API_BASE_URL } from '@/constants/api';
 
 const AUTH_TOKEN_KEY = 'arohan-auth-token';
 const AUTH_PHONE_KEY = 'arohan-auth-phone';
@@ -40,7 +39,7 @@ export const AuthService = {
      */
     async sendOTP(phoneNumber: string): Promise<{ success: boolean; error?: string }> {
         try {
-            await apiClient.post('/api/v1/auth/request-otp', 
+            await apiClient.post('/api/v1/auth/request-otp',
                 { phone_number: phoneNumber },
                 { includeAuth: false }
             );
