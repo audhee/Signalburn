@@ -8,6 +8,7 @@ export type VoiceState = 'idle' | 'recording' | 'processing' | 'playing' | 'erro
 interface UseVoiceAgentOptions {
     // Called when voice is transcribed — so ai-guidance can feed it into guided flow
     onTranscribed?: (text: string) => void;
+    getLanguageCode?: () => string;
 }
 
 export const useVoiceAgent = (options: UseVoiceAgentOptions = {}) => {
@@ -133,6 +134,7 @@ export const useVoiceAgent = (options: UseVoiceAgentOptions = {}) => {
                 });
             }
             formData.append('session_id', sessionId);
+            formData.append('language_code', options.getLanguageCode?.() || '');
 
             // Step 2 — transcribe only
             const transcribeResponse = await apiClient.request('/api/v1/ai/transcribe-only', {
@@ -176,3 +178,4 @@ export const useVoiceAgent = (options: UseVoiceAgentOptions = {}) => {
         resetSession,
     };
 };
+

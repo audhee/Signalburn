@@ -21,7 +21,7 @@ groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 #  SPEECH TO TEXT — Groq Whisper
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def transcribe_audio(audio_file_path: str) -> str:
+def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
     """
     Transcribes audio to text using Groq Whisper API.
     Supports Hindi, Kannada, English, Hinglish, Kanglish.
@@ -32,11 +32,26 @@ def transcribe_audio(audio_file_path: str) -> str:
 
         logger.info(f"Transcribing audio: {audio_file_path}")
 
+        request_kwargs = {
+            "model": "whisper-large-v3",
+            "response_format": "text",
+        }
+
+        normalized_lang = (language_code or "").strip().lower()
+        if normalized_lang.startswith("hi"):
+            request_kwargs["language"] = "hi"
+            request_kwargs["prompt"] = "This audio is in Hindi or Hinglish. Prefer Devanagari or Roman Hindi words, never Urdu."
+        elif normalized_lang.startswith("kn"):
+            request_kwargs["language"] = "kn"
+            request_kwargs["prompt"] = "This audio is in Kannada or Kanglish. Prefer Kannada or Roman Kannada words, never other scripts."
+        elif normalized_lang.startswith("en"):
+            request_kwargs["language"] = "en"
+            request_kwargs["prompt"] = "This audio is in English. Use only English words."
+
         with open(audio_file_path, "rb") as audio_file:
             transcription = groq_client.audio.transcriptions.create(
-                model="whisper-large-v3",
                 file=audio_file,
-                response_format="text"
+                **request_kwargs
             )
 
         transcript = transcription.strip()
