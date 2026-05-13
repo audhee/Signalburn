@@ -2,6 +2,7 @@
 llm_service.py - Arohan AI Text Generation
 Uses Groq llama-3.3-70b-versatile
 Responds in SAME language as user query.
+3-layer script protection — no wrong language passes through.
 """
 
 import os
@@ -9,14 +10,14 @@ import re
 import logging
 from groq import Groq
 from app.services.ai.rag_service import rag_service
-from app.services.ai.language_service import detect_language
+from app.services.ai.language_service import detect_language, normalize_supported_language
 
 logger = logging.getLogger(__name__)
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
-# Only block truly unsupported scripts — NOT Hindi/Kannada
+# Scripts that are NEVER allowed in any response
 UNSUPPORTED_SCRIPTS = re.compile(
     r'[\u0600-\u06FF'   # Arabic/Urdu
     r'\u0A80-\u0AFF'    # Gujarati
@@ -30,17 +31,49 @@ UNSUPPORTED_SCRIPTS = re.compile(
     r'\u0590-\u05FF]'   # Hebrew
 )
 
+# Hindi and Kannada scripts — allowed only when user spoke those languages
+HINDI_SCRIPT   = re.compile(r'[\u0900-\u097F]')
+KANNADA_SCRIPT = re.compile(r'[\u0C80-\u0CFF]')
+
 
 def has_unsupported_script(text: str) -> bool:
     return bool(UNSUPPORTED_SCRIPTS.search(text))
 
 
+def needs_retry(response_text: str, language_name: str) -> bool:
+    """
+    Returns True if response contains wrong script for the detected language.
+    Rules:
+    - UNSUPPORTED scripts (Urdu, Gujarati, Chinese etc.) → ALWAYS retry
+    - Hindi script in response → only OK if user spoke Hindi or Hinglish
+    - Kannada script in response → only OK if user spoke Kannada or Kanglish
+    """
+    if has_unsupported_script(response_text):
+        return True
+
+    user_spoke_hindi   = language_name in ["Hindi", "Hinglish"]
+    user_spoke_kannada = language_name in ["Kannada", "Kanglish"]
+
+    if bool(HINDI_SCRIPT.search(response_text)) and not user_spoke_hindi:
+        return True
+
+    if bool(KANNADA_SCRIPT.search(response_text)) and not user_spoke_kannada:
+        return True
+
+    return False
+
+
 def process_voice_with_llm(text: str, context: str = "", language: str = "en") -> dict:
 
-    lang_info     = detect_language(text)
+    requested_lang = normalize_supported_language(language)
+    lang_info      = detect_language(text)
     language_code = lang_info["language_code"]
     language_name = lang_info["language_name"]
     is_emergency  = lang_info["is_emergency"]
+
+    if context and requested_lang["language_name"] in ["English", "Hindi", "Kannada", "Hinglish", "Kanglish"]:
+        language_code = requested_lang["language_code"]
+        language_name = requested_lang["language_name"]
 
     logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
@@ -69,10 +102,9 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en") -
 
         response_text = response.choices[0].message.content.strip()
 
-        # Only retry if unsupported script found (Urdu, Chinese etc.)
-        # Hindi and Kannada scripts are ALLOWED
-        if has_unsupported_script(response_text):
-            logger.warning("Unsupported script in response. Retrying...")
+        # Layer 2 — check if wrong script detected
+        if needs_retry(response_text, language_name):
+            logger.warning(f"Wrong script for {language_name}. Retrying...")
             response_text = force_language_retry(text, rag_context, language_name, is_emergency)
 
         response_text = post_process(response_text, is_emergency)
@@ -89,16 +121,31 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en") -
 
 
 def force_language_retry(text: str, rag_context: str, language_name: str, is_emergency: bool) -> str:
+    """
+    Layer 2 retry — ultra strict prompt for correct language.
+    If still wrong → Layer 3 hardcoded fallback.
+    """
     try:
-        strict_prompt = f"""You are a medical assistant.
-CRITICAL: Respond ONLY in {language_name}.
-Do NOT use Arabic, Urdu, Gujarati, Bengali, Chinese or any unsupported script.
-Only use English, Hindi (Devanagari), or Kannada scripts.
+        if language_name == "English":
+            script_rule = "Use ONLY English alphabet A-Z. Zero non-English characters allowed."
+        elif language_name == "Hinglish":
+            script_rule = "Use English words mixed with Hindi words written in Roman script (A-Z only). Example: 'Haath ko rest do'. NO Devanagari script. NO other scripts."
+        elif language_name == "Kanglish":
+            script_rule = "Use English words mixed with Kannada words written in Roman script (A-Z only). Example: 'Kai rest madi'. NO Kannada script. NO other scripts."
+        elif language_name == "Hindi":
+            script_rule = "Use ONLY Hindi Devanagari script (like हाथ, दर्द). NO English, NO other scripts."
+        elif language_name == "Kannada":
+            script_rule = "Use ONLY Kannada script (like ಕೈ, ನೋವು). NO English, NO other scripts."
+        else:
+            script_rule = "Use ONLY English alphabet A-Z."
 
-Medical knowledge:
-{rag_context[:500] if rag_context else 'Use general first aid knowledge.'}
+        strict_prompt = f"""You are a medical first aid assistant.
+LANGUAGE: {language_name}
+SCRIPT RULE: {script_rule}
+FORBIDDEN: Arabic, Urdu, Gujarati, Bengali, Tamil, Telugu, Chinese, Japanese scripts.
 
-Give 6 to 8 numbered first aid steps in {language_name}."""
+Give 6 to 8 numbered first aid steps in {language_name} only.
+No introduction. Just numbered steps."""
 
         retry = groq_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -111,7 +158,9 @@ Give 6 to 8 numbered first aid steps in {language_name}."""
         )
         result = retry.choices[0].message.content.strip()
 
-        if has_unsupported_script(result):
+        # Layer 3 — if STILL wrong, use hardcoded
+        if needs_retry(result, language_name):
+            logger.error("Still wrong after retry. Using hardcoded fallback.")
             return get_hardcoded_response(is_emergency, language_name)
 
         return result
@@ -122,6 +171,7 @@ Give 6 to 8 numbered first aid steps in {language_name}."""
 
 
 def get_hardcoded_response(is_emergency: bool, language_name: str = "English") -> str:
+    """Layer 3 — guaranteed correct script hardcoded responses."""
     if language_name == "Hindi":
         if is_emergency:
             return (
@@ -132,7 +182,7 @@ def get_hardcoded_response(is_emergency: bool, language_name: str = "English") -
                 "4. तुरंत 112 या 108 पर call करें।"
             )
         return (
-            "प्राथमिक चिकित्सा के लिए:\n"
+            "प्राथमिक चिकित्सा:\n"
             "1. व्यक्ति को शांत रखें।\n"
             "2. सांस सही है या नहीं देखें।\n"
             "3. बिना doctor की सलाह के कोई दवा न दें।\n"
@@ -143,7 +193,7 @@ def get_hardcoded_response(is_emergency: bool, language_name: str = "English") -
             return (
                 "Idu medical emergency.\n"
                 "1. Vyaktiya shanta madi.\n"
-                "2. Yenu tinisabedi, kudisabedi.\n"
+                "2. Yenu tinisabedi kudisabedi.\n"
                 "3. Bagge hetige madi.\n"
                 "4. Turant 112 ge call madi."
             )
@@ -221,35 +271,44 @@ def build_system_prompt(
             f"End with: Call 112 or 108 immediately.\n\n"
         )
 
+    # Script rules per language
+    if language_name == "English":
+        script_rule = "Use ONLY English alphabet. NO Hindi, Kannada, Urdu, Arabic, Chinese or any other script."
+    elif language_name == "Hinglish":
+        script_rule = "Use English alphabet only (A-Z). Mix Hindi words written in Roman script. Example: 'Haath ko rest do, ice lagao'. NO Devanagari. NO other scripts."
+    elif language_name == "Kanglish":
+        script_rule = "Use English alphabet only (A-Z). Mix Kannada words written in Roman script. Example: 'Kai rest madi, ice hachi'. NO Kannada script. NO other scripts."
+    elif language_name == "Hindi":
+        script_rule = "Use ONLY Hindi Devanagari script. NO English alphabet for Hindi words. NO other scripts."
+    elif language_name == "Kannada":
+        script_rule = "Use ONLY Kannada script. NO Roman alphabet for Kannada words. NO other scripts."
+    else:
+        script_rule = "Use ONLY English alphabet A-Z."
+
     return f"""You are Arohan, a health assistant for elderly Indians.
 
 {emergency_block}
-USER LANGUAGE DETECTED: {language_name}
+USER LANGUAGE: {language_name}
+SUPPORTED LANGUAGE MODES ONLY: English, Hindi, Kannada, Hinglish, Kanglish.
+If uncertain, default to English.
+Never identify, classify, or answer as Urdu, Gujarati, Chinese, Korean, Bengali, Tamil, or Telugu.
 
-=== CRITICAL LANGUAGE RULE ===
-The user spoke in {language_name}.
-You MUST reply in EXACTLY {language_name}.
-
-- If user spoke ENGLISH → reply in English only
-- If user spoke HINDI (Devanagari script) → reply in Hindi only
-- If user spoke KANNADA (Kannada script) → reply in Kannada only
-- If user spoke HINGLISH (like "mera haath is paining") → reply in same Hinglish style
-- If user spoke KANGLISH (like "my kai is paining") → reply in same Kanglish style
-
-NEVER switch to a different language than what the user used.
-Do NOT use Arabic, Urdu, Gujarati, Bengali, Chinese scripts.
-==============================
+=== SCRIPT RULE — MOST IMPORTANT ===
+{script_rule}
+FORBIDDEN SCRIPTS: Arabic, Urdu, Gujarati, Bengali, Tamil, Telugu, Chinese, Japanese.
+If you use any forbidden script, your response is WRONG.
+=====================================
 
 RESPONSE FORMAT:
 - Start directly with first aid advice
 - Give minimum 6 numbered steps, maximum 8 steps
-- Use simple words that elderly people understand
+- Simple words elderly people understand
 - End emergencies with: Call 112 or 108 immediately
 
 EXAMPLES:
 
 User (English): "my nose is bleeding"
-Response (English):
+Response:
 "For a nosebleed:
 1. Sit upright and lean slightly forward.
 2. Pinch the soft part of your nose firmly.
@@ -261,7 +320,7 @@ Response (English):
 Call 112 if bleeding does not stop after 20 minutes."
 
 User (Hinglish): "mera naak is bleeding"
-Response (Hinglish):
+Response:
 "Nosebleed ke liye:
 1. Seedha baitho aur thoda aage jhuko.
 2. Naak ka soft hissa dono ungliyon se dabao.
@@ -273,7 +332,7 @@ Response (Hinglish):
 Call 112 agar bleeding 20 minute mein band na ho."
 
 User (Hinglish): "my haath is paining"
-Response (Hinglish):
+Response:
 "Haath ke dard ke liye:
 1. Haath ko rest do — use mat karo.
 2. Ice ko kapde mein wrap karke 15 minute lagao.
@@ -283,17 +342,17 @@ Response (Hinglish):
 6. 2 din mein theek na ho toh doctor ko dikhaao."
 
 User (Kanglish): "my kai is paining"
-Response (Kanglish):
+Response:
 "Kai novu ge:
 1. Kai rest madi — use madabedi.
 2. Ice cloth nalli sulidu 15 nimisha hachi.
 3. Kai hrudaya matte mele elu.
 4. Thumba novu idre paracetamol tago.
-5. Ulu iro nodko ungalu adisoke kashta agtide nodko.
+5. Sujan iro nodko ungalu adisoke kashta agtide nodko.
 6. 2 dina inda mele aagilla andre doctor hatra hogo."
 
 User (Kanglish): "nanna nose is bleeding"
-Response (Kanglish):
+Response:
 "Nanna nose bleeding ge:
 1. Naer kuto swalpa munde bago.
 2. Nose soft part eradu begalugalinda gattagi hidi.
@@ -304,7 +363,7 @@ Response (Kanglish):
 7. 20 nimisha mele bleeding ninthilla andre 112 ge call madi."
 
 User (Kannada): "ನನ್ನ ಕೈ ನೋಯುತ್ತಿದೆ"
-Response (Kannada):
+Response:
 "ಕೈ ನೋವಿಗೆ:
 1. ಕೈಗೆ ವಿಶ್ರಾಂತಿ ಕೊಡಿ.
 2. ಐಸ್ ಅನ್ನು ಬಟ್ಟೆಯಲ್ಲಿ ಸುತ್ತಿ 15 ನಿಮಿಷ ಹಚ್ಚಿ.
@@ -314,7 +373,7 @@ Response (Kannada):
 6. 2 ದಿನದಲ್ಲಿ ಸರಿಯಾಗದಿದ್ದರೆ ಆಸ್ಪತ್ರೆಗೆ ಹೋಗಿ."
 
 User (Hindi): "मेरा हाथ दर्द कर रहा है"
-Response (Hindi):
+Response:
 "हाथ के दर्द के लिए:
 1. हाथ को आराम दें।
 2. बर्फ को कपड़े में लपेटकर 15 मिनट लगाएं।
@@ -327,9 +386,10 @@ MEDICAL KNOWLEDGE (rephrase in {language_name}):
 {rag_context if rag_context else 'Use general first aid knowledge.'}
 
 RULES:
-- Reply in {language_name} only — never switch language
-- Minimum 6 steps — maximum 8 steps
-- Simple words — elderly users must understand easily
+- Reply in {language_name} only
+- Follow script rule strictly
+- Minimum 6 steps maximum 8 steps
+- Simple words for elderly users
 - Never paste raw database text
 - No medical jargon
 - Be calm and caring
@@ -353,3 +413,4 @@ def fallback_response(language_code: str, is_emergency: bool) -> dict:
         "response_text": get_hardcoded_response(is_emergency, lang_name),
         "language_code": language_code
     }
+
