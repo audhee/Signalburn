@@ -80,13 +80,12 @@ def sanitize_text_for_language(text: str, language_code: str, fallback: str = "U
     normalized = normalize_supported_language(language_code)
     code = normalized["language_code"]
 
-    # Keep only the scripts relevant to the locked language plus common punctuation,
-    # digits, whitespace, and latin letters (latin is allowed for Hinglish/Kanglish and
-    # still useful inside medical labels or numbers).
+    # Once a guided session is locked to Hindi or Kannada, we keep only that
+    # script so translated English does not leak back into the transcript.
     if code == "hi-IN":
-        allowed_pattern = re.compile(r'[^0-9a-zA-Z\u0900-\u097F\s.,!?():;+\-/]')
+        allowed_pattern = re.compile(r'[^0-9\u0900-\u097F\s.,!?():;+\-/]')
     elif code == "kn-IN":
-        allowed_pattern = re.compile(r'[^0-9a-zA-Z\u0C80-\u0CFF\s.,!?():;+\-/]')
+        allowed_pattern = re.compile(r'[^0-9\u0C80-\u0CFF\s.,!?():;+\-/]')
     else:
         allowed_pattern = re.compile(r'[^0-9a-zA-Z\s.,!?():;+\-/]')
 

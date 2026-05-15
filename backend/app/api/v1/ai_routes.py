@@ -102,7 +102,14 @@ async def process_voice_input(
             tmp.write(content)
             tmp_path = tmp.name
 
-        transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path)
+        normalized_language = normalize_supported_language(language_code)["language_code"] if language_code else ""
+        transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
+        if normalized_language:
+            transcribed_text = sanitize_text_for_language(
+                transcribed_text,
+                normalized_language,
+                fallback=transcribed_text.strip() or "Unclear response"
+            )
         llm_result       = await run_in_threadpool(process_voice_with_llm, transcribed_text, "", language_code)
         answer_text      = llm_result["response_text"]
         detected_lang    = llm_result["language_code"]
@@ -256,7 +263,11 @@ async def transcribe_only(
         normalized_language = normalize_supported_language(language_code)["language_code"] if language_code else ""
         transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
         if normalized_language:
-            transcribed_text = sanitize_text_for_language(transcribed_text, normalized_language)
+            transcribed_text = sanitize_text_for_language(
+                transcribed_text,
+                normalized_language,
+                fallback=transcribed_text.strip() or "Unclear response"
+            )
         return JSONResponse(content={"success": True, "transcription": transcribed_text})
 
     except Exception as e:

@@ -172,7 +172,7 @@ export default function AIGuidanceScreen() {
                 handleVoiceAnswerRef.current(voiceText);
             }
         },
-        getLanguageCode: () => lockedLanguage || 'hi-IN'
+        getLanguageCode: () => lockedLanguage
     });
 
     const busy = isProcessing || isTextProcessing || isUploading;

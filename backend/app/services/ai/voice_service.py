@@ -16,6 +16,95 @@ logger = logging.getLogger(__name__)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
+KANNADA_SCRIPT_PATTERN = re.compile(r"[\u0C80-\u0CFF]")
+HINDI_SCRIPT_PATTERN = re.compile(r"[\u0900-\u097F]")
+
+
+def _has_expected_script(text: str, normalized_lang: str) -> bool:
+    value = (text or "").strip()
+    if normalized_lang.startswith("kn"):
+        return bool(KANNADA_SCRIPT_PATTERN.search(value))
+    if normalized_lang.startswith("hi"):
+        return bool(HINDI_SCRIPT_PATTERN.search(value))
+    return bool(value)
+
+
+def _convert_transcript_to_locked_script(transcript: str, normalized_lang: str) -> str:
+    value = (transcript or "").strip()
+    if not value or not groq_client:
+        return value
+
+    if normalized_lang.startswith("kn"):
+        system_prompt = (
+            "Convert the user's transcript into Kannada script only. "
+            "Preserve meaning, keep it short, and do not translate to English. "
+            "Return only Kannada script text."
+        )
+    elif normalized_lang.startswith("hi"):
+        system_prompt = (
+            "Convert the user's transcript into Hindi Devanagari script only. "
+            "Preserve meaning, keep it short, and do not translate to English. "
+            "Return only Hindi script text."
+        )
+    else:
+        return value
+
+    try:
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": value},
+            ],
+            temperature=0.0,
+            max_tokens=120,
+        )
+        converted = response.choices[0].message.content.strip()
+        return converted or value
+    except Exception as exc:
+        logger.error("Locked-script conversion failed: %s", exc)
+        return value
+
+
+def _build_stt_request_kwargs(normalized_lang: str, retry_strict: bool = False) -> dict:
+    request_kwargs = {
+        "model": "whisper-large-v3",
+        "response_format": "text",
+    }
+
+    if normalized_lang.startswith("hi"):
+        request_kwargs["language"] = "hi"
+        request_kwargs["prompt"] = (
+            "Transcribe exactly what is spoken. "
+            "This audio is in Hindi. Output only Hindi in Devanagari script. "
+            "Do not translate to English. Do not romanize. Do not use Urdu script."
+        )
+        if retry_strict:
+            request_kwargs["prompt"] += (
+                " Return only Devanagari characters for the spoken answer. "
+                "If a word is unclear, still keep the answer in Hindi script."
+            )
+    elif normalized_lang.startswith("kn"):
+        request_kwargs["language"] = "kn"
+        request_kwargs["prompt"] = (
+            "Transcribe exactly what is spoken. "
+            "This audio is in Kannada. Output only Kannada in Kannada script. "
+            "Do not translate to English. Do not romanize. Do not use any other script."
+        )
+        if retry_strict:
+            request_kwargs["prompt"] += (
+                " Return only Kannada script for the spoken answer. "
+                "If a word is unclear, still keep the answer in Kannada script."
+            )
+    elif normalized_lang.startswith("en"):
+        request_kwargs["language"] = "en"
+        request_kwargs["prompt"] = (
+            "Transcribe exactly what is spoken in English. "
+            "Do not translate and do not add extra words."
+        )
+
+    return request_kwargs
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  SPEECH TO TEXT — Groq Whisper
@@ -32,21 +121,8 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
 
         logger.info(f"Transcribing audio: {audio_file_path}")
 
-        request_kwargs = {
-            "model": "whisper-large-v3",
-            "response_format": "text",
-        }
-
         normalized_lang = (language_code or "").strip().lower()
-        if normalized_lang.startswith("hi"):
-            request_kwargs["language"] = "hi"
-            request_kwargs["prompt"] = "This audio is in Hindi or Hinglish. Prefer Devanagari or Roman Hindi words, never Urdu."
-        elif normalized_lang.startswith("kn"):
-            request_kwargs["language"] = "kn"
-            request_kwargs["prompt"] = "This audio is in Kannada or Kanglish. Prefer Kannada or Roman Kannada words, never other scripts."
-        elif normalized_lang.startswith("en"):
-            request_kwargs["language"] = "en"
-            request_kwargs["prompt"] = "This audio is in English. Use only English words."
+        request_kwargs = _build_stt_request_kwargs(normalized_lang, retry_strict=False)
 
         with open(audio_file_path, "rb") as audio_file:
             transcription = groq_client.audio.transcriptions.create(
@@ -55,6 +131,27 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
             )
 
         transcript = transcription.strip()
+
+        # If a locked Hindi/Kannada answer comes back without the expected
+        # script, retry once with a stricter instruction before giving up.
+        if normalized_lang and not _has_expected_script(transcript, normalized_lang):
+            logger.warning("STT returned unexpected script for %s. Retrying with stricter prompt.", normalized_lang)
+            retry_kwargs = _build_stt_request_kwargs(normalized_lang, retry_strict=True)
+            with open(audio_file_path, "rb") as audio_file:
+                retry_transcription = groq_client.audio.transcriptions.create(
+                    file=audio_file,
+                    **retry_kwargs
+                )
+            retry_text = retry_transcription.strip()
+            if retry_text:
+                transcript = retry_text
+
+        if normalized_lang and not _has_expected_script(transcript, normalized_lang):
+            logger.warning("STT still returned unexpected script for %s. Converting transcript to locked script.", normalized_lang)
+            converted = _convert_transcript_to_locked_script(transcript, normalized_lang)
+            if converted:
+                transcript = converted
+
         logger.info(f"Transcribed: {transcript[:100]}...")
         return transcript
 
