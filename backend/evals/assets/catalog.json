@@ -1,0 +1,22 @@
+﻿{
+  "version": 1,
+  "assets": [
+    {
+      "id": "smoke_image",
+      "path": "assets/images/doctor.png",
+      "purpose": "smoke multimodal contract check",
+      "quality_level": "low"
+    },
+    {
+      "id": "unsupported_file",
+      "path": "backend/evals/assets/unsupported_upload.xyz",
+      "purpose": "negative unsupported media guardrail",
+      "quality_level": "n/a"
+    }
+  ],
+  "todo_real_medical_assets": [
+    "backend/evals/assets/minor-cut.jpg",
+    "backend/evals/assets/burn-hand.jpg",
+    "backend/evals/assets/bleeding-wound.mp4"
+  ]
+}

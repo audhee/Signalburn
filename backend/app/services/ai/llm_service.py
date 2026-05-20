@@ -63,7 +63,7 @@ def needs_retry(response_text: str, language_name: str) -> bool:
     return False
 
 
-def process_voice_with_llm(text: str, context: str = "", language: str = "en") -> dict:
+def process_voice_with_llm(text: str, context: str = "", language: str = "en", rag_source: str = "all") -> dict:
 
     requested_lang = normalize_supported_language(language)
     lang_info      = detect_language(text)
@@ -77,7 +77,7 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en") -
 
     logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
-    rag_context_raw = rag_service.retrieve_context(text, k=5)
+    rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
     rag_context     = rag_context_raw[:2000] if rag_context_raw else ""
 
     if not groq_client:

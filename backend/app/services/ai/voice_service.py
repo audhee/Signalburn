@@ -29,6 +29,23 @@ def _has_expected_script(text: str, normalized_lang: str) -> bool:
     return bool(value)
 
 
+def _normalize_short_locked_transcript(transcript: str, normalized_lang: str) -> str:
+    value = (transcript or "").strip()
+    if not value:
+        return value
+
+    normalized_value = re.sub(r"[^\w\u0900-\u097F\u0C80-\u0CFF]+", "", value).lower()
+
+    if normalized_lang.startswith("hi"):
+        hindi_yes_variants = {
+            "नमस्ते", "नमस्कार", "namaste", "namaskar", "haan", "han", "ha",
+        }
+        if normalized_value in hindi_yes_variants:
+            return "हाँ"
+
+    return value
+
+
 def _convert_transcript_to_locked_script(transcript: str, normalized_lang: str) -> str:
     value = (transcript or "").strip()
     if not value or not groq_client:
@@ -77,7 +94,9 @@ def _build_stt_request_kwargs(normalized_lang: str, retry_strict: bool = False) 
         request_kwargs["prompt"] = (
             "Transcribe exactly what is spoken. "
             "This audio is in Hindi. Output only Hindi in Devanagari script. "
-            "Do not translate to English. Do not romanize. Do not use Urdu script."
+            "Do not translate to English. Do not romanize. Do not use Urdu script. "
+            "Short answers like yes/no must stay exact, for example 'हाँ', 'नहीं', 'ठीक'. "
+            "Do not expand a short reply into a greeting like नमस्ते."
         )
         if retry_strict:
             request_kwargs["prompt"] += (
@@ -131,6 +150,7 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
             )
 
         transcript = transcription.strip()
+        transcript = _normalize_short_locked_transcript(transcript, normalized_lang)
 
         # If a locked Hindi/Kannada answer comes back without the expected
         # script, retry once with a stricter instruction before giving up.
@@ -145,12 +165,14 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
             retry_text = retry_transcription.strip()
             if retry_text:
                 transcript = retry_text
+                transcript = _normalize_short_locked_transcript(transcript, normalized_lang)
 
         if normalized_lang and not _has_expected_script(transcript, normalized_lang):
             logger.warning("STT still returned unexpected script for %s. Converting transcript to locked script.", normalized_lang)
             converted = _convert_transcript_to_locked_script(transcript, normalized_lang)
             if converted:
                 transcript = converted
+                transcript = _normalize_short_locked_transcript(transcript, normalized_lang)
 
         logger.info(f"Transcribed: {transcript[:100]}...")
         return transcript

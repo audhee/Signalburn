@@ -1,5 +1,6 @@
 import os
 import logging
+from typing import Dict, List, Optional, Tuple
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma, FAISS
 from langchain_core.documents import Document
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 SASHWAT_CHROMA_DIR  = r"D:\intern\medical-rag-llm\db\my_chroma_db"
 HARSHITA_FAISS_DIR  = r"D:\intern\Arohan\backend\app\knowledge_base\harshita_faiss_index"
 GESHNA_FAISS_DIR    = r"D:\intern\Arohan\backend\app\knowledge_base\geshna_faiss"
+VALID_RAG_SOURCES   = ("all", "arohan", "sashwat", "harshita", "geshna")
 
 
 class RAGService:
@@ -99,48 +101,50 @@ class RAGService:
             self.harshita_db = None
             self.geshna_db   = None
 
-    def retrieve_context(self, query: str, k: int = 3) -> str:
+    def _normalize_source(self, source: Optional[str]) -> str:
+        normalized = (source or "all").strip().lower()
+        if normalized not in VALID_RAG_SOURCES:
+            logger.warning(f"Unknown rag_source '{source}', defaulting to 'all'.")
+            return "all"
+        return normalized
+
+    def _get_enabled_stores(self, source: Optional[str]) -> List[Tuple[str, object]]:
+        normalized = self._normalize_source(source)
+        stores: Dict[str, object] = {
+            "arohan": self.arohan_db,
+            "sashwat": self.sashwat_db,
+            "harshita": self.harshita_db,
+            "geshna": self.geshna_db,
+        }
+        if normalized == "all":
+            return [(name, store) for name, store in stores.items() if store]
+        selected_store = stores.get(normalized)
+        return [(normalized, selected_store)] if selected_store else []
+
+    def _search_store(self, store_name: str, store: object, query: str, k: int) -> List[Document]:
+        if not store:
+            return []
+        try:
+            results = store.similarity_search(query, k=k)
+            logger.info(f"{store_name.title()} DB: {len(results)} chunks.")
+            return results
+        except Exception as e:
+            logger.error(f"{store_name.title()} retrieval failed: {e}")
+            return []
+
+    def retrieve_context(self, query: str, k: int = 3, source: Optional[str] = "all") -> str:
         """
-        Query all 4 DBs and combine results.
-        Returns combined context string for Gemini.
+        Query the selected knowledge base(s) and combine results.
+        Returns combined context string for downstream LLM prompts.
         """
-        results = []
+        results: List[Document] = []
+        enabled_stores = self._get_enabled_stores(source)
+        if not enabled_stores:
+            logger.warning(f"No RAG stores available for source='{source}'.")
+            return ""
 
-        # 1. Arohan KB
-        if self.arohan_db:
-            try:
-                res = self.arohan_db.similarity_search(query, k=k)
-                results.extend(res)
-                logger.info(f"Arohan KB: {len(res)} chunks.")
-            except Exception as e:
-                logger.error(f"Arohan KB retrieval failed: {e}")
-
-        # 2. Sashwat medical DB
-        if self.sashwat_db:
-            try:
-                res = self.sashwat_db.similarity_search(query, k=k)
-                results.extend(res)
-                logger.info(f"Sashwat DB: {len(res)} chunks.")
-            except Exception as e:
-                logger.error(f"Sashwat DB retrieval failed: {e}")
-
-        # 3. Harshita FAISS
-        if self.harshita_db:
-            try:
-                res = self.harshita_db.similarity_search(query, k=k)
-                results.extend(res)
-                logger.info(f"Harshita FAISS: {len(res)} chunks.")
-            except Exception as e:
-                logger.error(f"Harshita FAISS retrieval failed: {e}")
-
-        # 4. Geshna FAISS
-        if self.geshna_db:
-            try:
-                res = self.geshna_db.similarity_search(query, k=k)
-                results.extend(res)
-                logger.info(f"Geshna FAISS: {len(res)} chunks.")
-            except Exception as e:
-                logger.error(f"Geshna FAISS retrieval failed: {e}")
+        for store_name, store in enabled_stores:
+            results.extend(self._search_store(store_name, store, query, k))
 
         if not results:
             logger.warning("No results from any DB.")
@@ -150,9 +154,9 @@ class RAGService:
         logger.info(f"Total: {len(results)} chunks retrieved across all DBs.")
         return context
 
-    def retrieve_structured(self, query: str, k: int = 3) -> dict:
+    def retrieve_structured(self, query: str, k: int = 3, source: Optional[str] = "all") -> dict:
         """
-        Returns structured context from each DB separately.
+        Returns structured context from the selected DB(s) separately.
         Used by Geshna's question flow to get targeted results.
         """
         structured = {
@@ -161,40 +165,16 @@ class RAGService:
             "harshita": [],
             "geshna":   [],
         }
-
-        if self.arohan_db:
-            try:
-                structured["arohan"] = [
-                    d.page_content for d in self.arohan_db.similarity_search(query, k=k)
-                ]
-            except Exception as e:
-                logger.error(f"Arohan structured retrieval failed: {e}")
-
-        if self.sashwat_db:
-            try:
-                structured["sashwat"] = [
-                    d.page_content for d in self.sashwat_db.similarity_search(query, k=k)
-                ]
-            except Exception as e:
-                logger.error(f"Sashwat structured retrieval failed: {e}")
-
-        if self.harshita_db:
-            try:
-                structured["harshita"] = [
-                    d.page_content for d in self.harshita_db.similarity_search(query, k=k)
-                ]
-            except Exception as e:
-                logger.error(f"Harshita structured retrieval failed: {e}")
-
-        if self.geshna_db:
-            try:
-                structured["geshna"] = [
-                    d.page_content for d in self.geshna_db.similarity_search(query, k=k)
-                ]
-            except Exception as e:
-                logger.error(f"Geshna structured retrieval failed: {e}")
+        for store_name, store in self._get_enabled_stores(source):
+            structured[store_name] = [
+                doc.page_content for doc in self._search_store(store_name, store, query, k)
+            ]
 
         return structured
+
+
+def get_rag_context(query: str, k: int = 3, source: Optional[str] = "all") -> str:
+    return rag_service.retrieve_context(query, k=k, source=source)
 
 
 rag_service = RAGService()

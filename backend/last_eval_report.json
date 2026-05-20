@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "suite": "full",
+    "dataset": "D:\\intern\\Arohan\\backend\\evals\\golden_cases.json",
+    "base_url": "http://localhost:8000",
+    "generated_at_epoch": 1779211235
+  },
+  "summary": {
+    "total_cases": 17,
+    "passed": 17,
+    "failed": 0,
+    "score_percent": 100.0,
+    "weighted_passed": 18.0,
+    "weighted_total": 18.0,
+    "endpoint_avg_latency_ms": 3185.22,
+    "endpoint_p95_latency_ms": 7400.89
+  },
+  "reliability": {
+    "by_type": {
+      "guided_query": {
+        "count": 4,
+        "passed": 4,
+        "failed": 0,
+        "avg_latency_ms": 2045.69,
+        "pass_rate_percent": 100.0
+      },
+      "language_service": {
+        "count": 2,
+        "passed": 2,
+        "failed": 0,
+        "avg_latency_ms": 0.04,
+        "pass_rate_percent": 100.0
+      },
+      "text_query": {
+        "count": 2,
+        "passed": 2,
+        "failed": 0,
+        "avg_latency_ms": 7500.74,
+        "pass_rate_percent": 100.0
+      },
+      "transcribe_only": {
+        "count": 1,
+        "passed": 1,
+        "failed": 0,
+        "avg_latency_ms": 2452.07,
+        "pass_rate_percent": 100.0
+      },
+      "process_voice": {
+        "count": 1,
+        "passed": 1,
+        "failed": 0,
+        "avg_latency_ms": 7400.89,
+        "pass_rate_percent": 100.0
+      },
+      "multimodal_text_query": {
+        "count": 3,
+        "passed": 3,
+        "failed": 0,
+        "avg_latency_ms": 2190.18,
+        "pass_rate_percent": 100.0
+      },
+      "supported_media_types": {
+        "count": 1,
+        "passed": 1,
+        "failed": 0,
+        "avg_latency_ms": 2030.36,
+        "pass_rate_percent": 100.0
+      },
+      "chat_history_get": {
+        "count": 2,
+        "passed": 2,
+        "failed": 0,
+        "avg_latency_ms": 2046.26,
+        "pass_rate_percent": 100.0
+      },
+      "chat_history_delete": {
+        "count": 1,
+        "passed": 1,
+        "failed": 0,
+        "avg_latency_ms": 2047.71,
+        "pass_rate_percent": 100.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "guided-en-first-question",
+      "type": "guided_query",
+      "suite": "smoke",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2044.08,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "guided-hi-first-question",
+      "type": "guided_query",
+      "suite": "core",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2052.09,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "guided-kn-first-question",
+      "type": "guided_query",
+      "suite": "core",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2046.99,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "guided-lock-language-followup",
+      "type": "guided_query",
+      "suite": "core",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2039.59,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "langservice-emergency-english",
+      "type": "language_service",
+      "suite": "smoke",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 0.05,
+      "is_endpoint_case": false
+    },
+    {
+      "id": "langservice-hinglish-roman",
+      "type": "language_service",
+      "suite": "core",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 0.03,
+      "is_endpoint_case": false
+    },
+    {
+      "id": "text-query-english-smoke",
+      "type": "text_query",
+      "suite": "smoke",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 7735.2,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "text-query-emergency-safety",
+      "type": "text_query",
+      "suite": "full",
+      "critical": true,
+      "weight": 2.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 7266.28,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "transcribe-sample-audio-smoke",
+      "type": "transcribe_only",
+      "suite": "core",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2452.07,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "process-voice-sample-audio-smoke",
+      "type": "process_voice",
+      "suite": "core",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 7400.89,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "multimodal-image-english-smoke",
+      "type": "multimodal_text_query",
+      "suite": "core",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2250.31,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "multimodal-image-hindi-language-detect",
+      "type": "multimodal_text_query",
+      "suite": "full",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2259.67,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "multimodal-invalid-file-type-rejected",
+      "type": "multimodal_text_query",
+      "suite": "smoke",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2060.55,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "supported-media-types-contract",
+      "type": "supported_media_types",
+      "suite": "smoke",
+      "critical": true,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2030.36,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "chat-history-after-multimodal",
+      "type": "chat_history_get",
+      "suite": "full",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2041.57,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "chat-history-clear-session",
+      "type": "chat_history_delete",
+      "suite": "full",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2047.71,
+      "is_endpoint_case": true
+    },
+    {
+      "id": "chat-history-empty-after-clear",
+      "type": "chat_history_get",
+      "suite": "full",
+      "critical": false,
+      "weight": 1.0,
+      "passed": true,
+      "detail": "passed",
+      "latency_ms": 2050.94,
+      "is_endpoint_case": true
+    }
+  ],
+  "baseline": null
+}

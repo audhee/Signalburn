@@ -140,7 +140,13 @@ async def process_voice_input(
 @router.post("/text-query")
 async def process_text_input(payload: VoicePromptPayload):
     try:
-        llm_result    = await run_in_threadpool(process_voice_with_llm, payload.text, payload.context, payload.language)
+        llm_result    = await run_in_threadpool(
+            process_voice_with_llm,
+            payload.text,
+            payload.context,
+            payload.language,
+            payload.rag_source,
+        )
         answer_text   = llm_result["response_text"]
         detected_lang = llm_result["language_code"]
 
@@ -217,7 +223,13 @@ async def guided_query(payload: VoicePromptPayload):
     # Step 3 — Final answer
     full_context = f"Additional patient details:\n{context}"
     try:
-        result        = await run_in_threadpool(process_voice_with_llm, text, full_context, locked_language)
+        result        = await run_in_threadpool(
+            process_voice_with_llm,
+            text,
+            full_context,
+            locked_language,
+            payload.rag_source,
+        )
         answer_text   = result["response_text"]
         language_code = result["language_code"]
 

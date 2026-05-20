@@ -8,6 +8,7 @@ class VoicePromptPayload(BaseModel):
     text: str
     context: str = ""
     language: str = "en"
+    rag_source: str = "all"
 
 class VoiceAudioPayload(BaseModel):
     audio_path: str
