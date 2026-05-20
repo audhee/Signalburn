@@ -51,4 +51,4 @@ __pycache__/
 .env
 venv/
 
-.vscode
+.vscode/
