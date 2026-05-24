@@ -13,6 +13,8 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
+    expose_headers=["X-Answer-Text", "X-Severity", "X-Language-Code", "X-Session-Id",
+                    "X-Media-Type", "X-Media-Filename", "X-Chat-Count", "X-Transcription"],
 )
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
