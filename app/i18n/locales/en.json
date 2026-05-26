@@ -110,6 +110,12 @@
     "otp_sent_to": "Sent to",
     "invalid_otp": "Please enter a 6-digit code",
     "wrong_otp": "Incorrect OTP. Use 123456 for testing.",
+    "chatbox_title": "AI Chat",
+    "chatbox_placeholder": "Ask something (e.g., gale me dard hai)...",
+    "chatbox_send": "Send",
+    "chatbox_network_error": "Network connection error. Please try again.",
+    "chatbox_no_answer": "I could not formulate an answer. Please call 112 if this is an emergency.",
+    "chatbox_welcome": "Namaste! Welcome to Arohan First-Aid. How can we help you?",
     "verifying": "Verifying...",
     "didnt_receive": "Didn't receive code?"
 }

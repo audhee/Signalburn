@@ -17,6 +17,7 @@ export default function RootLayout() {
       <Stack.Screen name="emergency/assist" />
       <Stack.Screen name="emergency/ai-guidance" />
       <Stack.Screen name="emergency/location" />
+      <Stack.Screen name="emergency/chatbox" />
     </Stack>
   );
 }
