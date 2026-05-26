@@ -1,0 +1,21 @@
+id,type,input_text,input_context,input_language,input_media_path,input_audio_path,expect_status_code,expect_language_code,expect_detected_language,expect_mode,expect_question,expect_media_type,expect_severity,expect_non_empty_fields,expect_allowed_values
+guided-en-first-question,guided_query,My father fell in the bathroom and his arm is bleeding.,,,,,200,,en-IN,question,What happened?,,,,
+guided-hi-first-question,guided_query,मेरे पिता गिर गए हैं और उनके हाथ से खून निकल रहा है,,,,,200,,hi-IN,question,What happened?,,,,
+guided-kn-first-question,guided_query,ನನ್ನ ಅಪ್ಪ ಬಿದ್ದಿದ್ದಾರೆ ಮತ್ತು ಕೈಯಲ್ಲಿ ರಕ್ತ ಬರುತ್ತಿದೆ,,,,,200,,kn-IN,question,What happened?,,,,
+guided-lock-language-followup,guided_query,Patient is 72 years old male,"Q: What happened?
+A: मेरे पिता गिर गए हैं
+Q: What is the age and gender of the person?
+A: ",hi-IN,,,200,,hi-IN,question,Do they have any medical conditions or take regular medication?,,,,
+langservice-emergency-english,language_service,My mother has chest pain and is not breathing properly,,,,,,en-IN,,,,,,,
+langservice-hinglish-roman,language_service,mera bhai behosh hai aur saans nahi aa rahi,,,,,,hi-IN,,,,,,,
+text-query-english-smoke,text_query,My father has a small bleeding cut on hand. What first aid should I do?,,en-IN,,,200,,,,,,,"[""response"", ""transcription""]",
+text-query-emergency-safety,text_query,Person is unconscious and not breathing. What should I do right now?,,en-IN,,,200,,,,,,,"[""response""]",
+transcribe-sample-audio-smoke,transcribe_only,,,,,backend/sample_audio.mp3,200,,,,,,,"[""transcription""]",
+process-voice-sample-audio-smoke,process_voice,,,,,backend/sample_audio.mp3,200,,,,,,,"[""transcription"", ""response""]","{""language"": [""en-IN"", ""hi-IN"", ""kn-IN""]}"
+multimodal-image-english-smoke,multimodal_text_query,Please analyze this visible injury and suggest first aid.,,,assets/images/doctor.png,,200,en-IN,,,,image,,"[""response"", ""severity"", ""media_filename""]","{""severity"": [""minor"", ""moderate"", ""emergency"", ""unknown""]}"
+multimodal-image-hindi-language-detect,multimodal_text_query,कृपया इस चोट को देखकर प्राथमिक उपचार बताइए,,,assets/images/doctor.png,,200,hi-IN,,,,image,,"[""response"", ""severity""]","{""severity"": [""minor"", ""moderate"", ""emergency"", ""unknown""]}"
+multimodal-invalid-file-type-rejected,multimodal_text_query,Analyze this file,,,backend/evals/assets/unsupported_upload.xyz,,400,,,,,,,,
+supported-media-types-contract,supported_media_types,,,,,,200,,,,,,,,
+chat-history-after-multimodal,chat_history_get,,,,,,200,,,,,,,,
+chat-history-clear-session,chat_history_delete,,,,,,200,,,,,,,,
+chat-history-empty-after-clear,chat_history_get,,,,,,200,,,,,,,,

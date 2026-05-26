@@ -1,8 +1,15 @@
 import os
+from pathlib import Path
 import google.generativeai as genai
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+# Explicitly load .env from backend directory (reliable on Windows)
+_env_path = Path(__file__).parent.parent.parent / '.env'
+if _env_path.exists():
+    load_dotenv(dotenv_path=_env_path)
+else:
+    # Fallback: search upward from CWD
+    load_dotenv(find_dotenv(usecwd=True))
 
 class Settings:
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")

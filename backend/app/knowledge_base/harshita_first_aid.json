@@ -1,0 +1,3989 @@
+[
+  {
+    "title": "Burn from hot oil while cooking",
+    "identify": "Skin is red, painful, may blister after oil spill",
+    "immediate_steps": ["Run cool water for 10 minutes", "Remove rings or tight items", "Cover with clean cloth"],
+    "avoid": ["Do not apply ice", "Do not apply toothpaste or butter"],
+    "emergency": "Hospital if burn is deep or large",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Steam burn from pressure cooker",
+    "identify": "Skin burn due to steam exposure",
+    "immediate_steps": ["Cool under running water", "Cover loosely with cloth"],
+    "avoid": ["Do not break blisters"],
+    "emergency": "Seek help if severe",
+    "source": "WHO"
+  },
+  {
+    "title": "Chemical burn from cleaning liquid",
+    "identify": "Burning sensation after chemical contact",
+    "immediate_steps": ["Wash area with lots of water", "Remove contaminated clothes"],
+    "avoid": ["Do not apply creams immediately"],
+    "emergency": "Visit hospital urgently",
+    "source": "WHO"
+  },
+  {
+    "title": "Electric burn from exposed wire",
+    "identify": "Burn marks after electric shock",
+    "immediate_steps": ["Turn off power source", "Do not touch directly", "Call emergency help"],
+    "avoid": ["Do not use water near electricity"],
+    "emergency": "Immediate hospital care required",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Sunburn after long sun exposure",
+    "identify": "Red, hot, painful skin after sun",
+    "immediate_steps": ["Move to shade", "Apply cool cloth", "Drink water"],
+    "avoid": ["Do not scratch skin"],
+    "emergency": "Hospital if fever or blisters",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Deep cut from kitchen knife",
+    "identify": "Bleeding from sharp cut",
+    "immediate_steps": ["Press firmly with cloth", "Raise injured area"],
+    "avoid": ["Do not wash deep wound immediately"],
+    "emergency": "If bleeding continues after 10 minutes",
+    "source": "WHO"
+  },
+  {
+    "title": "Glass cut on foot",
+    "identify": "Bleeding due to stepping on glass",
+    "immediate_steps": ["Remove visible glass carefully", "Apply pressure"],
+    "avoid": ["Do not walk on injured foot"],
+    "emergency": "Hospital if glass is deep inside",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Nose bleeding suddenly",
+    "identify": "Blood flowing from nose",
+    "immediate_steps": ["Sit upright", "Pinch nose for 10 minutes"],
+    "avoid": ["Do not tilt head back"],
+    "emergency": "If bleeding continues beyond 15 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Head cut after fall",
+    "identify": "Bleeding from head wound",
+    "immediate_steps": ["Apply clean cloth pressure", "Keep person still"],
+    "avoid": ["Do not press too hard"],
+    "emergency": "Hospital immediately",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger cut while chopping vegetables",
+    "identify": "Small bleeding cut on finger",
+    "immediate_steps": ["Wash with clean water", "Apply bandage"],
+    "avoid": ["Do not ignore infection signs"],
+    "emergency": "If swelling or pus forms",
+    "source": "Red Cross"
+  },
+
+  {
+    "title": "Choking on food (adult)",
+    "identify": "Person cannot speak or breathe",
+    "immediate_steps": ["Give 5 back blows", "Give abdominal thrusts"],
+    "avoid": ["Do not give water"],
+    "emergency": "Call emergency if unconscious",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Choking on small object",
+    "identify": "Airway blocked by object",
+    "immediate_steps": ["Back blows and thrusts", "Check mouth carefully"],
+    "avoid": ["Do not put fingers blindly"],
+    "emergency": "Emergency services if not cleared",
+    "source": "WHO"
+  },
+  {
+    "title": "Fainting due to heat",
+    "identify": "Sudden collapse in hot weather",
+    "immediate_steps": ["Lay flat", "Raise legs", "Loosen clothes"],
+    "avoid": ["Do not crowd person"],
+    "emergency": "If unconscious for more than 1 minute",
+    "source": "NHS"
+  },
+  {
+    "title": "Fainting due to weakness",
+    "identify": "Dizziness and blackout",
+    "immediate_steps": ["Lay down", "Provide fresh air"],
+    "avoid": ["Do not give food immediately"],
+    "emergency": "If not regaining consciousness",
+    "source": "WHO"
+  },
+  {
+    "title": "CPR needed after collapse",
+    "identify": "Unconscious and not breathing",
+    "immediate_steps": ["Call emergency", "30 compressions, 2 breaths"],
+    "avoid": ["Do not delay CPR"],
+    "emergency": "Continue till help arrives",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Snake bite on leg",
+    "identify": "Two puncture marks, swelling",
+    "immediate_steps": ["Keep person calm", "Immobilize limb"],
+    "avoid": ["Do not suck venom"],
+    "emergency": "Hospital urgently",
+    "source": "WHO"
+  },
+  {
+    "title": "Dog bite wound",
+    "identify": "Teeth marks with bleeding",
+    "immediate_steps": ["Wash with soap and water", "Apply antiseptic"],
+    "avoid": ["Do not ignore vaccination need"],
+    "emergency": "Hospital for rabies shot",
+    "source": "NHS"
+  },
+  {
+    "title": "Bee sting reaction",
+    "identify": "Pain, swelling at sting site",
+    "immediate_steps": ["Remove sting carefully", "Apply cold cloth"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If breathing difficulty",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Allergic reaction after food",
+    "identify": "Swelling, itching, rash",
+    "immediate_steps": ["Stop eating", "Give antihistamine if available"],
+    "avoid": ["Do not ignore breathing issues"],
+    "emergency": "Call emergency if throat swelling",
+    "source": "WHO"
+  },
+  {
+    "title": "Asthma attack",
+    "identify": "Difficulty breathing, wheezing",
+    "immediate_steps": ["Help use inhaler", "Sit upright"],
+    "avoid": ["Do not make person lie down"],
+    "emergency": "If no relief after inhaler",
+    "source": "NHS"
+  },
+  {
+    "title": "Fracture suspected in arm after fall",
+    "identify": "Severe pain, swelling, cannot move arm",
+    "immediate_steps": ["Keep arm still", "Use cloth as sling", "Apply cold pack"],
+    "avoid": ["Do not try to straighten arm"],
+    "emergency": "Go to hospital immediately",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Fracture suspected in leg",
+    "identify": "Cannot stand, swelling, severe pain",
+    "immediate_steps": ["Do not move leg", "Support with pillows"],
+    "avoid": ["Do not attempt to walk"],
+    "emergency": "Hospital urgently",
+    "source": "WHO"
+  },
+  {
+    "title": "Ankle sprain while walking",
+    "identify": "Pain and swelling in ankle",
+    "immediate_steps": ["Rest ankle", "Apply cold pack", "Keep elevated"],
+    "avoid": ["Do not put weight on ankle"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Knee injury after slipping",
+    "identify": "Pain, difficulty bending knee",
+    "immediate_steps": ["Rest knee", "Cold compress"],
+    "avoid": ["Do not force movement"],
+    "emergency": "Hospital if severe pain",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Shoulder dislocation",
+    "identify": "Shoulder looks out of place, severe pain",
+    "immediate_steps": ["Keep arm still", "Support with sling"],
+    "avoid": ["Do not try to fix yourself"],
+    "emergency": "Immediate hospital care",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Heat stroke in hot weather",
+    "identify": "High body temperature, confusion",
+    "immediate_steps": ["Move to cool place", "Give water", "Cool body with wet cloth"],
+    "avoid": ["Do not leave person alone"],
+    "emergency": "Call emergency services",
+    "source": "NHS"
+  },
+  {
+    "title": "Heat exhaustion",
+    "identify": "Heavy sweating, weakness",
+    "immediate_steps": ["Rest in shade", "Drink fluids"],
+    "avoid": ["Do not continue activity"],
+    "emergency": "If vomiting or unconscious",
+    "source": "WHO"
+  },
+  {
+    "title": "Hypothermia in cold weather",
+    "identify": "Shivering, cold skin, confusion",
+    "immediate_steps": ["Move to warm place", "Cover with blankets"],
+    "avoid": ["Do not rub skin hard"],
+    "emergency": "Hospital if severe",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Dehydration in elderly",
+    "identify": "Dry mouth, dizziness",
+    "immediate_steps": ["Give small sips of water", "Rest"],
+    "avoid": ["Do not give alcohol"],
+    "emergency": "If confusion or fainting",
+    "source": "WHO"
+  },
+  {
+    "title": "Vomiting repeatedly",
+    "identify": "Frequent vomiting, weakness",
+    "immediate_steps": ["Give small sips of ORS", "Rest"],
+    "avoid": ["Do not give solid food"],
+    "emergency": "If blood in vomit",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Diarrhea and weakness",
+    "identify": "Loose motions, dehydration signs",
+    "immediate_steps": ["Give ORS solution", "Rest"],
+    "avoid": ["Do not ignore dehydration"],
+    "emergency": "Hospital if persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Food poisoning symptoms",
+    "identify": "Vomiting, stomach pain",
+    "immediate_steps": ["Drink fluids", "Rest"],
+    "avoid": ["Do not eat outside food"],
+    "emergency": "If high fever",
+    "source": "NHS"
+  },
+  {
+    "title": "Chest pain suspected heart attack",
+    "identify": "Chest pressure, sweating",
+    "immediate_steps": ["Make person sit", "Call emergency"],
+    "avoid": ["Do not ignore symptoms"],
+    "emergency": "Immediate hospital",
+    "source": "WHO"
+  },
+  {
+    "title": "Stroke warning signs",
+    "identify": "Face drooping, slurred speech",
+    "immediate_steps": ["Call emergency immediately"],
+    "avoid": ["Do not wait"],
+    "emergency": "Hospital urgently",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Low blood sugar (diabetic)",
+    "identify": "Shaking, sweating, confusion",
+    "immediate_steps": ["Give sugar or juice"],
+    "avoid": ["Do not delay sugar intake"],
+    "emergency": "If unconscious",
+    "source": "WHO"
+  },
+  {
+    "title": "Nosebleed suddenly started",
+    "identify": "Blood coming from nose",
+    "immediate_steps": ["Sit upright", "Lean slightly forward", "Pinch nose for 10 minutes"],
+    "avoid": ["Do not tilt head back"],
+    "emergency": "If bleeding continues after 15 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Object stuck in eye",
+    "identify": "Pain, tearing, cannot open eye",
+    "immediate_steps": ["Rinse eye with clean water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If object does not come out",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Soap or chemical in eye",
+    "identify": "Burning sensation in eye",
+    "immediate_steps": ["Wash eye with water for 10 minutes"],
+    "avoid": ["Do not touch eye"],
+    "emergency": "Hospital if pain continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Insect entered ear",
+    "identify": "Buzzing sound, discomfort",
+    "immediate_steps": ["Tilt head to affected side"],
+    "avoid": ["Do not insert objects"],
+    "emergency": "If insect remains",
+    "source": "NHS"
+  },
+  {
+    "title": "Ear bleeding after injury",
+    "identify": "Blood from ear",
+    "immediate_steps": ["Cover ear lightly with cloth"],
+    "avoid": ["Do not plug ear"],
+    "emergency": "Immediate hospital care",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Dog bite wound",
+    "identify": "Puncture wound, bleeding",
+    "immediate_steps": ["Wash with soap and water", "Apply clean cloth"],
+    "avoid": ["Do not ignore vaccination need"],
+    "emergency": "Hospital for rabies check",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Cat bite",
+    "identify": "Small puncture wound",
+    "immediate_steps": ["Wash thoroughly", "Apply antiseptic"],
+    "avoid": ["Do not leave untreated"],
+    "emergency": "Doctor visit advised",
+    "source": "WHO"
+  },
+  {
+    "title": "Snake bite suspected",
+    "identify": "Two puncture marks, swelling",
+    "immediate_steps": ["Keep person calm", "Immobilize limb"],
+    "avoid": ["Do not suck venom", "Do not tie tight band"],
+    "emergency": "Rush to hospital",
+    "source": "NHS"
+  },
+  {
+    "title": "Bee sting",
+    "identify": "Painful swelling at sting site",
+    "immediate_steps": ["Remove stinger", "Apply cold pack"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If breathing difficulty",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Allergic reaction swelling",
+    "identify": "Swelling of face or lips",
+    "immediate_steps": ["Give antihistamine if available"],
+    "avoid": ["Do not ignore breathing issues"],
+    "emergency": "Call emergency services",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Minor head injury",
+    "identify": "Mild bump, no unconsciousness",
+    "immediate_steps": ["Apply cold compress", "Rest"],
+    "avoid": ["Do not sleep immediately"],
+    "emergency": "If vomiting or confusion",
+    "source": "NHS"
+  },
+  {
+    "title": "Severe head injury",
+    "identify": "Bleeding, unconsciousness",
+    "immediate_steps": ["Do not move person", "Call emergency"],
+    "avoid": ["Do not give food or drink"],
+    "emergency": "Immediate hospital",
+    "source": "WHO"
+  },
+  {
+    "title": "Back injury after fall",
+    "identify": "Cannot move, severe back pain",
+    "immediate_steps": ["Keep still", "Call emergency"],
+    "avoid": ["Do not attempt to lift"],
+    "emergency": "Hospital urgently",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Neck injury suspected",
+    "identify": "Pain, cannot turn neck",
+    "immediate_steps": ["Keep head still"],
+    "avoid": ["Do not move neck"],
+    "emergency": "Immediate medical help",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger cut deeply",
+    "identify": "Deep bleeding cut",
+    "immediate_steps": ["Press with cloth", "Raise hand"],
+    "avoid": ["Do not remove cloth if soaked"],
+    "emergency": "If bleeding heavy",
+    "source": "NHS"
+  },
+  {
+    "title": "Vomiting repeatedly",
+    "identify": "Person vomiting many times",
+    "immediate_steps": ["Give small sips of water", "Let person rest"],
+    "avoid": ["Do not give solid food immediately"],
+    "emergency": "If vomiting continues for hours",
+    "source": "WHO"
+  },
+  {
+    "title": "Severe diarrhea",
+    "identify": "Loose motions frequently",
+    "immediate_steps": ["Give ORS solution", "Keep hydrated"],
+    "avoid": ["Do not give oily food"],
+    "emergency": "If signs of dehydration",
+    "source": "NHS"
+  },
+  {
+    "title": "Food poisoning suspected",
+    "identify": "Stomach pain, vomiting, diarrhea",
+    "immediate_steps": ["Give fluids", "Rest"],
+    "avoid": ["Do not take random medicines"],
+    "emergency": "If blood in vomit or stool",
+    "source": "WHO"
+  },
+  {
+    "title": "Chest pain suddenly",
+    "identify": "Tightness or pain in chest",
+    "immediate_steps": ["Make person sit calmly"],
+    "avoid": ["Do not ignore"],
+    "emergency": "Call emergency immediately",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Panic attack",
+    "identify": "Fast breathing, fear, sweating",
+    "immediate_steps": ["Make person sit", "Slow breathing"],
+    "avoid": ["Do not shout"],
+    "emergency": "If not calming down",
+    "source": "NHS"
+  },
+  {
+    "title": "Electric shock mild",
+    "identify": "Tingling sensation after shock",
+    "immediate_steps": ["Turn off power source", "Check burns"],
+    "avoid": ["Do not touch with wet hands"],
+    "emergency": "If unconscious",
+    "source": "WHO"
+  },
+  {
+    "title": "Electric shock severe",
+    "identify": "Unconscious after shock",
+    "immediate_steps": ["Do not touch directly", "Call emergency"],
+    "avoid": ["Do not delay help"],
+    "emergency": "Immediate hospital",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Drowning rescued from water",
+    "identify": "Unconscious, wet clothes",
+    "immediate_steps": ["Lay flat", "Start CPR if not breathing"],
+    "avoid": ["Do not shake person"],
+    "emergency": "Immediate medical help",
+    "source": "WHO"
+  },
+  {
+    "title": "High fever in elderly",
+    "identify": "Body very hot, weak",
+    "immediate_steps": ["Give water", "Keep cool cloth on forehead"],
+    "avoid": ["Do not cover with blankets"],
+    "emergency": "If fever above 103°F",
+    "source": "NHS"
+  },
+  {
+    "title": "Low body temperature",
+    "identify": "Shivering, cold skin",
+    "immediate_steps": ["Wrap in warm cloth", "Give warm drink"],
+    "avoid": ["Do not use hot water suddenly"],
+    "emergency": "If unconscious",
+    "source": "WHO"
+  },
+ {
+    "title": "Burns and scalds",
+    "identify": "Skin becomes red, painful, may develop blisters",
+    "immediate_steps": [
+      "Cool the burn under running water for at least 20 minutes",
+      "Remove tight items like rings or watches",
+      "Cover with a clean non-stick dressing"
+    ],
+    "avoid": [
+      "Do not apply ice, creams, butter, or oils"
+    ],
+    "emergency": "Seek medical help if burn is large, deep, or on sensitive areas",
+    "source": "NHS"
+  },
+  {
+    "title": "Severe bleeding",
+    "identify": "Heavy and continuous blood loss, weakness or dizziness",
+    "immediate_steps": [
+      "Apply firm pressure with a clean cloth or bandage",
+      "Maintain pressure",
+      "Raise the injured area if possible"
+    ],
+    "avoid": [
+      "Do not remove soaked dressings; add another layer instead"
+    ],
+    "emergency": "Call emergency services if bleeding does not stop quickly",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Nosebleed",
+    "identify": "Bleeding from the nose, often after injury or dryness",
+    "immediate_steps": [
+      "Sit upright and lean forward",
+      "Pinch the soft part of the nose for 10 minutes"
+    ],
+    "avoid": [
+      "Do not tilt head backward",
+      "Do not blow nose immediately after"
+    ],
+    "emergency": "Seek help if bleeding lasts more than 20 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Choking in adult",
+    "identify": "Difficulty breathing, inability to speak, clutching throat",
+    "immediate_steps": [
+      "Give up to 5 back blows between shoulder blades",
+      "If ineffective, perform abdominal thrusts"
+    ],
+    "avoid": [
+      "Do not give food or water",
+      "Do not hit randomly"
+    ],
+    "emergency": "If unconscious, begin CPR immediately",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Stroke symptoms",
+    "identify": "Face drooping, arm weakness, speech difficulty",
+    "immediate_steps": [
+      "Call emergency services immediately",
+      "Keep person calm",
+      "Note time symptoms started"
+    ],
+    "avoid": [
+      "Do not give food or drink",
+      "Do not delay response"
+    ],
+    "emergency": "Immediate treatment required",
+    "source": "NHS"
+  },
+  {
+    "title": "Fainting episode",
+    "identify": "Sudden collapse, dizziness, temporary loss of consciousness",
+    "immediate_steps": [
+      "Lay the person flat",
+      "Raise legs slightly",
+      "Loosen tight clothing"
+    ],
+    "avoid": [
+      "Do not give food or drink immediately",
+      "Do not leave unattended"
+    ],
+    "emergency": "Seek help if unconsciousness persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Broken bone injury",
+    "identify": "Severe pain, swelling, possible deformity",
+    "immediate_steps": [
+      "Keep the injured area still",
+      "Support with splint",
+      "Apply cold pack to reduce swelling"
+    ],
+    "avoid": [
+      "Do not attempt to realign the bone",
+      "Do not move unnecessarily"
+    ],
+    "emergency": "Immediate medical attention required",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Shortness of breath",
+    "identify": "Difficulty breathing, rapid breathing, chest tightness",
+    "immediate_steps": [
+      "Help the person sit upright",
+      "Loosen tight clothing",
+      "Ensure fresh air"
+    ],
+    "avoid": [
+      "Do not make the person lie flat",
+      "Do not ignore symptoms"
+    ],
+    "emergency": "Call emergency if breathing becomes severe",
+    "source": "NHS"
+  },
+  {
+    "title": "Poisoning case",
+    "identify": "Nausea, vomiting, confusion, burns around mouth",
+    "immediate_steps": [
+      "Call emergency services immediately",
+      "Identify substance if possible",
+      "Keep person calm"
+    ],
+    "avoid": [
+      "Do not induce vomiting",
+      "Do not give food or drink"
+    ],
+    "emergency": "Immediate medical attention required",
+    "source": "NHS"
+  },
+  {
+    "title": "Cardiac arrest",
+    "identify": "Unconscious, not breathing normally",
+    "immediate_steps": [
+      "Call emergency services immediately",
+      "Start chest compressions at 100 to 120 per minute",
+      "Continue CPR"
+    ],
+    "avoid": [
+      "Do not delay CPR",
+      "Do not stop unless help arrives"
+    ],
+    "emergency": "Continue until professional help arrives",
+    "source": "Red Cross"
+  },
+{
+    "title": "Head injury",
+    "identify": "Head pain, dizziness, confusion, possible loss of consciousness",
+    "immediate_steps": [
+      "Keep the person still and calm",
+      "Support the head and neck",
+      "Apply a cold pack to reduce swelling"
+    ],
+    "avoid": [
+      "Do not move the person unnecessarily",
+      "Do not give food or drink"
+    ],
+    "emergency": "Seek immediate medical help if unconsciousness, vomiting, or confusion occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Seizure (fits)",
+    "identify": "Sudden shaking, loss of control, possible unconsciousness",
+    "immediate_steps": [
+      "Protect the person from injury",
+      "Place something soft under the head",
+      "Turn them on their side after movements stop"
+    ],
+    "avoid": [
+      "Do not restrain the person",
+      "Do not put anything in their mouth"
+    ],
+    "emergency": "Call emergency if seizure lasts more than 5 minutes or repeats",
+    "source": "NHS"
+  },
+  {
+    "title": "Heat exhaustion",
+    "identify": "Heavy sweating, dizziness, weakness, headache",
+    "immediate_steps": [
+      "Move the person to a cool place",
+      "Give water",
+      "Loosen tight clothing",
+      "Cool the body with damp cloth"
+    ],
+    "avoid": [
+      "Do not ignore symptoms",
+      "Do not give alcohol or caffeine"
+    ],
+    "emergency": "Seek help if symptoms worsen or do not improve within 30 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Heatstroke",
+    "identify": "High body temperature, confusion, lack of sweating, possible unconsciousness",
+    "immediate_steps": [
+      "Call emergency services immediately",
+      "Move to a cool place",
+      "Cool the body rapidly using water or cloth"
+    ],
+    "avoid": [
+      "Do not delay cooling",
+      "Do not give fluids if unconscious"
+    ],
+    "emergency": "This is a life-threatening condition requiring immediate care",
+    "source": "NHS"
+  },
+  {
+    "title": "Electric shock",
+    "identify": "Burns, unconsciousness, difficulty breathing after contact with electricity",
+    "immediate_steps": [
+      "Turn off power source if safe",
+      "Do not touch person directly if still connected",
+      "Check breathing and start CPR if needed"
+    ],
+    "avoid": [
+      "Do not touch with bare hands if current is active",
+      "Do not pour water on electrical source"
+    ],
+    "emergency": "Immediate medical attention required",
+    "source": "NHS"
+  },
+  {
+    "title": "Asthma attack",
+    "identify": "Wheezing, shortness of breath, chest tightness",
+    "immediate_steps": [
+      "Help the person sit upright",
+      "Use reliever inhaler if available",
+      "Encourage slow breathing"
+    ],
+    "avoid": [
+      "Do not make the person lie down",
+      "Do not panic the person"
+    ],
+    "emergency": "Call emergency if symptoms do not improve after inhaler use",
+    "source": "NHS"
+  },
+  {
+    "title": "Allergic reaction",
+    "identify": "Rash, swelling, itching, difficulty breathing",
+    "immediate_steps": [
+      "Remove trigger if known",
+      "Give antihistamine if available",
+      "Monitor breathing"
+    ],
+    "avoid": [
+      "Do not ignore swelling or breathing difficulty"
+    ],
+    "emergency": "Call emergency if severe reaction or breathing problems occur",
+    "source": "NHS"
+  },
+  {
+    "title": "Hypothermia",
+    "identify": "Shivering, cold skin, confusion, slow breathing",
+    "immediate_steps": [
+      "Move to a warm place",
+      "Remove wet clothing",
+      "Warm gradually using blankets"
+    ],
+    "avoid": [
+      "Do not use direct heat",
+      "Do not rub skin harshly"
+    ],
+    "emergency": "Seek medical help immediately",
+    "source": "NHS"
+  },
+  {
+    "title": "Sprain or strain",
+    "identify": "Pain, swelling, limited movement",
+    "immediate_steps": [
+      "Rest the injured area",
+      "Apply ice pack",
+      "Compress with bandage",
+      "Elevate if possible"
+    ],
+    "avoid": [
+      "Do not continue using injured area",
+      "Do not apply heat immediately"
+    ],
+    "emergency": "Seek help if pain is severe or swelling increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Chest pain",
+    "identify": "Tightness or pain in chest, may spread to arm or jaw",
+    "immediate_steps": [
+      "Help the person sit and rest",
+      "Loosen tight clothing",
+      "Call emergency immediately"
+    ],
+    "avoid": [
+      "Do not ignore symptoms",
+      "Do not delay calling help"
+    ],
+    "emergency": "Immediate medical attention required",
+    "source": "NHS"
+  },
+{
+    "title": "Cuts and grazes",
+    "identify": "Broken skin, minor bleeding, pain around wound",
+    "immediate_steps": [
+      "Clean the wound under running water",
+      "Pat dry",
+      "Apply antiseptic and cover with sterile dressing"
+    ],
+    "avoid": [
+      "Do not touch wound with dirty hands",
+      "Do not leave it uncovered if deep"
+    ],
+    "emergency": "Seek help if wound is deep, bleeding heavily, or shows signs of infection",
+    "source": "NHS"
+  },
+  {
+    "title": "Insect bite or sting",
+    "identify": "Redness, swelling, itching or pain at bite site",
+    "immediate_steps": [
+      "Wash the area with soap and water",
+      "Apply a cold compress to reduce swelling"
+    ],
+    "avoid": [
+      "Do not scratch the area",
+      "Do not apply unknown substances"
+    ],
+    "emergency": "Seek help if severe swelling, breathing difficulty, or allergic reaction occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Foreign object in eye",
+    "identify": "Pain, redness, watering, difficulty opening eye",
+    "immediate_steps": [
+      "Rinse the eye gently with clean water",
+      "Blink to try to remove object"
+    ],
+    "avoid": [
+      "Do not rub the eye",
+      "Do not use sharp objects to remove debris"
+    ],
+    "emergency": "Seek help if object does not come out or vision is affected",
+    "source": "NHS"
+  },
+  {
+    "title": "Knocked out tooth",
+    "identify": "Missing tooth, bleeding from mouth, pain",
+    "immediate_steps": [
+      "Hold tooth by the crown",
+      "Rinse gently if dirty",
+      "Try to place it back in socket or store in milk"
+    ],
+    "avoid": [
+      "Do not touch the root",
+      "Do not let tooth dry out"
+    ],
+    "emergency": "Seek dental care immediately within 1 hour",
+    "source": "NHS"
+  },
+  {
+    "title": "Chemical in eye",
+    "identify": "Burning sensation, redness, blurred vision",
+    "immediate_steps": [
+      "Rinse eye immediately with clean water for at least 20 minutes",
+      "Keep eye open while flushing"
+    ],
+    "avoid": [
+      "Do not rub the eye",
+      "Do not delay washing"
+    ],
+    "emergency": "Seek immediate medical help after rinsing",
+    "source": "NHS"
+  },
+  {
+    "title": "Diarrhea and vomiting",
+    "identify": "Frequent loose stools, vomiting, dehydration",
+    "immediate_steps": [
+      "Give plenty of fluids",
+      "Encourage rest",
+      "Maintain hygiene"
+    ],
+    "avoid": [
+      "Do not give heavy or oily foods",
+      "Do not ignore dehydration signs"
+    ],
+    "emergency": "Seek help if symptoms persist more than 2 days or signs of dehydration appear",
+    "source": "NHS"
+  },
+  {
+    "title": "Sunburn",
+    "identify": "Red, painful skin after sun exposure",
+    "immediate_steps": [
+      "Cool skin with water",
+      "Apply soothing lotion",
+      "Stay hydrated"
+    ],
+    "avoid": [
+      "Do not burst blisters",
+      "Do not expose skin to sun again"
+    ],
+    "emergency": "Seek help if severe blistering or fever occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Ear injury",
+    "identify": "Pain, bleeding, hearing difficulty",
+    "immediate_steps": [
+      "Keep the ear clean",
+      "Cover lightly with sterile dressing if bleeding"
+    ],
+    "avoid": [
+      "Do not insert objects into ear",
+      "Do not attempt to clean deeply"
+    ],
+    "emergency": "Seek immediate medical help if severe pain or hearing loss occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Dehydration",
+    "identify": "Dry mouth, dizziness, dark urine, fatigue",
+    "immediate_steps": [
+      "Give fluids slowly",
+      "Use oral rehydration solutions if available",
+      "Allow rest"
+    ],
+    "avoid": [
+      "Do not give alcohol or caffeine",
+      "Do not ignore symptoms"
+    ],
+    "emergency": "Seek help if confusion, fainting, or severe weakness occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Panic attack",
+    "identify": "Rapid heartbeat, sweating, shortness of breath, fear",
+    "immediate_steps": [
+      "Help the person sit comfortably",
+      "Encourage slow breathing",
+      "Reassure them calmly"
+    ],
+    "avoid": [
+      "Do not panic or leave the person alone"
+    ],
+    "emergency": "Seek help if symptoms do not improve or mimic heart attack",
+    "source": "NHS"
+  },
+{
+    "title": "Animal bite",
+    "identify": "Broken skin, bleeding, pain, risk of infection",
+    "immediate_steps": [
+      "Wash the wound with running water and soap",
+      "Apply antiseptic and cover with dressing"
+    ],
+    "avoid": [
+      "Do not ignore even small bites",
+      "Do not delay cleaning"
+    ],
+    "emergency": "Seek medical help for deep wounds or unknown animal bites",
+    "source": "NHS"
+  },
+  {
+    "title": "Human bite",
+    "identify": "Skin break, swelling, redness, pain",
+    "immediate_steps": [
+      "Clean the wound thoroughly",
+      "Apply antiseptic and cover with sterile dressing"
+    ],
+    "avoid": [
+      "Do not ignore bite injuries",
+      "Do not delay treatment"
+    ],
+    "emergency": "Seek medical help due to high infection risk",
+    "source": "NHS"
+  },
+  {
+    "title": "Concussion",
+    "identify": "Headache, confusion, dizziness, memory issues",
+    "immediate_steps": [
+      "Let the person rest",
+      "Monitor symptoms",
+      "Avoid physical activity"
+    ],
+    "avoid": [
+      "Do not allow immediate return to activity",
+      "Do not ignore symptoms"
+    ],
+    "emergency": "Seek help if vomiting, worsening headache, or unconsciousness occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Back pain from injury",
+    "identify": "Pain in lower or upper back, stiffness, difficulty moving",
+    "immediate_steps": [
+      "Rest the back",
+      "Apply cold or heat packs",
+      "Maintain gentle movement"
+    ],
+    "avoid": [
+      "Do not lift heavy objects",
+      "Do not stay completely inactive for long"
+    ],
+    "emergency": "Seek help if numbness, weakness, or severe pain occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Migraine attack",
+    "identify": "Severe headache, sensitivity to light, nausea",
+    "immediate_steps": [
+      "Rest in a quiet, dark room",
+      "Stay hydrated",
+      "Take prescribed medication if available"
+    ],
+    "avoid": [
+      "Do not expose to bright light or loud noise"
+    ],
+    "emergency": "Seek help if symptoms are severe or different from usual",
+    "source": "NHS"
+  },
+  {
+    "title": "Food poisoning",
+    "identify": "Nausea, vomiting, diarrhoea, stomach cramps",
+    "immediate_steps": [
+      "Drink fluids to stay hydrated",
+      "Rest",
+      "Maintain hygiene"
+    ],
+    "avoid": [
+      "Do not eat heavy or contaminated food",
+      "Do not ignore dehydration"
+    ],
+    "emergency": "Seek help if symptoms are severe or prolonged",
+    "source": "NHS"
+  },
+  {
+    "title": "Nose injury",
+    "identify": "Pain, swelling, bleeding from nose",
+    "immediate_steps": [
+      "Apply cold compress",
+      "Sit upright and lean forward",
+      "Control bleeding"
+    ],
+    "avoid": [
+      "Do not tilt head backward",
+      "Do not press too hard"
+    ],
+    "emergency": "Seek help if nose appears deformed or bleeding persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Blunt eye injury",
+    "identify": "Pain, swelling, bruising around eye, vision issues",
+    "immediate_steps": [
+      "Apply a cold compress gently",
+      "Rest the eye"
+    ],
+    "avoid": [
+      "Do not press on the eye",
+      "Do not rub"
+    ],
+    "emergency": "Seek immediate help if vision is affected",
+    "source": "NHS"
+  },
+  {
+    "title": "Low blood sugar",
+    "identify": "Sweating, shaking, confusion, dizziness",
+    "immediate_steps": [
+      "Give fast-acting sugar such as juice or glucose tablets",
+      "Allow rest"
+    ],
+    "avoid": [
+      "Do not ignore symptoms",
+      "Do not delay giving sugar"
+    ],
+    "emergency": "Seek help if person becomes unconscious",
+    "source": "NHS"
+  },
+  {
+    "title": "High fever",
+    "identify": "Body temperature above normal, sweating, chills",
+    "immediate_steps": [
+      "Keep hydrated",
+      "Use light clothing",
+      "Rest"
+    ],
+    "avoid": [
+      "Do not overdress",
+      "Do not ignore persistent fever"
+    ],
+    "emergency": "Seek help if fever is very high or lasts long",
+    "source": "NHS"
+  },
+{
+    "title": "Burns (Electrical)",
+    "identify": "Burn marks, possible unconsciousness, breathing difficulty",
+    "immediate_steps": [
+      "Turn off power source if safe",
+      "Check breathing",
+      "Start CPR if needed"
+    ],
+    "avoid": [
+      "Do not touch person while connected to electricity"
+    ],
+    "emergency": "Seek immediate medical help",
+    "source": "NHS - Electric Shock"
+  },
+  {
+    "title": "Drowning",
+    "identify": "Difficulty breathing, coughing, unconsciousness after water exposure",
+    "immediate_steps": [
+      "Remove person from water safely",
+      "Check breathing",
+      "Start CPR if needed"
+    ],
+    "avoid": [
+      "Do not delay rescue",
+      "Do not ignore breathing issues"
+    ],
+    "emergency": "Call emergency services immediately",
+    "source": "NHS - First Aid"
+  },
+  {
+    "title": "Shock (Medical)",
+    "identify": "Pale skin, sweating, rapid breathing, weakness",
+    "immediate_steps": [
+      "Lay person down",
+      "Raise legs slightly",
+      "Keep warm"
+    ],
+    "avoid": [
+      "Do not give food or drink",
+      "Do not leave alone"
+    ],
+    "emergency": "Seek urgent medical help",
+    "source": "NHS - First Aid"
+  },
+  {
+    "title": "Severe Allergic Reaction (Anaphylaxis)",
+    "identify": "Swelling of face/throat, breathing difficulty, rash",
+    "immediate_steps": [
+      "Use adrenaline auto-injector if available",
+      "Lay person down",
+      "Call emergency services"
+    ],
+    "avoid": [
+      "Do not delay treatment",
+      "Do not leave person alone"
+    ],
+    "emergency": "Immediate medical emergency",
+    "source": "NHS - Anaphylaxis"
+  },
+  {
+    "title": "Eye Injury (Penetrating)",
+    "identify": "Severe pain, visible object in eye, vision loss",
+    "immediate_steps": [
+      "Cover eye lightly with sterile dressing",
+      "Keep person still"
+    ],
+    "avoid": [
+      "Do not remove object",
+      "Do not apply pressure"
+    ],
+    "emergency": "Seek immediate medical help",
+    "source": "NHS - Eye Injuries"
+  },
+  {
+    "title": "Finger Injury",
+    "identify": "Pain, swelling, possible deformity",
+    "immediate_steps": [
+      "Immobilize finger",
+      "Apply ice pack",
+      "Keep elevated"
+    ],
+    "avoid": [
+      "Do not force movement",
+      "Do not ignore severe pain"
+    ],
+    "emergency": "Seek help if deformity or severe swelling occurs",
+    "source": "NHS - Broken Finger"
+  },
+  {
+    "title": "Knee Injury",
+    "identify": "Pain, swelling, difficulty walking",
+    "immediate_steps": [
+      "Rest the knee",
+      "Apply ice",
+      "Elevate leg"
+    ],
+    "avoid": [
+      "Do not put weight on injured knee"
+    ],
+    "emergency": "Seek help if unable to move or severe swelling",
+    "source": "NHS - Knee Pain"
+  },
+  {
+    "title": "Skin Rash",
+    "identify": "Redness, itching, irritation on skin",
+    "immediate_steps": [
+      "Keep area clean",
+      "Use soothing lotion if needed"
+    ],
+    "avoid": [
+      "Do not scratch",
+      "Do not use unknown chemicals"
+    ],
+    "emergency": "Seek help if rash spreads or causes breathing issues",
+    "source": "NHS - Rashes (Babies and Children)"
+  },
+  {
+    "title": "Vomiting Blood",
+    "identify": "Blood in vomit, weakness, dizziness",
+    "immediate_steps": [
+      "Keep person calm",
+      "Lay them on side"
+    ],
+    "avoid": [
+      "Do not give food or drink"
+    ],
+    "emergency": "Immediate medical attention required",
+    "source": "NHS - Vomiting Blood"
+  },
+  {
+    "title": "Abdominal Pain (Severe)",
+    "identify": "Severe stomach pain, vomiting, tenderness",
+    "immediate_steps": [
+      "Help person rest",
+      "Monitor symptoms"
+    ],
+    "avoid": [
+      "Do not give painkillers without advice"
+    ],
+    "emergency": "Seek urgent medical help",
+    "source": "NHS - Stomach Ache"
+  },
+{
+    "title": "Frostbite",
+    "identify": "Cold, pale or numb skin, possible blistering",
+    "immediate_steps": [
+      "Move to a warm place",
+      "Warm the affected area slowly using body heat or warm water"
+    ],
+    "avoid": [
+      "Do not rub the area",
+      "Do not use direct heat like fire or hot water"
+    ],
+    "emergency": "Seek immediate medical help",
+    "source": "NHS - Frostbite"
+  },
+  {
+    "title": "Poisoning (Chemical Exposure)",
+    "identify": "Burns, irritation, nausea after exposure to chemicals",
+    "immediate_steps": [
+      "Move away from source",
+      "Rinse affected area with clean water",
+      "Remove contaminated clothing"
+    ],
+    "avoid": [
+      "Do not touch chemicals directly",
+      "Do not delay washing"
+    ],
+    "emergency": "Seek immediate medical help",
+    "source": "NHS - Poisoning"
+  },
+  {
+    "title": "Foreign Object in Nose",
+    "identify": "Difficulty breathing through one nostril, discomfort",
+    "immediate_steps": [
+      "Encourage gentle breathing through mouth",
+      "Try to remove by blowing gently"
+    ],
+    "avoid": [
+      "Do not insert tools into nose",
+      "Do not push object further"
+    ],
+    "emergency": "Seek medical help if object cannot be removed",
+    "source": "NHS - First Aid"
+  },
+  {
+    "title": "Foreign Object in Ear",
+    "identify": "Pain, hearing difficulty, irritation in ear",
+    "immediate_steps": [
+      "Tilt head to allow object to fall out",
+      "Seek medical help if needed"
+    ],
+    "avoid": [
+      "Do not insert objects into ear",
+      "Do not poke with tools"
+    ],
+    "emergency": "Seek medical help if object is stuck",
+    "source": "NHS - First Aid"
+  },
+  {
+    "title": "Bruises",
+    "identify": "Skin discoloration, pain, swelling",
+    "immediate_steps": [
+      "Apply cold compress",
+      "Rest the area",
+      "Elevate if possible"
+    ],
+    "avoid": [
+      "Do not massage the bruise immediately"
+    ],
+    "emergency": "Seek help if bruise is severe or unexplained",
+    "source": "NHS - Bruises"
+  },
+  {
+    "title": "Blisters",
+    "identify": "Fluid-filled swelling on skin, pain",
+    "immediate_steps": [
+      "Keep blister clean and covered",
+      "Allow it to heal naturally"
+    ],
+    "avoid": [
+      "Do not burst blister unnecessarily"
+    ],
+    "emergency": "Seek help if signs of infection appear",
+    "source": "NHS - Blisters"
+  },
+  {
+    "title": "Neck Pain (Injury)",
+    "identify": "Pain, stiffness, difficulty moving neck",
+    "immediate_steps": [
+      "Keep neck supported",
+      "Apply cold or heat packs"
+    ],
+    "avoid": [
+      "Do not force movement",
+      "Do not ignore severe pain"
+    ],
+    "emergency": "Seek help if pain is severe or after trauma",
+    "source": "NHS - Neck Pain"
+  },
+  {
+    "title": "Shoulder Injury",
+    "identify": "Pain, swelling, limited movement",
+    "immediate_steps": [
+      "Rest the shoulder",
+      "Apply ice",
+      "Support with sling if needed"
+    ],
+    "avoid": [
+      "Do not move excessively",
+      "Do not lift heavy objects"
+    ],
+    "emergency": "Seek help if severe pain or deformity",
+    "source": "NHS - Shoulder Pain"
+  },
+  {
+    "title": "Toothache",
+    "identify": "Pain in tooth or jaw, sensitivity",
+    "immediate_steps": [
+      "Rinse mouth with warm water",
+      "Use pain relief if needed"
+    ],
+    "avoid": [
+      "Do not ignore persistent pain",
+      "Do not apply extreme heat"
+    ],
+    "emergency": "Seek dental care if pain is severe or swelling occurs",
+    "source": "NHS - Toothache"
+  },
+  {
+    "title": "Swollen Ankles",
+    "identify": "Swelling around ankle, discomfort",
+    "immediate_steps": [
+      "Elevate legs",
+      "Rest",
+      "Apply cold compress"
+    ],
+    "avoid": [
+      "Do not stand for long periods"
+    ],
+    "emergency": "Seek help if swelling is sudden or severe",
+    "source": "NHS - Swollen Ankles, Feet and Legs"
+  },
+{
+    "title": "Nail puncture wound on foot",
+    "identify": "Small deep hole after stepping on nail, bleeding, pain",
+    "immediate_steps": ["Wash with clean water", "Apply antiseptic", "Cover with sterile bandage"],
+    "avoid": ["Do not ignore tetanus risk"],
+    "emergency": "Hospital visit for tetanus shot",
+    "source": "WHO"
+  },
+  {
+    "title": "Fish bone stuck in throat",
+    "identify": "Sharp pain while swallowing after eating fish",
+    "immediate_steps": ["Stop eating", "Try swallowing soft bread"],
+    "avoid": ["Do not use fingers to remove"],
+    "emergency": "Hospital if not removed",
+    "source": "NHS"
+  },
+  {
+    "title": "Tongue bite during seizure",
+    "identify": "Bleeding from tongue after fit",
+    "immediate_steps": ["Turn person to side", "Clean blood gently"],
+    "avoid": ["Do not put fingers in mouth"],
+    "emergency": "If bleeding does not stop",
+    "source": "WHO"
+  },
+  {
+    "title": "Object stuck under skin (splinter)",
+    "identify": "Small wood/metal piece under skin, pain",
+    "immediate_steps": ["Wash area", "Remove gently with clean tweezers"],
+    "avoid": ["Do not dig deep with sharp objects"],
+    "emergency": "If redness or swelling increases",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Hot metal burn (iron box)",
+    "identify": "Burn mark after touching hot iron",
+    "immediate_steps": ["Cool under running water", "Cover loosely"],
+    "avoid": ["Do not apply toothpaste"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Scalp wound from sharp object",
+    "identify": "Bleeding from scalp, hair soaked with blood",
+    "immediate_steps": ["Apply firm pressure with cloth"],
+    "avoid": ["Do not wash immediately"],
+    "emergency": "Hospital if deep cut",
+    "source": "WHO"
+  },
+  {
+    "title": "Lip cut after fall",
+    "identify": "Bleeding cut on lip, swelling",
+    "immediate_steps": ["Press gently with cloth", "Apply cold pack outside"],
+    "avoid": ["Do not lick wound"],
+    "emergency": "If cut is deep",
+    "source": "NHS"
+  },
+  {
+    "title": "Broken fingernail injury",
+    "identify": "Painful cracked nail, slight bleeding",
+    "immediate_steps": ["Trim nail carefully", "Clean and bandage"],
+    "avoid": ["Do not pull nail forcefully"],
+    "emergency": "If nail bed exposed",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Bleeding gums after injury",
+    "identify": "Blood from gums after hit",
+    "immediate_steps": ["Rinse mouth with clean water", "Apply gentle pressure"],
+    "avoid": ["Do not spit forcefully"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Dust inhalation breathing issue",
+    "identify": "Coughing, breathing trouble after dust exposure",
+    "immediate_steps": ["Move to fresh air", "Sit upright"],
+    "avoid": ["Do not lie down"],
+    "emergency": "If breathing worsens",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Chili powder in eyes",
+    "identify": "Burning eyes after chili contact",
+    "immediate_steps": ["Wash eyes with plenty of water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Hot water spill on hand",
+    "identify": "Red painful skin after hot water spill",
+    "immediate_steps": ["Cool under water for 15 minutes"],
+    "avoid": ["Do not apply butter"],
+    "emergency": "If blistering occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Pressure cooker whistle burn",
+    "identify": "Steam burn on face or hand",
+    "immediate_steps": ["Cool with running water", "Cover lightly"],
+    "avoid": ["Do not apply creams"],
+    "emergency": "If severe burn",
+    "source": "WHO"
+  },
+  {
+    "title": "Fall from stairs back injury",
+    "identify": "Severe back pain after fall",
+    "immediate_steps": ["Keep still", "Call emergency"],
+    "avoid": ["Do not move person"],
+    "emergency": "Immediate hospital",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Hair caught in fan injury",
+    "identify": "Scalp pain, hair pulled forcefully",
+    "immediate_steps": ["Turn off fan", "Free hair slowly"],
+    "avoid": ["Do not pull hair forcefully"],
+    "emergency": "If scalp bleeding",
+    "source": "WHO"
+  },
+  {
+    "title": "Ring stuck on swollen finger",
+    "identify": "Swollen finger with tight ring",
+    "immediate_steps": ["Apply soap or oil to slide ring off"],
+    "avoid": ["Do not forcefully pull"],
+    "emergency": "If finger turns blue",
+    "source": "NHS"
+  },
+  {
+    "title": "Tight shoe causing toe injury",
+    "identify": "Swollen painful toe after tight footwear",
+    "immediate_steps": ["Remove shoe", "Apply cold compress"],
+    "avoid": ["Do not walk much"],
+    "emergency": "If nail turns black",
+    "source": "WHO"
+  },
+  {
+    "title": "Gas cylinder leak dizziness",
+    "identify": "Dizziness, nausea after gas leak",
+    "immediate_steps": ["Move to fresh air", "Turn off gas supply"],
+    "avoid": ["Do not light fire"],
+    "emergency": "Seek medical help if symptoms continue",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Paint thinner inhalation",
+    "identify": "Headache, nausea after inhaling fumes",
+    "immediate_steps": ["Move to open air", "Rest"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If breathing difficulty",
+    "source": "WHO"
+  },
+  {
+    "title": "Mosquito coil smoke breathing issue",
+    "identify": "Coughing, eye irritation from coil smoke",
+    "immediate_steps": ["Ventilate room", "Move outside"],
+    "avoid": ["Do not remain in smoke"],
+    "emergency": "If breathing worsens",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Thread wrapped tightly around finger (child)",
+    "identify": "Swollen finger due to tight thread",
+    "immediate_steps": ["Carefully cut and remove thread"],
+    "avoid": ["Do not pull forcefully"],
+    "emergency": "If skin color changes",
+    "source": "WHO"
+  },
+  {
+    "title": "Small battery swallowed (child)",
+    "identify": "Child swallowed button battery",
+    "immediate_steps": ["Do not give food or water", "Rush to hospital"],
+    "avoid": ["Do not induce vomiting"],
+    "emergency": "Immediate emergency care required",
+    "source": "NHS"
+  },
+  {
+    "title": "Coin swallowed (child)",
+    "identify": "Difficulty swallowing after coin ingestion",
+    "immediate_steps": ["Keep child calm"],
+    "avoid": ["Do not force food"],
+    "emergency": "Hospital immediately",
+    "source": "WHO"
+  },
+  {
+    "title": "Soap ingestion (child)",
+    "identify": "Vomiting, irritation after soap intake",
+    "immediate_steps": ["Rinse mouth", "Give small sips of water"],
+    "avoid": ["Do not induce vomiting"],
+    "emergency": "If symptoms worsen",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Shampoo in eyes (child)",
+    "identify": "Crying, eye irritation during bath",
+    "immediate_steps": ["Wash eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Finger slammed in door",
+    "identify": "Swelling, pain, possible nail damage",
+    "immediate_steps": ["Apply cold pack", "Keep elevated"],
+    "avoid": ["Do not apply heat"],
+    "emergency": "If severe swelling or nail turns black",
+    "source": "WHO"
+  },
+  {
+    "title": "Hammer hit on thumb",
+    "identify": "Severe thumb pain, swelling",
+    "immediate_steps": ["Cold compress", "Rest hand"],
+    "avoid": ["Do not ignore pain"],
+    "emergency": "If movement difficult",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Rope burn on hand",
+    "identify": "Friction burn after rope sliding",
+    "immediate_steps": ["Cool with water", "Cover with dressing"],
+    "avoid": ["Do not apply powder"],
+    "emergency": "If skin peeled off",
+    "source": "WHO"
+  },
+  {
+    "title": "Car door hit on leg",
+    "identify": "Bruising and swelling on leg",
+    "immediate_steps": ["Apply ice pack", "Rest leg"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If unable to walk",
+    "source": "NHS"
+  },
+  {
+    "title": "Back strain after lifting heavy object",
+    "identify": "Sudden lower back pain",
+    "immediate_steps": ["Rest back", "Apply cold pack"],
+    "avoid": ["Do not bend repeatedly"],
+    "emergency": "If numbness in legs",
+    "source": "WHO"
+  },
+{
+    "title": "Nose irritation after pepper spray exposure",
+    "identify": "Burning nose, coughing, watery eyes after spray",
+    "immediate_steps": ["Move to fresh air", "Rinse face and eyes with plenty of water"],
+    "avoid": ["Do not rub eyes or face"],
+    "emergency": "Seek help if breathing difficulty continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Super glue stuck on fingers",
+    "identify": "Fingers stuck together with dried glue",
+    "immediate_steps": ["Soak in warm soapy water", "Gently peel apart"],
+    "avoid": ["Do not pull forcefully"],
+    "emergency": "If skin tears or pain persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Eyelid cut from sharp paper edge",
+    "identify": "Small cut on eyelid, slight bleeding",
+    "immediate_steps": ["Apply gentle pressure with clean cloth"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If bleeding does not stop",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Metal shard in skin while drilling",
+    "identify": "Tiny metal piece embedded in skin, pain",
+    "immediate_steps": ["Wash area", "Remove gently with sterilized tweezers"],
+    "avoid": ["Do not dig deep"],
+    "emergency": "If swelling or redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Hot glue gun burn",
+    "identify": "Sticky hot glue on skin causing burn",
+    "immediate_steps": ["Cool under running water", "Let glue harden before removal"],
+    "avoid": ["Do not peel hot glue immediately"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Battery acid on skin",
+    "identify": "Burning sensation after battery leak contact",
+    "immediate_steps": ["Wash with plenty of water", "Remove contaminated clothing"],
+    "avoid": ["Do not apply creams immediately"],
+    "emergency": "Seek urgent medical help",
+    "source": "WHO"
+  },
+  {
+    "title": "Cement contact skin irritation",
+    "identify": "Red itchy skin after wet cement contact",
+    "immediate_steps": ["Wash with clean water thoroughly"],
+    "avoid": ["Do not leave cement on skin"],
+    "emergency": "If rash worsens",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye strain and headache from welding flash",
+    "identify": "Eye pain, watering, light sensitivity after welding",
+    "immediate_steps": ["Rest eyes in dark room", "Apply cold compress"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If vision problems occur",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Fall from bicycle elbow injury",
+    "identify": "Scraped skin, bleeding, elbow pain",
+    "immediate_steps": ["Clean wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore dirt in wound"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Hit by cricket ball on chest",
+    "identify": "Chest pain after ball impact, difficulty breathing",
+    "immediate_steps": ["Rest", "Apply cold compress"],
+    "avoid": ["Do not continue playing"],
+    "emergency": "If breathing becomes difficult",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Thorn prick while gardening",
+    "identify": "Small prick, redness, pain",
+    "immediate_steps": ["Remove thorn", "Wash and apply antiseptic"],
+    "avoid": ["Do not leave thorn inside"],
+    "emergency": "If swelling or pus forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Grass allergy skin rash",
+    "identify": "Red itchy rash after grass contact",
+    "immediate_steps": ["Wash area", "Apply soothing lotion"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads widely",
+    "source": "NHS"
+  },
+  {
+    "title": "Ice cube stuck on tongue (child)",
+    "identify": "Tongue stuck to ice due to cold",
+    "immediate_steps": ["Pour lukewarm water to release"],
+    "avoid": ["Do not pull tongue forcefully"],
+    "emergency": "If bleeding occurs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger caught in zipper",
+    "identify": "Skin pinched in zipper, pain",
+    "immediate_steps": ["Gently unzip slowly", "Apply cold compress"],
+    "avoid": ["Do not pull suddenly"],
+    "emergency": "If skin tears",
+    "source": "WHO"
+  },
+  {
+    "title": "Rubber band snapped into eye",
+    "identify": "Eye pain, redness after rubber band hit",
+    "immediate_steps": ["Rinse eye with clean water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If vision affected",
+    "source": "NHS"
+  },
+  {
+    "title": "Plastic bag suffocation risk (child)",
+    "identify": "Child struggling to breathe with bag over head",
+    "immediate_steps": ["Remove bag immediately", "Ensure fresh air"],
+    "avoid": ["Do not leave child unattended"],
+    "emergency": "If breathing difficulty continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Perfume spray into eyes",
+    "identify": "Burning eyes after perfume contact",
+    "immediate_steps": ["Wash eyes with water for several minutes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Hot tea spill on lap",
+    "identify": "Red painful skin after hot liquid spill",
+    "immediate_steps": ["Cool area under water", "Remove wet clothing"],
+    "avoid": ["Do not apply ointments immediately"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Staple pin stuck in finger",
+    "identify": "Small metal pin embedded, pain",
+    "immediate_steps": ["Remove carefully", "Clean and bandage"],
+    "avoid": ["Do not push deeper"],
+    "emergency": "If infection signs appear",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Paper dust in eye",
+    "identify": "Eye irritation, watering after paper dust exposure",
+    "immediate_steps": ["Rinse eye gently with water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If redness continues",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Hot laptop burn on thighs",
+    "identify": "Redness and heat rash from laptop heat",
+    "immediate_steps": ["Cool skin", "Avoid direct contact"],
+    "avoid": ["Do not keep laptop on skin"],
+    "emergency": "If blistering occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Allergic reaction to hair dye",
+    "identify": "Itching, redness on scalp after dye",
+    "immediate_steps": ["Wash hair thoroughly", "Apply cool compress"],
+    "avoid": ["Do not scratch scalp"],
+    "emergency": "If swelling of face occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Nail polish remover spill on skin",
+    "identify": "Skin irritation after acetone contact",
+    "immediate_steps": ["Wash with water", "Apply moisturizer"],
+    "avoid": ["Do not leave chemical on skin"],
+    "emergency": "If rash develops",
+    "source": "NHS"
+  },
+  {
+    "title": "Ink in eye from pen burst",
+    "identify": "Colored fluid in eye, irritation",
+    "immediate_steps": ["Rinse eye with clean water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If vision changes",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Burn from motorcycle silencer",
+    "identify": "Skin burn after touching hot exhaust",
+    "immediate_steps": ["Cool under running water", "Cover loosely"],
+    "avoid": ["Do not apply oils"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger numbness after cold exposure",
+    "identify": "Numb pale fingers after cold weather",
+    "immediate_steps": ["Warm gradually with body heat"],
+    "avoid": ["Do not use hot water directly"],
+    "emergency": "If color does not return",
+    "source": "NHS"
+  },
+  {
+    "title": "Back hit against table edge",
+    "identify": "Pain and bruising on back",
+    "immediate_steps": ["Apply cold compress", "Rest"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If severe pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger pricked by sewing needle",
+    "identify": "Small puncture, mild bleeding",
+    "immediate_steps": ["Wash area", "Apply antiseptic"],
+    "avoid": ["Do not ignore infection risk"],
+    "emergency": "If swelling occurs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Hair dye in eyes",
+    "identify": "Burning eyes during hair coloring",
+    "immediate_steps": ["Wash eyes with water immediately"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If pain continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Fumes from phenyl inhalation",
+    "identify": "Dizziness, irritation after phenyl smell",
+    "immediate_steps": ["Move to fresh air", "Rest"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If breathing trouble starts",
+    "source": "NHS"
+  },
+ {
+    "title": "Splinter under fingernail",
+    "identify": "Sharp pain under nail, visible tiny wood piece",
+    "immediate_steps": ["Wash hands", "Use sterilized tweezers to remove splinter", "Clean and bandage"],
+    "avoid": ["Do not push splinter deeper"],
+    "emergency": "If swelling or pus develops",
+    "source": "WHO"
+  },
+  {
+    "title": "Detergent powder in eyes",
+    "identify": "Burning, redness after detergent exposure",
+    "immediate_steps": ["Rinse eyes with clean water for several minutes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Steam burn from pressure cooker",
+    "identify": "Red painful skin after steam release",
+    "immediate_steps": ["Cool under running water", "Cover loosely"],
+    "avoid": ["Do not apply oil or cream"],
+    "emergency": "If blisters form",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Choking on small candy",
+    "identify": "Person unable to speak, clutching throat",
+    "immediate_steps": ["Give back blows", "Perform abdominal thrusts if needed"],
+    "avoid": ["Do not give water"],
+    "emergency": "Call emergency services immediately",
+    "source": "WHO"
+  },
+  {
+    "title": "Nosebleed after nose picking",
+    "identify": "Bleeding from nostril",
+    "immediate_steps": ["Sit upright", "Pinch nose for 10 minutes"],
+    "avoid": ["Do not tilt head back"],
+    "emergency": "If bleeding lasts more than 20 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Hot iron burn on hand",
+    "identify": "Red skin after touching hot iron",
+    "immediate_steps": ["Cool under water", "Cover with clean cloth"],
+    "avoid": ["Do not apply toothpaste"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Mosquito coil smoke irritation",
+    "identify": "Coughing, eye irritation from coil smoke",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not stay in smoky room"],
+    "emergency": "If breathing issue continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Small fish bone stuck in throat",
+    "identify": "Pricking sensation while swallowing",
+    "immediate_steps": ["Try swallowing soft bread or banana"],
+    "avoid": ["Do not insert fingers into throat"],
+    "emergency": "If pain persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Mild electric shock from switch",
+    "identify": "Tingling sensation after touching switch",
+    "immediate_steps": ["Move away from source", "Rest"],
+    "avoid": ["Do not touch again"],
+    "emergency": "If chest pain or dizziness",
+    "source": "WHO"
+  },
+  {
+    "title": "Soap in eyes while bathing",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Rinse eyes with clean water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation lasts",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Fall on knees while running",
+    "identify": "Scraped skin, bleeding knees",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not leave dirt inside"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Hot soup spill on chest",
+    "identify": "Red painful skin from hot liquid",
+    "immediate_steps": ["Cool with water", "Remove wet clothes"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Insect in ear",
+    "identify": "Buzzing sound, discomfort in ear",
+    "immediate_steps": ["Tilt head and gently pour warm oil to float insect out"],
+    "avoid": ["Do not insert objects into ear"],
+    "emergency": "If pain continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Hair caught in fan",
+    "identify": "Hair pulled, scalp pain",
+    "immediate_steps": ["Turn off fan", "Gently untangle hair"],
+    "avoid": ["Do not pull forcefully"],
+    "emergency": "If scalp injury occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from chalk dust",
+    "identify": "Watering eyes after chalk exposure",
+    "immediate_steps": ["Rinse with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Allergic rash from new soap",
+    "identify": "Red itchy rash after soap use",
+    "immediate_steps": ["Wash area", "Apply soothing lotion"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger jammed in door",
+    "identify": "Swelling, pain in finger",
+    "immediate_steps": ["Apply cold compress", "Rest finger"],
+    "avoid": ["Do not force movement"],
+    "emergency": "If severe swelling",
+    "source": "NHS"
+  },
+  {
+    "title": "Lip cut from accidental bite",
+    "identify": "Bleeding inside lip",
+    "immediate_steps": ["Rinse mouth", "Apply cold compress outside"],
+    "avoid": ["Do not touch wound repeatedly"],
+    "emergency": "If bleeding continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Sunburn after long outdoor exposure",
+    "identify": "Red hot skin, pain after sun",
+    "immediate_steps": ["Cool shower", "Apply soothing lotion"],
+    "avoid": ["Do not burst blisters"],
+    "emergency": "If fever occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Dust particle stuck under eyelid",
+    "identify": "Irritation, blinking discomfort",
+    "immediate_steps": ["Blink in clean water", "Rinse gently"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If irritation remains",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Hot pan touch burn",
+    "identify": "Red skin after touching pan",
+    "immediate_steps": ["Cool under water", "Cover loosely"],
+    "avoid": ["Do not apply butter"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Tight ring stuck on swollen finger",
+    "identify": "Swollen finger, ring stuck",
+    "immediate_steps": ["Apply soap or oil to slide off", "Elevate hand"],
+    "avoid": ["Do not forcefully pull"],
+    "emergency": "If finger turns blue",
+    "source": "NHS"
+  },
+  {
+    "title": "Small cut from shaving razor",
+    "identify": "Minor bleeding cut",
+    "immediate_steps": ["Apply pressure", "Clean and bandage"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If bleeding continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Paint thinner smell dizziness",
+    "identify": "Headache, dizziness from fumes",
+    "immediate_steps": ["Move to fresh air", "Rest"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If nausea continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Cold water shock while swimming",
+    "identify": "Gasping, shivering in cold water",
+    "immediate_steps": ["Get out of water", "Warm gradually"],
+    "avoid": ["Do not rub skin hard"],
+    "emergency": "If shivering doesn't stop",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger cut by broken glass",
+    "identify": "Bleeding cut, possible glass piece",
+    "immediate_steps": ["Rinse wound", "Remove visible glass", "Bandage"],
+    "avoid": ["Do not ignore glass inside"],
+    "emergency": "If deep cut",
+    "source": "WHO"
+  },
+  {
+    "title": "Rubber slipper friction blister",
+    "identify": "Fluid-filled blister on foot",
+    "immediate_steps": ["Keep area clean and dry", "Cover loosely"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If signs of infection",
+    "source": "NHS"
+  },
+  {
+    "title": "Hit head lightly on shelf",
+    "identify": "Mild headache, bump on head",
+    "immediate_steps": ["Apply cold compress", "Rest"],
+    "avoid": ["Do not ignore dizziness"],
+    "emergency": "If vomiting or confusion",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Bleach splash on skin",
+    "identify": "Burning, irritation after bleach contact",
+    "immediate_steps": ["Wash with plenty of water"],
+    "avoid": ["Do not leave bleach on skin"],
+    "emergency": "If rash worsens",
+    "source": "WHO"
+  },
+  {
+    "title": "Food stuck between teeth causing gum pain",
+    "identify": "Gum irritation, pain",
+    "immediate_steps": ["Rinse mouth", "Use dental floss gently"],
+    "avoid": ["Do not use sharp objects"],
+    "emergency": "If swelling occurs",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Bug flying into eye while riding bike",
+    "identify": "Sudden eye irritation, watering",
+    "immediate_steps": ["Stop safely", "Rinse eye with water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If redness persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Shoulder pain after lifting heavy bucket",
+    "identify": "Pain on movement, strain feeling",
+    "immediate_steps": ["Rest shoulder", "Apply cold compress"],
+    "avoid": ["Do not lift heavy objects"],
+    "emergency": "If pain severe",
+    "source": "NHS"
+  },
+  {
+    "title": "Foot stepped on nail",
+    "identify": "Puncture wound in foot, bleeding",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore tetanus risk"],
+    "emergency": "Seek medical help",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Gas stove flame singed eyebrows",
+    "identify": "Burnt hair smell, mild skin burn",
+    "immediate_steps": ["Cool area", "Apply soothing lotion"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If skin blisters",
+    "source": "WHO"
+  },
+  {
+    "title": "Rope burn on palm",
+    "identify": "Red raw skin after rope friction",
+    "immediate_steps": ["Cool under water", "Cover loosely"],
+    "avoid": ["Do not apply ointment immediately"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Allergic sneezing from dust cleaning",
+    "identify": "Sneezing, runny nose after dust exposure",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not continue exposure"],
+    "emergency": "If breathing trouble",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from matchstick",
+    "identify": "Tiny red burn spot",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Twisted ankle while stepping off curb",
+    "identify": "Swelling, pain in ankle",
+    "immediate_steps": ["Rest", "Ice compress", "Elevate leg"],
+    "avoid": ["Do not put weight on ankle"],
+    "emergency": "If unable to walk",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Tongue bite while chewing",
+    "identify": "Bleeding tongue, pain",
+    "immediate_steps": ["Rinse mouth", "Apply cold compress outside"],
+    "avoid": ["Do not eat spicy food"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Dehydration after playing in sun",
+    "identify": "Thirst, dizziness, dry mouth",
+    "immediate_steps": ["Drink water slowly", "Rest in shade"],
+    "avoid": ["Do not continue activity"],
+    "emergency": "If fainting occurs",
+    "source": "NHS"
+  },
+{
+    "title": "Sticker thorn lodged in heel",
+    "identify": "Sharp pain while walking, tiny thorn in heel",
+    "immediate_steps": ["Wash area", "Remove thorn with sterilized tweezers", "Apply antiseptic"],
+    "avoid": ["Do not walk with thorn inside"],
+    "emergency": "If swelling or pus develops",
+    "source": "WHO"
+  },
+  {
+    "title": "Shampoo in eyes during bath",
+    "identify": "Burning eyes, watering after shampoo contact",
+    "immediate_steps": ["Rinse eyes with clean water thoroughly"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor burn from incense stick",
+    "identify": "Small red burn spot from incense contact",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister forms",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger stuck in bottle neck",
+    "identify": "Swollen finger trapped in narrow bottle opening",
+    "immediate_steps": ["Apply soap water to lubricate", "Gently twist out"],
+    "avoid": ["Do not pull forcefully"],
+    "emergency": "If finger turns blue",
+    "source": "WHO"
+  },
+  {
+    "title": "Mild burn from candle wax drip",
+    "identify": "Hot wax on skin causing redness",
+    "immediate_steps": ["Cool under water", "Let wax harden before removal"],
+    "avoid": ["Do not peel hot wax"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from sanitizer splash",
+    "identify": "Burning sensation after sanitizer enters eye",
+    "immediate_steps": ["Rinse eye with water for several minutes"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If pain continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Back strain after sudden bending",
+    "identify": "Lower back pain after bending quickly",
+    "immediate_steps": ["Rest", "Apply cold compress"],
+    "avoid": ["Do not lift heavy items"],
+    "emergency": "If pain severe or persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Nail torn partially while playing",
+    "identify": "Partially lifted nail, pain, slight bleeding",
+    "immediate_steps": ["Trim loose nail carefully", "Clean and bandage"],
+    "avoid": ["Do not pull nail off"],
+    "emergency": "If bleeding continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Ear irritation from earphones long use",
+    "identify": "Pain or itching in ear after long earphone use",
+    "immediate_steps": ["Remove earphones", "Let ears rest"],
+    "avoid": ["Do not insert objects into ear"],
+    "emergency": "If pain increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Knee bruise from hitting bed corner",
+    "identify": "Swelling, blue mark on knee",
+    "immediate_steps": ["Apply cold compress", "Rest"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Chilli powder in nose",
+    "identify": "Burning nose, sneezing after chilli exposure",
+    "immediate_steps": ["Wash nose with clean water", "Move to fresh air"],
+    "avoid": ["Do not rub nose"],
+    "emergency": "If breathing difficulty",
+    "source": "WHO"
+  },
+  {
+    "title": "Small blister from new shoes",
+    "identify": "Fluid-filled blister on heel",
+    "immediate_steps": ["Keep clean and dry", "Cover with bandage"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If signs of infection",
+    "source": "NHS"
+  },
+  {
+    "title": "Pencil graphite stuck in skin",
+    "identify": "Black spot under skin after pencil poke",
+    "immediate_steps": ["Wash area", "Remove visible piece carefully"],
+    "avoid": ["Do not dig deep"],
+    "emergency": "If swelling occurs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Minor cut from kitchen grater",
+    "identify": "Scraped skin, slight bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Hit forehead on cupboard door",
+    "identify": "Bump on forehead, mild pain",
+    "immediate_steps": ["Apply cold compress", "Rest"],
+    "avoid": ["Do not ignore dizziness"],
+    "emergency": "If vomiting occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Sweat rash in neck folds",
+    "identify": "Red itchy rash due to sweating",
+    "immediate_steps": ["Keep area dry", "Apply soothing powder"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger caught in stapler",
+    "identify": "Small puncture, pain",
+    "immediate_steps": ["Remove staple carefully", "Clean and bandage"],
+    "avoid": ["Do not push staple deeper"],
+    "emergency": "If swelling occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Rubber eraser dust in eye",
+    "identify": "Irritation after eraser dust exposure",
+    "immediate_steps": ["Rinse eye gently with water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If irritation continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Mild ankle pain after jumping down",
+    "identify": "Slight swelling, pain on walking",
+    "immediate_steps": ["Rest", "Cold compress", "Elevate foot"],
+    "avoid": ["Do not run or jump"],
+    "emergency": "If pain increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Lip burn from hot pizza cheese",
+    "identify": "Red lip, burning sensation",
+    "immediate_steps": ["Cool with water", "Apply soothing gel"],
+    "avoid": ["Do not lick lips repeatedly"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Coin swallowed by child",
+    "identify": "Child coughing, discomfort after swallowing coin",
+    "immediate_steps": ["Keep child calm", "Do not induce vomiting"],
+    "avoid": ["Do not give food immediately"],
+    "emergency": "Seek urgent medical help",
+    "source": "WHO"
+  },
+  {
+    "title": "Rubber band snapped on skin",
+    "identify": "Red line, stinging pain",
+    "immediate_steps": ["Apply cold compress"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from face powder",
+    "identify": "Watering eyes after powder use",
+    "immediate_steps": ["Rinse with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Mild finger burn from sparkler",
+    "identify": "Small red burn from sparkler contact",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Shoulder bruise from slipping in bathroom",
+    "identify": "Pain and swelling in shoulder",
+    "immediate_steps": ["Cold compress", "Rest arm"],
+    "avoid": ["Do not lift weight"],
+    "emergency": "If movement very painful",
+    "source": "NHS"
+  },
+  {
+    "title": "Allergic itching from wool sweater",
+    "identify": "Itchy red skin after wool contact",
+    "immediate_steps": ["Remove sweater", "Wash skin"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "WHO"
+  },
+  {
+    "title": "Hairpin poke in scalp",
+    "identify": "Small puncture, mild pain",
+    "immediate_steps": ["Clean area", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If swelling occurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel pain after stepping on stone",
+    "identify": "Pain while walking, possible bruise",
+    "immediate_steps": ["Rest foot", "Cold compress"],
+    "avoid": ["Do not continue walking long"],
+    "emergency": "If swelling increases",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Nose irritation from strong perfume smell",
+    "identify": "Sneezing, irritation after perfume exposure",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If breathing trouble",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger skin peeled while opening can lid",
+    "identify": "Shallow skin peel, slight bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Hot water splash while washing dishes",
+    "identify": "Red painful skin from hot water",
+    "immediate_steps": ["Cool under water", "Cover loosely"],
+    "avoid": ["Do not apply butter"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Minor burn from oven tray",
+    "identify": "Small red burn on hand",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Ear discomfort after water entry while swimming",
+    "identify": "Blocked feeling in ear",
+    "immediate_steps": ["Tilt head to drain water", "Dry outer ear"],
+    "avoid": ["Do not insert objects"],
+    "emergency": "If pain develops",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Mild dehydration after travel in heat",
+    "identify": "Thirst, headache, tiredness",
+    "immediate_steps": ["Drink water slowly", "Rest in shade"],
+    "avoid": ["Do not continue travel without rest"],
+    "emergency": "If fainting occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger numb after tight grip on tool",
+    "identify": "Temporary numbness, tingling",
+    "immediate_steps": ["Relax hand", "Gently massage"],
+    "avoid": ["Do not continue gripping tightly"],
+    "emergency": "If numbness persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Small cut from cardboard edge",
+    "identify": "Thin paper-like cut, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Hit shin against stair edge",
+    "identify": "Painful bruise on shin",
+    "immediate_steps": ["Cold compress", "Rest leg"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If swelling severe",
+    "source": "NHS"
+  },
+  {
+    "title": "Soap bubble irritation in eye (child)",
+    "identify": "Watering eye after soap bubble contact",
+    "immediate_steps": ["Rinse eye with water"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If redness persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger stuck in scissors handle",
+    "identify": "Swollen finger trapped, pain",
+    "immediate_steps": ["Lubricate with soap water", "Gently remove"],
+    "avoid": ["Do not pull forcefully"],
+    "emergency": "If finger turns blue",
+    "source": "WHO"
+  },
+  {
+    "title": "Mild sun headache after outdoor play",
+    "identify": "Headache, tiredness after sun exposure",
+    "immediate_steps": ["Rest in shade", "Drink water"],
+    "avoid": ["Do not continue playing"],
+    "emergency": "If vomiting occurs",
+    "source": "NHS"
+  },
+{
+    "title": "Tongue burn from very hot milk",
+    "identify": "Burning pain on tongue after sipping hot milk",
+    "immediate_steps": ["Sip cool water", "Suck on ice chips briefly"],
+    "avoid": ["Do not eat spicy or hot food"],
+    "emergency": "If blisters form or pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from onion cutting",
+    "identify": "Watering, burning eyes while cutting onions",
+    "immediate_steps": ["Rinse eyes with clean water", "Move to fresh air"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues long after exposure",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor scalp cut from comb teeth",
+    "identify": "Small scalp cut, slight bleeding",
+    "immediate_steps": ["Clean area", "Apply gentle pressure"],
+    "avoid": ["Do not scratch scalp"],
+    "emergency": "If bleeding continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Burn from pressure cooker lid touch",
+    "identify": "Red skin after touching hot lid",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger cramp after long writing",
+    "identify": "Painful finger stiffness, cramp feeling",
+    "immediate_steps": ["Stretch fingers", "Massage gently"],
+    "avoid": ["Do not continue writing without rest"],
+    "emergency": "If pain persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Dust allergy sneezing while sweeping",
+    "identify": "Sneezing, runny nose after sweeping dust",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not continue exposure"],
+    "emergency": "If breathing trouble",
+    "source": "WHO"
+  },
+  {
+    "title": "Lip swelling after insect bite",
+    "identify": "Swollen lip, itching after bite",
+    "immediate_steps": ["Apply cold compress"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If breathing difficulty starts",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor burn from hot spoon",
+    "identify": "Red mark after touching heated spoon",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply toothpaste"],
+    "emergency": "If blister appears",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Heel scrape from rough floor",
+    "identify": "Scraped skin on heel, mild bleeding",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Ear pain after loud music in headphones",
+    "identify": "Ringing ear, mild pain after loud sound",
+    "immediate_steps": ["Remove headphones", "Rest ears in quiet place"],
+    "avoid": ["Do not continue loud audio"],
+    "emergency": "If ringing persists",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Finger skin nick from nail cutter",
+    "identify": "Small cut near nail, slight bleeding",
+    "immediate_steps": ["Clean area", "Apply pressure", "Bandage"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Forearm bruise from table hit",
+    "identify": "Blue mark, swelling on forearm",
+    "immediate_steps": ["Cold compress", "Rest arm"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If swelling severe",
+    "source": "WHO"
+  },
+  {
+    "title": "Chilli sauce in eye accidentally",
+    "identify": "Burning eye, watering after chilli contact",
+    "immediate_steps": ["Rinse eye with water for several minutes"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If pain continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Mild neck strain after sleeping wrong",
+    "identify": "Stiff neck, pain turning head",
+    "immediate_steps": ["Gentle neck movements", "Warm compress"],
+    "avoid": ["Do not make sudden movements"],
+    "emergency": "If pain worsens",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from incense ash fall",
+    "identify": "Tiny red burn from falling ash",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Nose irritation from cleaning acid fumes",
+    "identify": "Burning nose, coughing after fumes",
+    "immediate_steps": ["Move to fresh air immediately"],
+    "avoid": ["Do not stay in closed area"],
+    "emergency": "If breathing difficulty",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe stubbed against furniture",
+    "identify": "Pain, swelling in toe",
+    "immediate_steps": ["Cold compress", "Rest foot"],
+    "avoid": ["Do not put pressure"],
+    "emergency": "If toe turns blue",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from aluminum foil edge",
+    "identify": "Thin sharp cut, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Mild eye pain after long screen time",
+    "identify": "Dry eyes, headache after screen use",
+    "immediate_steps": ["Rest eyes", "Blink often", "Wash with water"],
+    "avoid": ["Do not continue screen use without break"],
+    "emergency": "If vision blurs",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pinch from cloth clip",
+    "identify": "Red pinched skin, pain",
+    "immediate_steps": ["Cold compress"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Hand redness from detergent liquid",
+    "identify": "Itchy red hands after detergent contact",
+    "immediate_steps": ["Wash hands thoroughly", "Apply moisturizer"],
+    "avoid": ["Do not continue exposure"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Mild dizziness after standing quickly",
+    "identify": "Lightheaded feeling after sudden stand",
+    "immediate_steps": ["Sit down slowly", "Drink water"],
+    "avoid": ["Do not walk immediately"],
+    "emergency": "If fainting occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Small blister from broom friction",
+    "identify": "Blister on palm after sweeping",
+    "immediate_steps": ["Keep clean and dry", "Cover loosely"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If infection signs appear",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Hot oil splash near eye (not inside)",
+    "identify": "Red skin near eye after oil splash",
+    "immediate_steps": ["Cool skin with water"],
+    "avoid": ["Do not apply creams immediately"],
+    "emergency": "If eye irritation begins",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from metal ruler edge",
+    "identify": "Thin cut, mild bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Ankle stiffness after long sitting",
+    "identify": "Stiff ankle, difficulty moving",
+    "immediate_steps": ["Rotate ankle gently", "Walk slowly"],
+    "avoid": ["Do not run immediately"],
+    "emergency": "If pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Minor gum bleed after hard brushing",
+    "identify": "Bleeding gums, sensitivity",
+    "immediate_steps": ["Rinse mouth with water", "Use soft brush later"],
+    "avoid": ["Do not brush hard"],
+    "emergency": "If bleeding continues frequently",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger burn from agarbatti tip",
+    "identify": "Small red burn spot",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister forms",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Shoulder stiffness after carrying bag long time",
+    "identify": "Shoulder pain, stiffness",
+    "immediate_steps": ["Rest shoulder", "Gentle stretches"],
+    "avoid": ["Do not carry heavy load"],
+    "emergency": "If pain severe",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from room freshener spray",
+    "identify": "Burning eyes after spray exposure",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Palm scrape from rough wall",
+    "identify": "Scraped skin, mild bleeding",
+    "immediate_steps": ["Wash area", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not leave dirt inside"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe cut from tile edge",
+    "identify": "Small bleeding cut on toe",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Nose itch from talcum powder inhalation",
+    "identify": "Sneezing, nose irritation",
+    "immediate_steps": ["Move to fresh air", "Rinse nose gently"],
+    "avoid": ["Do not sniff more powder"],
+    "emergency": "If breathing trouble",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger stiffness after holding phone long time",
+    "identify": "Finger pain, stiffness",
+    "immediate_steps": ["Stretch fingers", "Rest hand"],
+    "avoid": ["Do not continue gripping"],
+    "emergency": "If pain persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Mild sunburn on ears",
+    "identify": "Red hot ears after sun exposure",
+    "immediate_steps": ["Cool with water", "Apply soothing lotion"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister forms",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from biscuit packet edge",
+    "identify": "Thin paper-like cut, stinging",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Heel pain after jumping rope barefoot",
+    "identify": "Sore heel, pain on walking",
+    "immediate_steps": ["Rest foot", "Cold compress"],
+    "avoid": ["Do not continue jumping"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from incense smoke",
+    "identify": "Watering eyes, mild burning",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from match lighter flame",
+    "identify": "Tiny red burn on finger",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+ {
+    "title": "Finger scrape from rough brick wall",
+    "identify": "Scraped skin, mild bleeding, dust in wound",
+    "immediate_steps": ["Rinse with clean water", "Apply antiseptic", "Bandage lightly"],
+    "avoid": ["Do not leave dirt inside"],
+    "emergency": "If redness or swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from turmeric powder",
+    "identify": "Yellow tint, burning, watering eyes",
+    "immediate_steps": ["Rinse eyes with plenty of water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor burn from hot pressure cooker steam whistle",
+    "identify": "Red painful skin from steam burst",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not apply oil or cream immediately"],
+    "emergency": "If blister forms",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Toe nail crack after hitting door",
+    "identify": "Cracked nail, pain, slight bleeding",
+    "immediate_steps": ["Clean area", "Trim loose nail", "Bandage"],
+    "avoid": ["Do not pull nail forcefully"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Itchy hands after handling raw spinach",
+    "identify": "Mild itching, redness on fingers",
+    "immediate_steps": ["Wash hands thoroughly", "Apply soothing lotion"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye discomfort from wind dust while riding",
+    "identify": "Watering eyes, gritty feeling",
+    "immediate_steps": ["Rinse eyes with clean water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from tin can lid",
+    "identify": "Sharp thin cut, mild bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Mild calf muscle pull while climbing stairs fast",
+    "identify": "Sudden calf pain, tightness",
+    "immediate_steps": ["Rest leg", "Apply cold compress"],
+    "avoid": ["Do not continue climbing"],
+    "emergency": "If pain severe",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger burn from hot cooker handle",
+    "identify": "Red skin, burning pain",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply toothpaste"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Nose irritation from incense smoke",
+    "identify": "Sneezing, burning nose sensation",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not stay in smoky room"],
+    "emergency": "If breathing trouble",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Small blister from holding hot cup",
+    "identify": "Fluid-filled blister on palm",
+    "immediate_steps": ["Cool area", "Keep clean and dry"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If signs of infection",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from soap foam (child)",
+    "identify": "Burning, watering eyes during play",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Shoulder strain after lifting water bucket",
+    "identify": "Shoulder pain, difficulty raising arm",
+    "immediate_steps": ["Rest shoulder", "Cold compress"],
+    "avoid": ["Do not lift heavy objects"],
+    "emergency": "If pain worsens",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Lip dryness crack bleeding in winter",
+    "identify": "Small lip crack, slight bleeding",
+    "immediate_steps": ["Apply lip balm", "Keep lips moist"],
+    "avoid": ["Do not peel dry skin"],
+    "emergency": "If crack deepens",
+    "source": "WHO"
+  },
+  {
+    "title": "Ear discomfort after cotton bud use",
+    "identify": "Mild ear pain, irritation",
+    "immediate_steps": ["Stop inserting objects", "Let ear rest"],
+    "avoid": ["Do not insert buds again"],
+    "emergency": "If pain increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pinch from door latch",
+    "identify": "Red pinched skin, swelling",
+    "immediate_steps": ["Apply cold compress"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from hot ladle",
+    "identify": "Red mark on hand, burning pain",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply butter"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel scrape from stepping on rough stone",
+    "identify": "Scraped heel, mild bleeding",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If swelling occurs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Mild headache after dehydration in sun",
+    "identify": "Headache, dry mouth, tiredness",
+    "immediate_steps": ["Drink water slowly", "Rest in shade"],
+    "avoid": ["Do not continue activity"],
+    "emergency": "If fainting occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger stiffness after long typing",
+    "identify": "Stiff fingers, mild pain",
+    "immediate_steps": ["Stretch fingers", "Rest hands"],
+    "avoid": ["Do not continue typing without break"],
+    "emergency": "If pain persists",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Minor cut from steel wool scrubber",
+    "identify": "Small scratch, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from car exhaust smoke",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Toe pain after stubbing against brick",
+    "identify": "Pain, swelling in toe",
+    "immediate_steps": ["Cold compress", "Rest foot"],
+    "avoid": ["Do not put pressure"],
+    "emergency": "If toe turns blue",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small burn from incense holder metal",
+    "identify": "Tiny red burn mark",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Rash from wearing tight socks long time",
+    "identify": "Red itchy marks around ankle",
+    "immediate_steps": ["Remove socks", "Wash area"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger poke from compass needle",
+    "identify": "Tiny puncture, mild bleeding",
+    "immediate_steps": ["Clean area", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If swelling occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Palm redness after carrying rough rope",
+    "identify": "Red irritated skin, mild pain",
+    "immediate_steps": ["Cool with water", "Apply soothing lotion"],
+    "avoid": ["Do not continue friction"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye watering from strong wind exposure",
+    "identify": "Continuous tearing, irritation",
+    "immediate_steps": ["Blink gently", "Rinse with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from broken plastic edge",
+    "identify": "Thin cut, mild bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Mild ankle twist while stepping in pothole",
+    "identify": "Swelling, pain on walking",
+    "immediate_steps": ["Rest ankle", "Cold compress", "Elevate leg"],
+    "avoid": ["Do not put weight on ankle"],
+    "emergency": "If unable to walk",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Hand itch after handling detergent bar",
+    "identify": "Red itchy skin on hands",
+    "immediate_steps": ["Wash hands", "Apply moisturizer"],
+    "avoid": ["Do not continue exposure"],
+    "emergency": "If rash worsens",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from hot tawa splash",
+    "identify": "Red skin spot, burning sensation",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pain after cracking knuckles repeatedly",
+    "identify": "Mild joint pain, stiffness",
+    "immediate_steps": ["Rest fingers", "Gentle stretches"],
+    "avoid": ["Do not crack knuckles repeatedly"],
+    "emergency": "If pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from face wash entry",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel blister after long walk in sandals",
+    "identify": "Fluid blister on heel",
+    "immediate_steps": ["Keep clean and dry", "Cover loosely"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If infection signs appear",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from envelope paper edge",
+    "identify": "Paper-like thin cut, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Shoulder ache after sleeping on one side long",
+    "identify": "Shoulder stiffness, mild pain",
+    "immediate_steps": ["Gentle stretches", "Warm compress"],
+    "avoid": ["Do not sleep on same side continuously"],
+    "emergency": "If pain worsens",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from phenyl mop fumes",
+    "identify": "Burning eyes, watering after mopping",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If irritation persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe scrape from rough cement floor",
+    "identify": "Scraped skin, mild bleeding",
+    "immediate_steps": ["Wash area", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+ 
+  {
+    "title": "Small cut from vegetable grater",
+    "identify": "Thin skin slice, steady mild bleeding",
+    "immediate_steps": ["Rinse under clean water", "Apply antiseptic", "Cover with bandage"],
+    "avoid": ["Do not leave uncovered"],
+    "emergency": "If bleeding does not stop",
+    "source": "WHO"
+  },
+  {
+    "title": "Burn from touching hot iron plate",
+    "identify": "Red painful patch on skin",
+    "immediate_steps": ["Cool under running water for 10 minutes"],
+    "avoid": ["Do not apply toothpaste or oil"],
+    "emergency": "If blister develops",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Eye irritation from chili powder in air",
+    "identify": "Burning eyes, tears, redness",
+    "immediate_steps": ["Rinse eyes thoroughly with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If pain continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor wrist pain after lifting heavy bag",
+    "identify": "Wrist soreness, difficulty rotating",
+    "immediate_steps": ["Rest wrist", "Apply cold compress"],
+    "avoid": ["Do not lift weight"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Paper cut between fingers",
+    "identify": "Very thin cut, sharp stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore due to small size"],
+    "emergency": "If redness spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Foot pain after stepping on small pebble",
+    "identify": "Localized pain while walking",
+    "immediate_steps": ["Check sole", "Remove pebble if present", "Rest foot"],
+    "avoid": ["Do not continue walking in pain"],
+    "emergency": "If swelling occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Skin redness after mosquito coil smoke exposure",
+    "identify": "Mild itching, red patches",
+    "immediate_steps": ["Move to fresh air", "Wash exposed skin"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Small blister from new shoes friction",
+    "identify": "Fluid blister on toe or heel",
+    "immediate_steps": ["Keep clean and dry", "Cover with loose bandage"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If signs of infection",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger pain after trapping in window",
+    "identify": "Swelling, redness, pain on touch",
+    "immediate_steps": ["Apply cold compress", "Rest finger"],
+    "avoid": ["Do not press hard"],
+    "emergency": "If finger turns blue",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye watering from cutting onions",
+    "identify": "Tears, mild burning",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists long",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Mild neck pain after sleeping awkwardly",
+    "identify": "Neck stiffness, pain turning head",
+    "immediate_steps": ["Gentle neck stretches", "Warm compress"],
+    "avoid": ["Do not make sudden movements"],
+    "emergency": "If pain severe",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from shaving razor",
+    "identify": "Thin cut, mild bleeding",
+    "immediate_steps": ["Rinse area", "Apply antiseptic", "Press gently"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel pain after long standing",
+    "identify": "Aching heel, pain on pressure",
+    "immediate_steps": ["Rest foot", "Cold compress"],
+    "avoid": ["Do not stand continuously"],
+    "emergency": "If swelling appears",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Minor burn from candle wax drip",
+    "identify": "Red skin spot, mild burning",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not peel wax forcefully"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger scratch from pet kitten",
+    "identify": "Small scratch, slight bleeding",
+    "immediate_steps": ["Wash with soap and water", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from deodorant spray drift",
+    "identify": "Burning, watering eyes",
+    "immediate_steps": ["Rinse eyes with clean water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe cramp during sleep",
+    "identify": "Sudden tight pain in toe muscles",
+    "immediate_steps": ["Gently stretch toes", "Massage lightly"],
+    "avoid": ["Do not force stretch"],
+    "emergency": "If cramps frequent",
+    "source": "NHS"
+  },
+  {
+    "title": "Skin itch after contact with old books dust",
+    "identify": "Itchy skin, mild redness",
+    "immediate_steps": ["Wash area", "Apply moisturizer"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from broken glass edge",
+    "identify": "Sharp cut, visible bleeding",
+    "immediate_steps": ["Rinse wound", "Apply pressure", "Bandage"],
+    "avoid": ["Do not touch glass pieces"],
+    "emergency": "If bleeding heavy",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Wrist stiffness after long mobile use",
+    "identify": "Mild wrist pain, stiffness",
+    "immediate_steps": ["Rest wrist", "Stretch gently"],
+    "avoid": ["Do not continue usage without break"],
+    "emergency": "If pain persists",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Burn from hot tea splash",
+    "identify": "Red skin, burning sensation",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger poke from sewing needle",
+    "identify": "Tiny puncture wound",
+    "immediate_steps": ["Clean with water", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If swelling occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Ankle pain after jumping from step",
+    "identify": "Mild swelling, pain walking",
+    "immediate_steps": ["Rest ankle", "Cold compress", "Elevate leg"],
+    "avoid": ["Do not walk much"],
+    "emergency": "If unable to bear weight",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from sanitizer splash",
+    "identify": "Burning, redness, tears",
+    "immediate_steps": ["Rinse eyes with plenty of water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If pain continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Palm pain after clapping hard repeatedly",
+    "identify": "Redness, mild pain in palm",
+    "immediate_steps": ["Rest hands", "Apply cold compress"],
+    "avoid": ["Do not continue activity"],
+    "emergency": "If swelling appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor lip burn from hot food bite",
+    "identify": "Red lip, burning sensation",
+    "immediate_steps": ["Sip cool water"],
+    "avoid": ["Do not apply spicy items"],
+    "emergency": "If blister forms",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe scrape from metal stair edge",
+    "identify": "Scraped skin, mild bleeding",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If redness increases",
+    "source": "NHS"
+  },
+  {
+    "title": "Mild back pain after bending long time",
+    "identify": "Lower back ache, stiffness",
+    "immediate_steps": ["Rest back", "Warm compress"],
+    "avoid": ["Do not bend repeatedly"],
+    "emergency": "If pain severe",
+    "source": "WHO"
+  },
+  {
+    "title": "Skin irritation from chalk dust",
+    "identify": "Dry itchy skin, mild redness",
+    "immediate_steps": ["Wash skin", "Apply moisturizer"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pain after opening tight jar lid",
+    "identify": "Finger joint pain, stiffness",
+    "immediate_steps": ["Rest fingers", "Warm compress"],
+    "avoid": ["Do not force movement"],
+    "emergency": "If swelling occurs",
+    "source": "WHO"
+  },
+
+  {
+    "title": "Eye irritation from talcum powder cloud",
+    "identify": "Watering eyes, mild burning",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small burn from matchstick flame",
+    "identify": "Tiny red burn spot",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Heel pain from tight footwear strap",
+    "identify": "Redness, soreness on heel",
+    "immediate_steps": ["Remove footwear", "Rest heel"],
+    "avoid": ["Do not wear tight straps"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger numbness after holding cold bottle long",
+    "identify": "Temporary numbness, tingling",
+    "immediate_steps": ["Warm hands gradually"],
+    "avoid": ["Do not rub vigorously"],
+    "emergency": "If sensation not returning",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from cardboard box edge",
+    "identify": "Thin cut, mild bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Ankle stiffness after sitting cross-legged long",
+    "identify": "Stiff ankle, mild pain moving",
+    "immediate_steps": ["Stretch gently", "Move ankle slowly"],
+    "avoid": ["Do not force movement"],
+    "emergency": "If pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from room freshener spray",
+    "identify": "Burning eyes, tears",
+    "immediate_steps": ["Rinse with water", "Move to fresh air"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Small scrape from bicycle pedal hit",
+    "identify": "Scraped skin, mild bleeding",
+    "immediate_steps": ["Clean wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If swelling increases",
+    "source": "Red Cross"
+  },
+ 
+  {
+    "title": "Small cut from coconut shell edge",
+    "identify": "Rough cut, mild bleeding, brown dust present",
+    "immediate_steps": ["Rinse with clean water", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not leave shell dust inside"],
+    "emergency": "If redness or swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from ceiling fan dust fall",
+    "identify": "Gritty feeling, watering eyes",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Minor burn from hot cooker lid touch",
+    "identify": "Red painful skin spot",
+    "immediate_steps": ["Cool under running water"],
+    "avoid": ["Do not apply oil or paste"],
+    "emergency": "If blister forms",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger pain after nail pressed by brick",
+    "identify": "Pain under nail, mild swelling",
+    "immediate_steps": ["Apply cold compress", "Rest finger"],
+    "avoid": ["Do not press nail"],
+    "emergency": "If nail turns dark blue",
+    "source": "WHO"
+  },
+  {
+    "title": "Skin itch after sitting on dusty bench",
+    "identify": "Itchy red patches on legs",
+    "immediate_steps": ["Wash area", "Apply soothing lotion"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye watering from strong perfume smell",
+    "identify": "Burning sensation, tears",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Small cut from aluminum foil edge",
+    "identify": "Thin sharp cut, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If bleeding continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Calf pain after sudden running",
+    "identify": "Tight muscle, pain while walking",
+    "immediate_steps": ["Rest leg", "Cold compress"],
+    "avoid": ["Do not continue running"],
+    "emergency": "If pain severe",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Finger burn from hot steel plate",
+    "identify": "Red skin, burning pain",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply butter or paste"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Nose irritation from chalk powder",
+    "identify": "Sneezing, mild burning nose",
+    "immediate_steps": ["Move to fresh air", "Wash face"],
+    "avoid": ["Do not inhale deeply"],
+    "emergency": "If breathing difficulty",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Small blister from broom friction",
+    "identify": "Fluid-filled blister on palm",
+    "immediate_steps": ["Keep clean and dry", "Cover loosely"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If infection signs appear",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from handwash splash",
+    "identify": "Burning, redness, watering",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Shoulder pain after pushing heavy gate",
+    "identify": "Shoulder ache, difficulty lifting arm",
+    "immediate_steps": ["Rest shoulder", "Cold compress"],
+    "avoid": ["Do not lift heavy items"],
+    "emergency": "If pain worsens",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Lip swelling after spicy food contact",
+    "identify": "Mild swelling, burning lips",
+    "immediate_steps": ["Rinse mouth with cool water"],
+    "avoid": ["Do not apply spicy food again"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Ear discomfort after loud horn exposure",
+    "identify": "Ringing sound, mild ear pain",
+    "immediate_steps": ["Rest ears in quiet place"],
+    "avoid": ["Do not expose to loud sound again"],
+    "emergency": "If ringing persists",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pinch from drawer slide",
+    "identify": "Red pinched skin, swelling",
+    "immediate_steps": ["Apply cold compress"],
+    "avoid": ["Do not massage immediately"],
+    "emergency": "If swelling increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from hot spoon",
+    "identify": "Red burn mark, pain",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel scrape from rough staircase edge",
+    "identify": "Scraped heel, mild bleeding",
+    "immediate_steps": ["Wash wound", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If swelling occurs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Headache after skipping water intake",
+    "identify": "Headache, tiredness, dry mouth",
+    "immediate_steps": ["Drink water slowly", "Rest"],
+    "avoid": ["Do not continue activity"],
+    "emergency": "If fainting happens",
+    "source": "WHO"
+  },
+  {
+    "title": "Finger stiffness after writing long time",
+    "identify": "Stiff fingers, mild pain",
+    "immediate_steps": ["Stretch fingers", "Rest hand"],
+    "avoid": ["Do not continue writing without break"],
+    "emergency": "If pain persists",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Minor cut from metal bucket edge",
+    "identify": "Small scratch, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from vehicle smoke at signal",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Toe pain after hitting stone edge",
+    "identify": "Pain, swelling in toe",
+    "immediate_steps": ["Cold compress", "Rest foot"],
+    "avoid": ["Do not put pressure"],
+    "emergency": "If toe turns blue",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small burn from agarbatti stand metal",
+    "identify": "Tiny red burn mark",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If blister appears",
+    "source": "WHO"
+  },
+  {
+    "title": "Rash from tight wristwatch strap",
+    "identify": "Red itchy mark around wrist",
+    "immediate_steps": ["Remove watch", "Wash area"],
+    "avoid": ["Do not scratch"],
+    "emergency": "If rash spreads",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger poke from thumb pin",
+    "identify": "Tiny puncture, mild bleeding",
+    "immediate_steps": ["Clean area", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If swelling occurs",
+    "source": "WHO"
+  },
+  {
+    "title": "Palm redness after carrying cement bag",
+    "identify": "Red irritated skin, mild pain",
+    "immediate_steps": ["Wash hands", "Apply soothing lotion"],
+    "avoid": ["Do not continue friction"],
+    "emergency": "If blister forms",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye watering from fast bike ride wind",
+    "identify": "Continuous tearing, irritation",
+    "immediate_steps": ["Blink gently", "Rinse with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If redness persists",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from plastic chair crack",
+    "identify": "Thin cut, mild bleeding",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore hygiene"],
+    "emergency": "If bleeding continues",
+    "source": "WHO"
+  },
+  {
+    "title": "Mild ankle twist while stepping off bus",
+    "identify": "Swelling, pain on walking",
+    "immediate_steps": ["Rest ankle", "Cold compress", "Elevate leg"],
+    "avoid": ["Do not put weight on ankle"],
+    "emergency": "If unable to walk",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Hand itch after detergent powder contact",
+    "identify": "Red itchy skin on hands",
+    "immediate_steps": ["Wash hands", "Apply moisturizer"],
+    "avoid": ["Do not continue exposure"],
+    "emergency": "If rash worsens",
+    "source": "WHO"
+  },
+  {
+    "title": "Small burn from hot oil splash near stove",
+    "identify": "Red skin spot, burning sensation",
+    "immediate_steps": ["Cool under water"],
+    "avoid": ["Do not apply oil"],
+    "emergency": "If blister appears",
+    "source": "NHS"
+  },
+  {
+    "title": "Finger pain after twisting cloth tightly",
+    "identify": "Mild joint pain, stiffness",
+    "immediate_steps": ["Rest fingers", "Gentle stretches"],
+    "avoid": ["Do not force twisting motion"],
+    "emergency": "If pain persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Eye irritation from shampoo entry",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Rinse eyes with water"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "If irritation continues",
+    "source": "NHS"
+  },
+  {
+    "title": "Heel blister after walking on hot floor",
+    "identify": "Fluid blister on heel",
+    "immediate_steps": ["Keep clean and dry", "Cover loosely"],
+    "avoid": ["Do not burst blister"],
+    "emergency": "If infection signs appear",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Small cut from biscuit tin edge",
+    "identify": "Paper-like thin cut, stinging pain",
+    "immediate_steps": ["Rinse wound", "Apply antiseptic"],
+    "avoid": ["Do not ignore cleaning"],
+    "emergency": "If redness increases",
+    "source": "WHO"
+  },
+  {
+    "title": "Shoulder ache after carrying school bag long",
+    "identify": "Shoulder stiffness, mild pain",
+    "immediate_steps": ["Gentle stretches", "Warm compress"],
+    "avoid": ["Do not carry heavy load on one side"],
+    "emergency": "If pain worsens",
+    "source": "NHS"
+  },
+  {
+    "title": "Eye irritation from floor cleaner fumes",
+    "identify": "Burning eyes, watering",
+    "immediate_steps": ["Move to fresh air", "Rinse eyes"],
+    "avoid": ["Do not stay in closed room"],
+    "emergency": "If irritation persists",
+    "source": "WHO"
+  },
+  {
+    "title": "Toe scrape from rough playground floor",
+    "identify": "Scraped skin, mild bleeding",
+    "immediate_steps": ["Wash area", "Apply antiseptic", "Bandage"],
+    "avoid": ["Do not walk barefoot"],
+    "emergency": "If swelling increases",
+    "source": "NHS"
+  },
+ 
+  {
+    "title": "Person fainted suddenly while standing",
+    "identify": "Unconscious, pale, slow response",
+    "immediate_steps": ["Lay person flat", "Raise legs slightly", "Loosen tight clothes", "Check breathing"],
+    "avoid": ["Do not crowd around", "Do not pour water on face"],
+    "emergency": "If unconscious more than 1 minute or not breathing",
+    "source": "WHO"
+  },
+  {
+    "title": "Choking while eating food",
+    "identify": "Unable to speak, clutching throat, gasping",
+    "immediate_steps": ["Perform 5 back blows", "Give abdominal thrusts (Heimlich maneuver)"],
+    "avoid": ["Do not give water", "Do not slap randomly"],
+    "emergency": "If object not expelled quickly",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Electric shock from exposed wire",
+    "identify": "Person thrown back, burns, unconsciousness",
+    "immediate_steps": ["Switch off power source", "Use dry wood to separate person", "Check breathing"],
+    "avoid": ["Do not touch with bare hands"],
+    "emergency": "Immediate hospital care required",
+    "source": "WHO"
+  },
+  {
+    "title": "Suspected bone fracture after fall",
+    "identify": "Severe pain, swelling, unable to move limb",
+    "immediate_steps": ["Immobilize limb with splint", "Avoid movement"],
+    "avoid": ["Do not try to straighten bone"],
+    "emergency": "Immediate medical attention",
+    "source": "NHS"
+  },
+  {
+    "title": "Nosebleed suddenly starts",
+    "identify": "Blood flowing from nose",
+    "immediate_steps": ["Sit upright", "Lean slightly forward", "Pinch nose for 10 minutes"],
+    "avoid": ["Do not tilt head back"],
+    "emergency": "If bleeding lasts more than 20 minutes",
+    "source": "NHS"
+  },
+  {
+    "title": "Dog bite on leg",
+    "identify": "Puncture wound, bleeding",
+    "immediate_steps": ["Wash with soap and water for 10 minutes", "Apply antiseptic"],
+    "avoid": ["Do not ignore even small bite"],
+    "emergency": "Hospital for rabies and tetanus shots",
+    "source": "WHO"
+  },
+  {
+    "title": "Snake bite in field",
+    "identify": "Two puncture marks, swelling, pain",
+    "immediate_steps": ["Keep person calm", "Immobilize limb", "Remove tight items"],
+    "avoid": ["Do not cut wound", "Do not suck venom"],
+    "emergency": "Immediate hospital with antivenom",
+    "source": "WHO"
+  },
+  {
+    "title": "Bee sting on arm",
+    "identify": "Sharp pain, swelling, visible stinger",
+    "immediate_steps": ["Remove stinger gently", "Apply cold compress"],
+    "avoid": ["Do not squeeze stinger"],
+    "emergency": "If breathing difficulty or allergy signs",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Heat stroke after long sun exposure",
+    "identify": "Hot dry skin, confusion, no sweating",
+    "immediate_steps": ["Move to shade", "Cool body with wet cloth", "Give sips of water if conscious"],
+    "avoid": ["Do not give ice-cold water quickly"],
+    "emergency": "Immediate hospital care",
+    "source": "WHO"
+  },
+  {
+    "title": "Hypothermia in cold weather",
+    "identify": "Shivering, cold pale skin, confusion",
+    "immediate_steps": ["Move to warm place", "Cover with blankets", "Give warm drinks"],
+    "avoid": ["Do not rub body harshly"],
+    "emergency": "If shivering stops or unconscious",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Poison swallowed accidentally (cleaner/chemical)",
+    "identify": "Burning mouth, vomiting, dizziness",
+    "immediate_steps": ["Rinse mouth", "Give small sips of water"],
+    "avoid": ["Do not induce vomiting"],
+    "emergency": "Immediate poison control / hospital",
+    "source": "WHO"
+  },
+  {
+    "title": "Food poisoning symptoms after meal",
+    "identify": "Vomiting, diarrhea, stomach cramps",
+    "immediate_steps": ["Give ORS", "Keep hydrated", "Rest"],
+    "avoid": ["Do not eat solid food initially"],
+    "emergency": "If blood in vomit/stool or dehydration",
+    "source": "NHS"
+  },
+  {
+    "title": "Asthma attack with breathing difficulty",
+    "identify": "Wheezing, gasping, chest tightness",
+    "immediate_steps": ["Help use inhaler", "Sit upright and calm"],
+    "avoid": ["Do not lay flat"],
+    "emergency": "If no relief after inhaler",
+    "source": "WHO"
+  },
+  {
+    "title": "Seizure (fits) happening",
+    "identify": "Body shaking, unconscious, frothing",
+    "immediate_steps": ["Clear surroundings", "Turn to side after jerks stop"],
+    "avoid": ["Do not put anything in mouth"],
+    "emergency": "If seizure lasts more than 5 minutes",
+    "source": "WHO"
+  },
+  {
+    "title": "Heart attack suspected",
+    "identify": "Chest pain, sweating, nausea, arm pain",
+    "immediate_steps": ["Make person sit", "Loosen clothes", "Give aspirin if available"],
+    "avoid": ["Do not let person walk"],
+    "emergency": "Immediate ambulance",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Stroke symptoms observed",
+    "identify": "Face droop, arm weakness, slurred speech",
+    "immediate_steps": ["Note time", "Keep person calm"],
+    "avoid": ["Do not give food or drink"],
+    "emergency": "Immediate hospital (golden hour)",
+    "source": "WHO"
+  },
+  {
+    "title": "Drowning person pulled from water",
+    "identify": "Unconscious, not breathing, wet body",
+    "immediate_steps": ["Check breathing", "Start CPR", "Remove wet clothes"],
+    "avoid": ["Do not waste time shaking person"],
+    "emergency": "Immediate medical help",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Severe allergic reaction (anaphylaxis)",
+    "identify": "Swelling face/throat, rash, breathing trouble",
+    "immediate_steps": ["Use epinephrine auto-injector if available", "Lay flat"],
+    "avoid": ["Do not delay action"],
+    "emergency": "Immediate ambulance",
+    "source": "WHO"
+  },
+  {
+    "title": "Object stuck in ear (child)",
+    "identify": "Pain, crying, object visible",
+    "immediate_steps": ["Keep child calm", "Do not insert tools"],
+    "avoid": ["Do not try to remove forcefully"],
+    "emergency": "ENT doctor visit",
+    "source": "NHS"
+  },
+  {
+    "title": "Object stuck in nose (child)",
+    "identify": "Blocked nose, discomfort",
+    "immediate_steps": ["Ask child to breathe from mouth"],
+    "avoid": ["Do not insert sticks or fingers"],
+    "emergency": "Doctor removal needed",
+    "source": "NHS"
+  },
+
+  {
+    "title": "Deep bleeding wound from accident",
+    "identify": "Heavy bleeding, deep cut",
+    "immediate_steps": ["Apply firm pressure", "Elevate limb"],
+    "avoid": ["Do not remove embedded object"],
+    "emergency": "Immediate hospital",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Eye chemical splash (acid/cleaner)",
+    "identify": "Severe burning, redness",
+    "immediate_steps": ["Rinse eyes continuously for 15 minutes"],
+    "avoid": ["Do not rub eyes"],
+    "emergency": "Immediate hospital",
+    "source": "WHO"
+  },
+  {
+    "title": "Spinal injury suspected after fall",
+    "identify": "Neck/back pain, cannot move limbs",
+    "immediate_steps": ["Do not move person", "Stabilize head"],
+    "avoid": ["Do not twist body"],
+    "emergency": "Call ambulance immediately",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Burn from fire flames on clothes",
+    "identify": "Clothes on fire, panic",
+    "immediate_steps": ["Stop, Drop, Roll", "Cover with blanket"],
+    "avoid": ["Do not run"],
+    "emergency": "Hospital for burn care",
+    "source": "WHO"
+  },
+  {
+    "title": "Sprain in ankle during sports",
+    "identify": "Swelling, pain, difficulty walking",
+    "immediate_steps": ["R.I.C.E method (Rest, Ice, Compress, Elevate)"],
+    "avoid": ["Do not put weight"],
+    "emergency": "If swelling severe",
+    "source": "NHS"
+  },
+  {
+    "title": "Frostbite on fingers",
+    "identify": "White numb skin, hard feeling",
+    "immediate_steps": ["Warm gradually in lukewarm water"],
+    "avoid": ["Do not rub area"],
+    "emergency": "Hospital care needed",
+    "source": "WHO"
+  },
+  {
+    "title": "Foreign object in eye (metal/particle)",
+    "identify": "Pain, blinking, watering",
+    "immediate_steps": ["Rinse with clean water", "Blink repeatedly"],
+    "avoid": ["Do not rub eye"],
+    "emergency": "If object not removed",
+    "source": "NHS"
+  },
+  {
+    "title": "Crush injury from heavy object",
+    "identify": "Severe pain, swelling, possible fracture",
+    "immediate_steps": ["Immobilize area", "Cold compress"],
+    "avoid": ["Do not massage"],
+    "emergency": "Immediate hospital",
+    "source": "Red Cross"
+  },
+  {
+    "title": "Child swallowed coin",
+    "identify": "Coughing, discomfort in throat",
+    "immediate_steps": ["Keep child calm", "Observe breathing"],
+    "avoid": ["Do not induce vomiting"],
+    "emergency": "Immediate X-ray at hospital",
+    "source": "NHS"
+  },
+  {
+    "title": "Panic attack with fast breathing",
+    "identify": "Rapid breathing, dizziness, fear",
+    "immediate_steps": ["Calm person", "Slow breathing guidance"],
+    "avoid": ["Do not panic yourself"],
+    "emergency": "If chest pain occurs",
+    "source": "WHO"
+  }
+]
+
+

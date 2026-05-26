@@ -1,0 +1,102 @@
+[
+  {
+    "query_id": "S001",
+    "prompt": "Nosebleed for 45 minutes",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:03"
+  },
+  {
+    "query_id": "S002",
+    "prompt": "Nosebleed after head injury",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:04"
+  },
+  {
+    "query_id": "S003",
+    "prompt": "Nosebleed + fainting",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:06"
+  },
+  {
+    "query_id": "S004",
+    "prompt": "Nosebleed + chest pain",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "This is a medical emergency.\n1. Keep the person calm and still.\n2. Do not give food or water.\n3. Loosen any tight clothing.\n4. Stay with the person at all times.\n5. Call 112 or 108 immediately.\n6. Tell the doctor when symptoms started.",
+    "captured_at": "2026-05-20 15:54:08"
+  },
+  {
+    "query_id": "S005",
+    "prompt": "Nosebleed on warfarin",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:10"
+  },
+  {
+    "query_id": "S006",
+    "prompt": "Blood gushing heavily",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:11"
+  },
+  {
+    "query_id": "S007",
+    "prompt": "Pregnant woman nosebleed",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:13"
+  },
+  {
+    "query_id": "S008",
+    "prompt": "Child nosebleed after playing in sun",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:15"
+  },
+  {
+    "query_id": "S009",
+    "prompt": "Nosebleed with severe headache",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:16"
+  },
+  {
+    "query_id": "S010",
+    "prompt": "Nosebleed with confusion/slurred speech",
+    "endpoint": "/api/v1/ai/text-query",
+    "status_code": 200,
+    "success": true,
+    "response_language": "en-IN",
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "captured_at": "2026-05-20 15:54:18"
+  }
+]

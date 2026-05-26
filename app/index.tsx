@@ -136,14 +136,18 @@ export default function LoginScreen() {
                                     borderRadius: RADIUS.full,
                                     marginTop: SPACING.xl, ...SHADOWS.medium
                                 }}
-                                onPress={() => {
+                                onPress={async () => {
                                     if (!canContinue) {
                                         setError(t('invalid_phone'));
                                         return;
                                     }
 
-                                    // Send OTP then navigate
-                                    AuthService.sendOTP(phoneNumber);
+                                    const result = await AuthService.sendOTP(phoneNumber);
+                                    if (!result.success) {
+                                        setError(result.error || 'Failed to send OTP');
+                                        return;
+                                    }
+
                                     router.push({
                                         pathname: '/otp' as any,
                                         params: { phoneNumber }
