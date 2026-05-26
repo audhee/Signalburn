@@ -10,11 +10,6 @@
     "updates": {
       "enabled": false
     },
-    "splash": {
-      "image": "./assets/images/logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FDFCF7"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.arohan.assist",
@@ -35,8 +30,6 @@
         "RECORD_AUDIO",
         "MODIFY_AUDIO_SETTINGS"
       ],
-      "usesCleartextTraffic": true,
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -45,7 +38,23 @@
       "favicon": "./assets/images/logo.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      "expo-secure-store",
+      "expo-status-bar",
+      "expo-web-browser",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "newArchEnabled": true
+          },
+          "ios": {
+            "newArchEnabled": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -53,8 +62,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8f7d6e0a-4076-498d-ad2a-542a36be5c33"
+        "projectId": "bd329c66-e3e8-4a39-b2cd-039d7c69e999"
       }
-    }
+    },
+    "owner": "vaibhav63"
   }
 }

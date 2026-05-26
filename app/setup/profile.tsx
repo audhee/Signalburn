@@ -16,6 +16,8 @@ export default function ProfileSetup() {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [otherCondition, setOtherCondition] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [ageError, setAgeError] = useState('');
 
     const CONDITIONS = [
         'Diabetes',
@@ -60,25 +62,57 @@ export default function ProfileSetup() {
                         placeholder={t('name_placeholder')}
                         placeholderTextColor={COLORS.muted}
                         value={name}
-                        onChangeText={setName}
+                        onChangeText={(text) => {
+                            setName(text);
+                            // Detect numbers in name section
+                            if (/[0-9]/.test(text)) {
+                                setNameError('enter proper credential');
+                            } else {
+                                setNameError('');
+                            }
+                        }}
                         style={{
-                            borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.l,
+                            borderWidth: 1, borderColor: nameError ? COLORS.error : COLORS.border, marginBottom: SPACING.xs,
                             padding: SPACING.m, borderRadius: RADIUS.m, fontSize: rf(16), backgroundColor: COLORS.card
                         }}
                     />
+                    {nameError ? (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.l }}>
+                            <Ionicons name="alert-circle" size={rf(16)} color={COLORS.error} style={{ marginRight: 4 }} />
+                            <Text style={{ color: COLORS.error, fontSize: rf(13), fontWeight: '600' }}>{nameError}</Text>
+                        </View>
+                    ) : (
+                        <View style={{ marginBottom: SPACING.l }} />
+                    )}
 
-                    <Text style={{ fontSize: rf(16), marginBottom: SPACING.xs, fontWeight: '600', color: COLORS.text }}>{t('age')}</Text>
+                    <Text style={{ fontSize: rf(16), marginBottom: SPACING.xs, fontWeight: '600', color: COLORS.text }}>{t('age')} <Text style={{ color: COLORS.error }}>*</Text></Text>
                     <TextInput
                         placeholder={t('age_placeholder')}
                         placeholderTextColor={COLORS.muted}
-                        keyboardType="numeric"
+                        keyboardType="default"
                         value={age}
-                        onChangeText={setAge}
+                        onChangeText={(text) => {
+                            setAge(text);
+                            // Detect alphabets/non-numeric characters in age section
+                            if (/[^0-9]/.test(text)) {
+                                setAgeError('enter age in numbers');
+                            } else {
+                                setAgeError('');
+                            }
+                        }}
                         style={{
-                            borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.l,
+                            borderWidth: 1, borderColor: ageError ? COLORS.error : COLORS.border, marginBottom: SPACING.xs,
                             padding: SPACING.m, borderRadius: RADIUS.m, fontSize: rf(16), backgroundColor: COLORS.card
                         }}
                     />
+                    {ageError ? (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.l }}>
+                            <Ionicons name="alert-circle" size={rf(16)} color={COLORS.error} style={{ marginRight: 4 }} />
+                            <Text style={{ color: COLORS.error, fontSize: rf(13), fontWeight: '600' }}>{ageError}</Text>
+                        </View>
+                    ) : (
+                        <View style={{ marginBottom: SPACING.l }} />
+                    )}
 
                     <Text style={{ fontSize: rf(16), marginBottom: SPACING.xs, fontWeight: '600', color: COLORS.text }}>{t('health_conditions')}</Text>
                     <View
@@ -142,10 +176,21 @@ export default function ProfileSetup() {
                             marginBottom: SPACING.l, ...SHADOWS.medium
                         }}
                         onPress={async () => {
-                            if (!name.trim()) {
-                                Alert.alert(t('error'), t('name_required'));
-                                return;
+                            let hasError = false;
+                            if (!name.trim() || !age.trim()) {
+                                if (!name.trim()) setNameError('enter your full details correctly');
+                                if (!age.trim()) setAgeError('enter your full details correctly');
+                                hasError = true;
                             }
+                            if (/[0-9]/.test(name.trim())) {
+                                setNameError('enter proper credential');
+                                hasError = true;
+                            }
+                            if (/[^0-9]/.test(age.trim())) {
+                                setAgeError('enter age in numbers');
+                                hasError = true;
+                            }
+                            if (hasError) return;
                             const profile = { name, age, conditions: selectedConditions, other: otherCondition };
                             await StorageService.saveUserProfile(profile);
 

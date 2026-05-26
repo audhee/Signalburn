@@ -1,0 +1,82 @@
+[
+  {
+    "id": "Q001",
+    "query": "My father fell in the bathroom and his arm is bleeding.",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q002",
+    "query": "Nosebleed for 45 minutes",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q003",
+    "query": "Nosebleed after head injury",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q004",
+    "query": "Nosebleed with confusion and slurred speech",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q005",
+    "query": "My hand is paining and swollen after lifting a heavy bucket",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q006",
+    "query": "???? ???? ??? ?? ??? ?? ???? ??? ?? ??? ???? ??? ??",
+    "requested_language": "hi-IN",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q007",
+    "query": "mera naak bleeding ho raha hai",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "प्राथमिक चिकित्सा:\n1. व्यक्ति को शांत रखें।\n2. सांस सही है या नहीं देखें।\n3. बिना doctor की सलाह के कोई दवा न दें।\n4. स्थिति खराब हो तो 112 पर call करें।",
+    "response_language": "hi-IN",
+    "input_type": "text"
+  },
+  {
+    "id": "Q008",
+    "query": "my mother is feeling dizzy and sweating a lot",
+    "requested_language": "en",
+    "status_code": 200,
+    "success": true,
+    "response": "Here is general first aid advice.\n1. Keep the person calm and comfortable.\n2. Check if they are breathing normally.\n3. Do not move if there is a head or neck injury.\n4. Apply gentle pressure if there is bleeding.\n5. Do not give medicines without doctor advice.\n6. Call 112 or 108 if condition gets worse.",
+    "response_language": "en-IN",
+    "input_type": "text"
+  }
+]

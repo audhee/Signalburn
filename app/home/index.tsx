@@ -95,6 +95,48 @@ export default function HomeScreen() {
                             <Text style={{ fontSize: rf(10), color: COLORS.muted, marginTop: SPACING.xs }}>{t('hours_left', { hours: 14 })}</Text>
                         </View>
                     </View>
+
+                    {/* AI Chatbox Card */}
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            padding: SPACING.m,
+                            borderRadius: RADIUS.l,
+                            marginTop: SPACING.m,
+                            marginHorizontal: SPACING.l,
+                            ...SHADOWS.light,
+                            borderWidth: 1,
+                            borderColor: COLORS.border,
+                            alignSelf: 'stretch',
+                        }}
+                        onPress={() => router.push('/emergency/chatbox')}
+                        accessibilityRole="button"
+                        accessibilityLabel="AI Chat"
+                        accessibilityHint="Opens the AI first-aid chat assistant"
+                    >
+                        <View style={{
+                            width: rf(44),
+                            height: rf(44),
+                            borderRadius: rf(22),
+                            backgroundColor: '#E0F2FE',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: SPACING.m,
+                        }}>
+                            <Ionicons name="chatbubbles" size={rf(22)} color={COLORS.primary} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ fontSize: rf(15), fontWeight: '700', color: COLORS.text }}>
+                                {t('chatbox_title')}
+                            </Text>
+                            <Text style={{ fontSize: rf(12), color: COLORS.muted, marginTop: 2 }}>
+                                Ask health & first-aid questions
+                            </Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={rf(20)} color={COLORS.muted} />
+                    </TouchableOpacity>
                 </ScrollView>
 
                 {/* Bottom Panel - Fixed */}

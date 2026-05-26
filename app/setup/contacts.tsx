@@ -13,6 +13,7 @@ type Contact = {
     name: string;
     relation: string;
     phone: string; // digits only recommended
+    age?: string;
     isPrimary: boolean;
 };
 
@@ -25,6 +26,11 @@ export default function EmergencyContacts() {
     const [newName, setNewName] = useState('');
     const [newRelation, setNewRelation] = useState('');
     const [newPhone, setNewPhone] = useState('');
+    const [newAge, setNewAge] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [relationError, setRelationError] = useState('');
+    const [ageError, setAgeError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
 
     useEffect(() => {
         let cancelled = false;
@@ -82,17 +88,43 @@ export default function EmergencyContacts() {
         }
         const name = newName.trim();
         const relation = newRelation.trim();
-        const phoneDigits = newPhone.replace(/\D/g, '');
-        if (!name) {
-            Alert.alert('Missing name', 'Please enter the contact name.');
+        const ageVal = newAge.trim();
+        const phoneVal = newPhone.trim();
+
+        // Clear previous errors
+        setNameError('');
+        setRelationError('');
+        setAgeError('');
+        setPhoneError('');
+
+        if (!name || !relation || !ageVal || !phoneVal) {
+            if (!name) setNameError('Please fill all the fields correctly.');
+            if (!relation) setRelationError('Please fill all the fields correctly.');
+            if (!ageVal) setAgeError('Please fill all the fields correctly.');
+            if (!phoneVal) setPhoneError('Please fill all the fields correctly.');
             return;
         }
-        if (!relation) {
-            Alert.alert('Missing relation', 'Please enter the relationship (e.g., Son, Daughter, Doctor).');
+
+        const nameRegex = /^[a-zA-Z\s]+$/;
+        if (!nameRegex.test(name)) {
+            setNameError('enter in alphabets only');
             return;
         }
-        if (phoneDigits.length < 8) {
-            Alert.alert('Invalid phone', 'Please enter a valid phone number.');
+
+        const ageRegex = /^[0-9]+$/;
+        if (!ageRegex.test(ageVal)) {
+            setAgeError('enter in numbers');
+            return;
+        }
+
+        const phoneRegex = /^[0-9]+$/;
+        if (!phoneRegex.test(phoneVal)) {
+            setPhoneError('enter in numbers');
+            return;
+        }
+
+        if (phoneVal.length < 8) {
+            setPhoneError('Please enter a valid phone number.');
             return;
         }
 
@@ -100,7 +132,8 @@ export default function EmergencyContacts() {
             id: `${Date.now()}`,
             name,
             relation,
-            phone: phoneDigits,
+            phone: phoneVal,
+            age: ageVal,
             isPrimary: contacts.length === 0, // first contact defaults to primary
         };
         const next = [...contacts, nextContact].map((c) => ({ ...c, isPrimary: nextContact.isPrimary ? c.id === nextContact.id : c.isPrimary }));
@@ -109,6 +142,11 @@ export default function EmergencyContacts() {
         setNewName('');
         setNewRelation('');
         setNewPhone('');
+        setNewAge('');
+        setNameError('');
+        setRelationError('');
+        setAgeError('');
+        setPhoneError('');
         setShowAdd(false);
     };
 
@@ -169,30 +207,96 @@ export default function EmergencyContacts() {
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Name <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newName}
-                                onChangeText={setNewName}
+                                onChangeText={(text) => {
+                                    setNewName(text);
+                                    if (/[^a-zA-Z\s]/.test(text)) {
+                                        setNameError('enter in alphabets only');
+                                    } else {
+                                        setNameError('');
+                                    }
+                                }}
                                 placeholder="e.g., Raj Kumar"
                                 placeholderTextColor={COLORS.muted}
-                                style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
+                                style={{ borderWidth: 1, borderColor: nameError ? COLORS.error : COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.xs, fontSize: rf(16) }}
                             />
+                            {nameError ? (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.m }}>
+                                    <Ionicons name="alert-circle" size={rf(14)} color={COLORS.error} style={{ marginRight: 4 }} />
+                                    <Text style={{ color: COLORS.error, fontSize: rf(12), fontWeight: '600' }}>{nameError}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ marginBottom: SPACING.m }} />
+                            )}
 
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Relation <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newRelation}
-                                onChangeText={setNewRelation}
+                                onChangeText={(text) => {
+                                    setNewRelation(text);
+                                    if (relationError) setRelationError('');
+                                }}
                                 placeholder="e.g., Son / Daughter / Doctor"
                                 placeholderTextColor={COLORS.muted}
-                                style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
+                                style={{ borderWidth: 1, borderColor: relationError ? COLORS.error : COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.xs, fontSize: rf(16) }}
                             />
+                            {relationError ? (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.m }}>
+                                    <Ionicons name="alert-circle" size={rf(14)} color={COLORS.error} style={{ marginRight: 4 }} />
+                                    <Text style={{ color: COLORS.error, fontSize: rf(12), fontWeight: '600' }}>{relationError}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ marginBottom: SPACING.m }} />
+                            )}
+
+                            <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Age <Text style={{ color: COLORS.error }}>*</Text></Text>
+                            <TextInput
+                                value={newAge}
+                                onChangeText={(text) => {
+                                    setNewAge(text);
+                                    if (/[^0-9]/.test(text)) {
+                                        setAgeError('enter in numbers');
+                                    } else {
+                                        setAgeError('');
+                                    }
+                                }}
+                                placeholder="e.g., 45"
+                                placeholderTextColor={COLORS.muted}
+                                keyboardType="default"
+                                style={{ borderWidth: 1, borderColor: ageError ? COLORS.error : COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.xs, fontSize: rf(16) }}
+                            />
+                            {ageError ? (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.m }}>
+                                    <Ionicons name="alert-circle" size={rf(14)} color={COLORS.error} style={{ marginRight: 4 }} />
+                                    <Text style={{ color: COLORS.error, fontSize: rf(12), fontWeight: '600' }}>{ageError}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ marginBottom: SPACING.m }} />
+                            )}
 
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Phone <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newPhone}
-                                onChangeText={setNewPhone}
+                                onChangeText={(text) => {
+                                    setNewPhone(text);
+                                    if (/[^0-9]/.test(text)) {
+                                        setPhoneError('enter in numbers');
+                                    } else {
+                                        setPhoneError('');
+                                    }
+                                }}
                                 placeholder="Phone number"
                                 placeholderTextColor={COLORS.muted}
-                                keyboardType="phone-pad"
-                                style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
+                                keyboardType="default"
+                                style={{ borderWidth: 1, borderColor: phoneError ? COLORS.error : COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.xs, fontSize: rf(16) }}
                             />
+                            {phoneError ? (
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.m }}>
+                                    <Ionicons name="alert-circle" size={rf(14)} color={COLORS.error} style={{ marginRight: 4 }} />
+                                    <Text style={{ color: COLORS.error, fontSize: rf(12), fontWeight: '600' }}>{phoneError}</Text>
+                                </View>
+                            ) : (
+                                <View style={{ marginBottom: SPACING.m }} />
+                            )}
 
                             <View style={{ flexDirection: 'row', gap: SPACING.m }}>
                                 <TouchableOpacity
@@ -235,7 +339,7 @@ export default function EmergencyContacts() {
                                     </View>
                                     <View style={{ flex: 1 }}>
                                         <Text style={{ fontSize: rf(16), fontWeight: '800', color: COLORS.text }} numberOfLines={1}>{c.name}</Text>
-                                        <Text style={{ fontSize: rf(14), color: COLORS.muted }} numberOfLines={1}>{c.relation}</Text>
+                                        <Text style={{ fontSize: rf(14), color: COLORS.muted }} numberOfLines={1}>{c.relation} {c.age ? `(Age: ${c.age})` : ''}</Text>
                                         <Text style={{ fontSize: rf(12), color: COLORS.muted, marginTop: 2 }}>+{c.phone}</Text>
                                     </View>
                                 </View>

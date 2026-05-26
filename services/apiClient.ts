@@ -24,6 +24,9 @@ export type ApiRequestOptions = {
 };
 
 export const apiClient = {
+    // 🆕 Expose base URL for direct fetch calls (like multipart upload)
+    baseUrl: API_BASE_URL,
+
     async request<T = any>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> {
         const {
             method = 'GET',
@@ -85,6 +88,110 @@ export const apiClient = {
         }
     },
 
+    // 🆕 Returns both body AND headers (needed for voice assistant audio + text)
+    async requestWithHeaders(endpoint: string, options: ApiRequestOptions = {}): Promise<{ blob: Blob; headers: Headers }> {
+        const {
+            method = 'GET',
+            body,
+            headers = {},
+            includeAuth = true,
+            isFormData = false
+        } = options;
+
+        const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+        
+        const requestHeaders: Record<string, string> = {
+            ...headers,
+        };
+
+        if (!isFormData) {
+            requestHeaders['Content-Type'] = 'application/json';
+        }
+
+        if (includeAuth) {
+            const token = await getToken();
+            if (token) {
+                requestHeaders['Authorization'] = `Bearer ${token}`;
+            }
+        }
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: requestHeaders,
+                body: isFormData ? body : JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                let errorData: any;
+                try {
+                    errorData = JSON.parse(text);
+                } catch {
+                    errorData = { detail: text };
+                }
+                throw new Error(errorData.detail || `Request failed with status ${response.status}`);
+            }
+
+            // Return BOTH the blob (audio) AND headers (text response)
+            const blob = await response.blob();
+            return { blob, headers: response.headers };
+
+        } catch (error: any) {
+            console.error(`apiClient Error [${method} ${endpoint}]:`, error);
+            throw error;
+        }
+    },
+
+    // 🆕 NEW: Upload multipart form data (images/videos/files) + get headers back
+    async uploadMultipart(
+        endpoint: string,
+        formData: FormData,
+        options: Omit<ApiRequestOptions, 'method' | 'body' | 'isFormData'> = {}
+    ): Promise<{ blob: Blob; headers: Headers }> {
+        const { headers = {}, includeAuth = true } = options;
+
+        const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+        
+        const requestHeaders: Record<string, string> = {
+            ...headers,
+            // ⚠️ DO NOT set Content-Type for FormData — fetch sets it automatically with boundary
+        };
+
+        if (includeAuth) {
+            const token = await getToken();
+            if (token) {
+                requestHeaders['Authorization'] = `Bearer ${token}`;
+            }
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: requestHeaders,
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                let errorData: any;
+                try {
+                    errorData = JSON.parse(text);
+                } catch {
+                    errorData = { detail: text };
+                }
+                throw new Error(errorData.detail || `Upload failed with status ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            return { blob, headers: response.headers };
+
+        } catch (error: any) {
+            console.error(`apiClient Upload Error [POST ${endpoint}]:`, error);
+            throw error;
+        }
+    },
+
     get<T = any>(endpoint: string, options: Omit<ApiRequestOptions, 'method' | 'body'> = {}) {
         return this.request<T>(endpoint, { ...options, method: 'GET' });
     },
@@ -103,5 +210,5 @@ export const apiClient = {
 
     delete<T = any>(endpoint: string, options: Omit<ApiRequestOptions, 'method' | 'body'> = {}) {
         return this.request<T>(endpoint, { ...options, method: 'DELETE' });
-    }
+    },
 };
