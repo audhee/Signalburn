@@ -10,11 +10,7 @@
     "updates": {
       "enabled": false
     },
-    "splash": {
-      "image": "./assets/images/logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FDFCF7"
-    },
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.arohan.assist",
@@ -35,8 +31,6 @@
         "RECORD_AUDIO",
         "MODIFY_AUDIO_SETTINGS"
       ],
-      "usesCleartextTraffic": true,
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -45,7 +39,12 @@
       "favicon": "./assets/images/logo.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      "expo-secure-store",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
