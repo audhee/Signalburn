@@ -10,7 +10,6 @@
     "updates": {
       "enabled": false
     },
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.arohan.assist",
@@ -44,7 +43,18 @@
       "expo-localization",
       "expo-secure-store",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "newArchEnabled": true
+          },
+          "ios": {
+            "newArchEnabled": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
