@@ -315,14 +315,6 @@ async def multimodal_upload(
     generated_session = session_id or str(uuid.uuid4())[:8]
 
     try:
-        from groq import Groq
-        
-        GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-        if not GROQ_API_KEY:
-            raise HTTPException(status_code=500, detail="GROQ_API_KEY not configured")
-        
-        groq_client = Groq(api_key=GROQ_API_KEY)
-
         # Save uploaded file
         suffix = ".jpg"
         if media.filename:
@@ -337,75 +329,27 @@ async def multimodal_upload(
         file_size_mb = len(content) / (1024 * 1024)
         logger.info(f"[{generated_session}] Media uploaded: {media.filename} ({media.content_type}, {file_size_mb:.2f} MB)")
 
-        # Read bytes and encode as base64 for Groq Vision
-        with open(tmp_path, "rb") as f:
-            media_bytes = f.read()
+        mime_type = media.content_type
+        if not mime_type or mime_type == "application/octet-stream":
+            mime_type = get_mime_type(media.filename or "")
 
-        mime_type = media.content_type or "image/jpeg"
-        image_b64 = base64.b64encode(media_bytes).decode("utf-8")
-        image_data_url = f"data:{mime_type};base64,{image_b64}"
-
-        # Build prompt for Groq Vision
-        user_complaint = text.strip() if text.strip() else "Please analyze this injury"
-
-        vision_prompt = f"""You are a medical first-aid assistant analyzing an injury image.
-
-User complaint: {user_complaint}
-
-Analyze the image and provide:
-1. SEVERITY: classify as exactly one of: emergency, moderate, minor
-2. FIRST AID: give 6 to 8 clear numbered first aid steps
-
-Format your response EXACTLY like this:
-SEVERITY: minor
-FIRST AID:
-1. Step one
-2. Step two
-...
-
-Rules:
-- emergency = severe bleeding, deep wounds, unconscious, broken bones visible, burns covering large area
-- moderate = moderate wounds, sprains, small burns, cuts needing stitches
-- minor = small cuts, bruises, mild abrasions
-- Always give practical first aid steps
-- Keep steps simple and clear
-- End with: Call 112 if condition worsens"""
-
-        # Call Groq Vision (Llama 4 Scout — free tier multimodal)
-        response = await run_in_threadpool(
-            lambda: groq_client.chat.completions.create(
-                model="meta-llama/llama-4-scout-17b-16e-instruct",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": vision_prompt},
-                            {
-                                "type": "image_url",
-                                "image_url": {"url": image_data_url}
-                            }
-                        ]
-                    }
-                ],
-                temperature=0.2,
-                max_tokens=1024,
-            )
+        # Call Gemini Multimodal Processor
+        result = await run_in_threadpool(
+            process_multimodal_query,
+            text,
+            content,
+            mime_type,
+            media.filename or "unknown",
+            ""
         )
 
-        response_text = response.choices[0].message.content.strip()
-        logger.info(f"[{generated_session}] Groq vision response: {response_text[:200]}")
+        response_text = result["response_text"]
+        detected_lang = result["language_code"]
+        severity = result["severity"]
 
-        # Parse severity from response
-        severity = "minor"
-        response_lower = response_text.lower()
-        if "severity: emergency" in response_lower:
-            severity = "emergency"
-        elif "severity: moderate" in response_lower:
-            severity = "moderate"
-        elif "severity: minor" in response_lower:
-            severity = "minor"
+        logger.info(f"[{generated_session}] Gemini multimodal response: {response_text[:200]}")
 
-        # Extract first aid text (everything after "FIRST AID:")
+        # Extract first aid text (everything after "FIRST AID:") if it exists, otherwise keep full response
         first_aid_text = response_text
         if "FIRST AID:" in response_text:
             first_aid_text = response_text.split("FIRST AID:")[-1].strip()
@@ -414,7 +358,7 @@ Rules:
         audio_b64 = None
         try:
             audio_bytes = await run_in_threadpool(
-                text_to_indian_voice, first_aid_text, "en-IN"
+                text_to_indian_voice, first_aid_text, detected_lang
             )
             if audio_bytes:
                 audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
@@ -444,7 +388,7 @@ Rules:
             "success": True,
             "response": first_aid_text,
             "severity": severity,
-            "language_code": "en-IN",
+            "language_code": detected_lang,
             "session_id": generated_session,
             "audio_base64": audio_b64,
             "media_filename": media.filename or "unknown",

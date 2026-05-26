@@ -11,11 +11,27 @@ import logging
 from groq import Groq
 from app.services.ai.rag_service import rag_service
 from app.services.ai.language_service import detect_language, normalize_supported_language
+from app.services.ai.ollama_service import process_voice_with_ollama, USE_LOCAL_MODEL
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
+# Lazy-loaded Groq client — reads env var on first use so config.py's load_dotenv() runs first
+_groq_client = None
+
+def _get_groq_client():
+    """Return the Groq client, initializing it lazily on first call."""
+    global _groq_client
+    if _groq_client is None:
+        # Explicitly load .env in case config.py hasn't initialized yet
+        load_dotenv()
+        api_key = os.getenv("GROQ_API_KEY")
+        if api_key:
+            _groq_client = Groq(api_key=api_key)
+            logger.info("Groq client initialized (lazy)")
+        else:
+            logger.warning("GROQ_API_KEY not found — using fallback responses")
+    return _groq_client
 
 # Scripts that are NEVER allowed in any response
 UNSUPPORTED_SCRIPTS = re.compile(
@@ -64,6 +80,16 @@ def needs_retry(response_text: str, language_name: str) -> bool:
 
 
 def process_voice_with_llm(text: str, context: str = "", language: str = "en", rag_source: str = "all") -> dict:
+    """
+    Process voice input using either fine-tuned Ollama model or Groq API based on configuration.
+    
+    Uses dual mode:
+    - If USE_LOCAL_MODEL=true: Uses fine-tuned Ollama model
+    - If USE_LOCAL_MODEL=false: Uses Groq API (existing behavior)
+    """
+    if USE_LOCAL_MODEL:
+        logger.info("Using fine-tuned Ollama model")
+        return process_voice_with_ollama(text, context, language, rag_source)
 
     requested_lang = normalize_supported_language(language)
     lang_info      = detect_language(text)
@@ -80,6 +106,7 @@ def process_voice_with_llm(text: str, context: str = "", language: str = "en", r
     rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
     rag_context     = rag_context_raw[:2000] if rag_context_raw else ""
 
+    groq_client = _get_groq_client()
     if not groq_client:
         logger.error("GROQ_API_KEY not configured")
         return fallback_response(language_code, is_emergency)
@@ -147,7 +174,7 @@ FORBIDDEN: Arabic, Urdu, Gujarati, Bengali, Tamil, Telugu, Chinese, Japanese scr
 Give 6 to 8 numbered first aid steps in {language_name} only.
 No introduction. Just numbered steps."""
 
-        retry = groq_client.chat.completions.create(
+        retry = _get_groq_client().chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": strict_prompt},
@@ -267,47 +294,46 @@ def build_system_prompt(
     emergency_block = ""
     if is_emergency:
         emergency_block = (
-            f"EMERGENCY DETECTED: Give 6 to 8 detailed first aid steps in {language_name}. "
+            f"🚨 EMERGENCY — Give 6 to 8 detailed first aid steps in {language_name}. "
             f"End with: Call 112 or 108 immediately.\n\n"
         )
 
     # Script rules per language
     if language_name == "English":
-        script_rule = "Use ONLY English alphabet. NO Hindi, Kannada, Urdu, Arabic, Chinese or any other script."
+        script_rule = "Use ONLY English alphabet A-Z. No other scripts allowed."
     elif language_name == "Hinglish":
-        script_rule = "Use English alphabet only (A-Z). Mix Hindi words written in Roman script. Example: 'Haath ko rest do, ice lagao'. NO Devanagari. NO other scripts."
+        script_rule = "Use English alphabet only (A-Z). Mix Hindi words in Roman script. Example: 'Haath ko rest do'. NO Devanagari. NO other scripts."
     elif language_name == "Kanglish":
-        script_rule = "Use English alphabet only (A-Z). Mix Kannada words written in Roman script. Example: 'Kai rest madi, ice hachi'. NO Kannada script. NO other scripts."
+        script_rule = "Use English alphabet only (A-Z). Mix Kannada words in Roman script. Example: 'Kai rest madi'. NO Kannada script. NO other scripts."
     elif language_name == "Hindi":
-        script_rule = "Use ONLY Hindi Devanagari script. NO English alphabet for Hindi words. NO other scripts."
+        script_rule = "Use ONLY Hindi Devanagari script (हाथ, दर्द). NO English or other scripts."
     elif language_name == "Kannada":
-        script_rule = "Use ONLY Kannada script. NO Roman alphabet for Kannada words. NO other scripts."
+        script_rule = "Use ONLY Kannada script (ಕೈ, ನೋವು). NO English or other scripts."
     else:
         script_rule = "Use ONLY English alphabet A-Z."
 
-    return f"""You are Arohan, a health assistant for elderly Indians.
+    return f"""You are Arohan AI, a calm medical first aid assistant for elderly Indians.
 
-{emergency_block}
-USER LANGUAGE: {language_name}
-SUPPORTED LANGUAGE MODES ONLY: English, Hindi, Kannada, Hinglish, Kanglish.
+{emergency_block}RULES (Anisha's medical_safe template):
+1. Never diagnose disease — give only first aid suggestions
+2. Keep steps numbered (6 to 8 steps)
+3. For emergencies say "Call 112 or 108 immediately"
+4. Use short, simple words elderly people understand
+5. Never paste raw database text or medical jargon
+
+LANGUAGE: {language_name}
+SUPPORTED LANGUAGES ONLY: English, Hindi, Kannada, Hinglish, Kanglish.
 If uncertain, default to English.
 Never identify, classify, or answer as Urdu, Gujarati, Chinese, Korean, Bengali, Tamil, or Telugu.
 
 === SCRIPT RULE — MOST IMPORTANT ===
 {script_rule}
 FORBIDDEN SCRIPTS: Arabic, Urdu, Gujarati, Bengali, Tamil, Telugu, Chinese, Japanese.
-If you use any forbidden script, your response is WRONG.
 =====================================
-
-RESPONSE FORMAT:
-- Start directly with first aid advice
-- Give minimum 6 numbered steps, maximum 8 steps
-- Simple words elderly people understand
-- End emergencies with: Call 112 or 108 immediately
 
 EXAMPLES:
 
-User (English): "my nose is bleeding"
+User: "my nose is bleeding"
 Response:
 "For a nosebleed:
 1. Sit upright and lean slightly forward.
@@ -316,51 +342,16 @@ Response:
 4. Breathe through your mouth calmly.
 5. Apply cold cloth to bridge of nose.
 6. Do not blow your nose for 15 minutes after bleeding stops.
-7. Avoid hot drinks or spicy food for several hours.
 Call 112 if bleeding does not stop after 20 minutes."
 
-User (Hinglish): "mera naak is bleeding"
-Response:
-"Nosebleed ke liye:
-1. Seedha baitho aur thoda aage jhuko.
-2. Naak ka soft hissa dono ungliyon se dabao.
-3. 10-15 minute tak mat chodo.
-4. Muh se saans lo.
-5. Naak ke upar thanda kapda rakho.
-6. Bleeding band hone ke baad 15 minute tak naak mat dabaao.
-7. Bahut garam cheez mat khaao.
-Call 112 agar bleeding 20 minute mein band na ho."
-
-User (Hinglish): "my haath is paining"
+User (Hinglish): "mera haath is paining"
 Response:
 "Haath ke dard ke liye:
 1. Haath ko rest do — use mat karo.
 2. Ice ko kapde mein wrap karke 15 minute lagao.
 3. Haath ko dil se upar uthao.
 4. Zyada dard ho toh paracetamol lo.
-5. Sujan ya ungliyan hilane mein takleef ho toh dhyan do.
-6. 2 din mein theek na ho toh doctor ko dikhaao."
-
-User (Kanglish): "my kai is paining"
-Response:
-"Kai novu ge:
-1. Kai rest madi — use madabedi.
-2. Ice cloth nalli sulidu 15 nimisha hachi.
-3. Kai hrudaya matte mele elu.
-4. Thumba novu idre paracetamol tago.
-5. Sujan iro nodko ungalu adisoke kashta agtide nodko.
-6. 2 dina inda mele aagilla andre doctor hatra hogo."
-
-User (Kanglish): "nanna nose is bleeding"
-Response:
-"Nanna nose bleeding ge:
-1. Naer kuto swalpa munde bago.
-2. Nose soft part eradu begalugalinda gattagi hidi.
-3. 10 nimisha bidalagade hidi.
-4. Baya moolaka ushirade.
-5. Nose mele thanda kapada idko.
-6. Bleeding ninthara 15 nimisha nose fulish madabedi.
-7. 20 nimisha mele bleeding ninthilla andre 112 ge call madi."
+5. 2 din mein theek na ho toh doctor ko dikhaao."
 
 User (Kannada): "ನನ್ನ ಕೈ ನೋಯುತ್ತಿದೆ"
 Response:
@@ -369,8 +360,16 @@ Response:
 2. ಐಸ್ ಅನ್ನು ಬಟ್ಟೆಯಲ್ಲಿ ಸುತ್ತಿ 15 ನಿಮಿಷ ಹಚ್ಚಿ.
 3. ಕೈಯನ್ನು ಎದೆಗಿಂತ ಮೇಲೆ ಎತ್ತಿ.
 4. ನೋವು ಜಾಸ್ತಿ ಇದ್ದರೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ ತೆಗೆದುಕೊಳ್ಳಿ.
-5. ಊತ ಕಾಣಿಸಿದರೆ ವೈದ್ಯರನ್ನು ನೋಡಿ.
-6. 2 ದಿನದಲ್ಲಿ ಸರಿಯಾಗದಿದ್ದರೆ ಆಸ್ಪತ್ರೆಗೆ ಹೋಗಿ."
+5. 2 ದಿನದಲ್ಲಿ ಸರಿಯಾಗದಿದ್ದರೆ ಆಸ್ಪತ್ರೆಗೆ ಹೋಗಿ."
+
+User (Kanglish): "my kai is paining"
+Response:
+"Kai novu ge:
+1. Kai rest madi — use madabedi.
+2. Ice cloth nalli sulidu 15 nimisha hachi.
+3. Kai hrudaya matte mele elu.
+4. Thumba novu idre paracetamol tago.
+5. 2 dina inda mele aagilla andre doctor hatra hogo."
 
 User (Hindi): "मेरा हाथ दर्द कर रहा है"
 Response:
@@ -379,21 +378,12 @@ Response:
 2. बर्फ को कपड़े में लपेटकर 15 मिनट लगाएं।
 3. हाथ को दिल से ऊपर उठाएं।
 4. ज्यादा दर्द हो तो पैरासिटामोल लें।
-5. सूजन या उंगलियां हिलाने में तकलीफ हो तो ध्यान दें।
-6. 2 दिन में ठीक न हो तो डॉक्टर को दिखाएं।"
+5. 2 दिन में ठीक न हो तो डॉक्टर को दिखाएं।"
 
-MEDICAL KNOWLEDGE (rephrase in {language_name}):
+MEDICAL KNOWLEDGE:
 {rag_context if rag_context else 'Use general first aid knowledge.'}
 
-RULES:
-- Reply in {language_name} only
-- Follow script rule strictly
-- Minimum 6 steps maximum 8 steps
-- Simple words for elderly users
-- Never paste raw database text
-- No medical jargon
-- Be calm and caring
-"""
+Reply in {language_name} only. Follow the script rule strictly. Be calm and caring."""
 
 
 def post_process(response_text: str, is_emergency: bool) -> str:
