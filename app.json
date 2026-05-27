@@ -36,7 +36,7 @@
         "MODIFY_AUDIO_SETTINGS"
       ],
       "predictiveBackGestureEnabled": false,
-      "gradleWrapperDistributionUrl": "https://services.gradle.org/distributions/gradle-8.13-bin.zip"
+      "newArchEnabled": true
     },
     "web": {
       "bundler": "metro",
