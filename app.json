@@ -10,6 +10,11 @@
     "updates": {
       "enabled": false
     },
+    "splash": {
+      "image": "./assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDFCF7"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.arohan.assist",
@@ -30,7 +35,8 @@
         "RECORD_AUDIO",
         "MODIFY_AUDIO_SETTINGS"
       ],
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "gradleWrapperDistributionUrl": "https://services.gradle.org/distributions/gradle-8.13-bin.zip"
     },
     "web": {
       "bundler": "metro",
@@ -43,18 +49,7 @@
       "expo-localization",
       "expo-secure-store",
       "expo-status-bar",
-      "expo-web-browser",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "newArchEnabled": true
-          },
-          "ios": {
-            "newArchEnabled": true
-          }
-        }
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
