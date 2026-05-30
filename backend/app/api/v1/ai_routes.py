@@ -4,19 +4,19 @@ Language locked from initial complaint — never re-detected from answers.
 """
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse
 from fastapi.concurrency import run_in_threadpool
 from app.models.ai_models import VoicePromptPayload, MultimodalUploadResponse, ChatMessage, ChatHistoryResponse
 from app.services.ai.llm_service import process_voice_with_llm
-from app.services.ai.voice_service import transcribe_audio, text_to_indian_voice
+from app.services.ai.voice_service import transcribe_audio
+from app.services.ai.speech_service import transcribe_audio as gemini_transcribe
 from app.services.ai.language_service import detect_language, normalize_supported_language, sanitize_text_for_language
 from app.services.ai.multimodal_service import (
     process_multimodal_query, 
     get_mime_type, 
     is_image, 
     is_video, 
-    is_document,
-    build_multimodal_prompt
+    is_document
 )
 from app.services.ai.tts_service import synthesize_speech
 import tempfile
@@ -50,7 +50,14 @@ def _sanitize_guided_context(context: str, locked_language: str) -> str:
     return "\n".join(cleaned_lines)
 
 
-# ==================== EXISTING HELPERS (UNCHANGED) ====================
+# ==================== GUIDED QUESTIONS (English only) ====================
+
+FIXED_QUESTIONS = [
+    "What happened?",
+    "What is the age and gender of the person?",
+    "Do they have any medical conditions or take regular medication?",
+]
+
 
 def get_dynamic_question(context: str, already_asked: list) -> str:
     context_lower = context.lower()
@@ -68,17 +75,13 @@ def get_dynamic_question(context: str, already_asked: list) -> str:
         candidates = ["Is the person feeling weak or about to faint?", "When did this start?"]
     else:
         candidates = ["Is the person conscious?", "Is the person breathing properly?"]
+    
     for q in candidates:
         if q not in already_asked:
             return q
     return "When did this start?"
 
 
-FIXED_QUESTIONS = [
-    "What happened?",
-    "What is the age and gender of the person?",
-    "Do they have any medical conditions or take regular medication?",
-]
 MAX_QUESTIONS = 5
 
 
@@ -103,7 +106,19 @@ async def process_voice_input(
             tmp_path = tmp.name
 
         normalized_language = normalize_supported_language(language_code)["language_code"] if language_code else ""
-        transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
+        
+        # Try Groq first, fallback to Gemini
+        try:
+            transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
+        except Exception as e:
+            logger.warning(f"Groq transcription failed: {e}, trying Gemini fallback...")
+            try:
+                with open(tmp_path, "rb") as audio_file:
+                    transcribed_text = await run_in_threadpool(gemini_transcribe, audio_file, os.path.basename(tmp_path))
+            except Exception as gemini_e:
+                logger.error(f"Gemini transcription also failed: {gemini_e}")
+                transcribed_text = "Could not understand audio. Please try speaking clearly."
+        
         if normalized_language:
             transcribed_text = sanitize_text_for_language(
                 transcribed_text,
@@ -116,7 +131,7 @@ async def process_voice_input(
 
         audio_b64 = None
         try:
-            audio_bytes = await run_in_threadpool(text_to_indian_voice, answer_text, detected_lang)
+            audio_bytes = await run_in_threadpool(synthesize_speech, answer_text, detected_lang)
             audio_b64   = base64.b64encode(audio_bytes).decode("utf-8")
         except Exception as e:
             logger.error(f"TTS failed: {e}")
@@ -152,7 +167,7 @@ async def process_text_input(payload: VoicePromptPayload):
 
         audio_b64 = None
         try:
-            audio_bytes = await run_in_threadpool(text_to_indian_voice, answer_text, detected_lang)
+            audio_bytes = await run_in_threadpool(synthesize_speech, answer_text, detected_lang)
             audio_b64   = base64.b64encode(audio_bytes).decode("utf-8")
         except Exception as e:
             logger.error(f"TTS failed: {e}")
@@ -181,12 +196,14 @@ async def guided_query(payload: VoicePromptPayload):
     if not raw_context:
         lang_info = detect_language(text)
         locked_language = lang_info["language_code"]
+        locked_language_name = lang_info["language_name"]
         context = ""
-        logger.info(f"Language detected and locked: {locked_language}")
+        logger.info(f"Language detected and locked: {locked_language} ({locked_language_name})")
     else:
         locked_language = normalize_supported_language(payload.language)["language_code"]
+        locked_language_name = normalize_supported_language(payload.language)["language_name"]
         context = _sanitize_guided_context(raw_context, locked_language)
-        logger.info(f"Using locked language: {locked_language}")
+        logger.info(f"Using locked language: {locked_language} ({locked_language_name})")
 
     lines         = [l.strip() for l in context.split("\n") if l.strip()]
     answer_count  = len([l for l in lines if l.startswith("Q: ")])
@@ -195,28 +212,44 @@ async def guided_query(payload: VoicePromptPayload):
 
     logger.info(f"Guided query - answer_count: {answer_count}")
 
-    # Step 1 — Fixed questions
+    # Step 1 — Fixed questions (English only)
     if answer_count < len(FIXED_QUESTIONS):
+        question_text = FIXED_QUESTIONS[answer_count]
+        # Generate TTS audio for the question
+        audio_b64 = None
+        try:
+            audio_bytes = await run_in_threadpool(synthesize_speech, question_text, locked_language)
+            audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
+        except Exception as e:
+            logger.error(f"TTS for question failed: {e}")
         return JSONResponse(content={
             "success":           True,
             "mode":              "question",
-            "question":          FIXED_QUESTIONS[answer_count],
+            "question":          question_text,
             "question_num":      answer_count + 1,
             "total_questions":   MAX_QUESTIONS,
-            "audio_base64":      None,
+            "audio_base64":      audio_b64,
             "detected_language": locked_language,
         })
 
-    # Step 2 — Dynamic questions
+    # Step 2 — Dynamic questions (English only)
     dynamic_done = answer_count - len(FIXED_QUESTIONS)
     if dynamic_done < (MAX_QUESTIONS - len(FIXED_QUESTIONS)):
+        question_text = get_dynamic_question(accumulated, already_asked)
+        # Generate TTS audio for the question
+        audio_b64 = None
+        try:
+            audio_bytes = await run_in_threadpool(synthesize_speech, question_text, locked_language)
+            audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
+        except Exception as e:
+            logger.error(f"TTS for dynamic question failed: {e}")
         return JSONResponse(content={
             "success":           True,
             "mode":              "question",
-            "question":          get_dynamic_question(accumulated, already_asked),
+            "question":          question_text,
             "question_num":      answer_count + 1,
             "total_questions":   MAX_QUESTIONS,
-            "audio_base64":      None,
+            "audio_base64":      audio_b64,
             "detected_language": locked_language,
         })
 
@@ -235,7 +268,7 @@ async def guided_query(payload: VoicePromptPayload):
 
         audio_b64 = None
         try:
-            audio_bytes = await run_in_threadpool(text_to_indian_voice, answer_text, language_code)
+            audio_bytes = await run_in_threadpool(synthesize_speech, answer_text, language_code)
             audio_b64   = base64.b64encode(audio_bytes).decode("utf-8")
         except Exception as e:
             logger.error(f"TTS failed: {e}")
@@ -273,7 +306,25 @@ async def transcribe_only(
             tmp_path = tmp.name
 
         normalized_language = normalize_supported_language(language_code)["language_code"] if language_code else ""
-        transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
+        
+        # Try Groq first, fallback to Gemini
+        try:
+            transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path, normalized_language)
+        except Exception as e:
+            logger.warning(f"Groq transcription failed: {e}, trying Gemini fallback...")
+            try:
+                with open(tmp_path, "rb") as audio_file:
+                    transcribed_text = await run_in_threadpool(gemini_transcribe, audio_file, os.path.basename(tmp_path))
+            except Exception as gemini_e:
+                logger.error(f"Gemini transcription also failed: {gemini_e}")
+                return JSONResponse(
+                    content={
+                        "success": False,
+                        "error": "Could not transcribe audio. Please try again.",
+                        "transcription": "",
+                    }
+                )
+        
         if normalized_language:
             transcribed_text = sanitize_text_for_language(
                 transcribed_text,
@@ -307,7 +358,7 @@ async def multimodal_upload(
 ):
     """
     Full multimodal pipeline:
-    Upload Image/Video/File + Optional Text → Gemini Vision Analysis →
+    Upload Image/Video/File + Optional Text → Groq Vision Analysis →
     Severity Classification → First Aid Steps → TTS Audio →
     Returns JSON with base64 audio (web-compatible).
     """
@@ -333,7 +384,7 @@ async def multimodal_upload(
         if not mime_type or mime_type == "application/octet-stream":
             mime_type = get_mime_type(media.filename or "")
 
-        # Call Gemini Multimodal Processor
+        # Call Groq Multimodal Processor
         result = await run_in_threadpool(
             process_multimodal_query,
             text,
@@ -347,7 +398,7 @@ async def multimodal_upload(
         detected_lang = result["language_code"]
         severity = result["severity"]
 
-        logger.info(f"[{generated_session}] Gemini multimodal response: {response_text[:200]}")
+        logger.info(f"[{generated_session}] Groq multimodal response: {response_text[:200]}")
 
         # Extract first aid text (everything after "FIRST AID:") if it exists, otherwise keep full response
         first_aid_text = response_text
@@ -358,7 +409,7 @@ async def multimodal_upload(
         audio_b64 = None
         try:
             audio_bytes = await run_in_threadpool(
-                text_to_indian_voice, first_aid_text, detected_lang
+                synthesize_speech, first_aid_text, detected_lang
             )
             if audio_bytes:
                 audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")

@@ -28,7 +28,7 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 
-const DOCTOR_IMG = require('../../app/Anisha-feature/assets/images/doctor.png');
+const DOCTOR_IMG = require('../../assets/images/doctor.png');
 
 type AvatarState = 'idle' | 'listening' | 'thinking' | 'speaking';
 

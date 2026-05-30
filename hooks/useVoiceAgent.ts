@@ -173,8 +173,18 @@ export const useVoiceAgent = (options: UseVoiceAgentOptions = {}) => {
                 isFormData: true,
             });
 
+            if (transcribeResponse.success === false) {
+                throw new Error(transcribeResponse.error || 'Could not transcribe audio. Please try again.');
+            }
+
             const transcribedText = transcribeResponse.transcription || '';
             setTranscript(transcribedText);
+
+            if (!transcribedText.trim()) {
+                setError('No speech detected. Please try again.');
+                setState('error');
+                return;
+            }
 
             if (options.onTranscribed && transcribedText) {
                 options.onTranscribed(transcribedText);

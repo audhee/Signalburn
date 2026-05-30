@@ -5,22 +5,20 @@ Uses Gemini 1.5 Flash (multimodal) for image/video understanding
 
 import os
 import logging
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
-
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 
 def analyze_image(image_path: str, user_query: str = "") -> dict:
     """
     Analyzes an image of wound/injury using Gemini Vision.
-    
+
     Args:
         image_path: Path to uploaded image file
         user_query: Optional text description from user
-    
+
     Returns:
         dict with:
             - description: What AI sees
@@ -29,10 +27,10 @@ def analyze_image(image_path: str, user_query: str = "") -> dict:
             - confidence: 0-1 confidence score
     """
     try:
-        if not GEMINI_API_KEY:
-            raise ValueError("GEMINI_API_KEY not set")
+        if not settings.GEMINI_API_KEY:
+            raise ValueError("GEMINI_API_KEY not configured")
 
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
         # Read image bytes
         with open(image_path, "rb") as f:
@@ -68,18 +66,10 @@ INFECTION_SIGNS: [yes/no, describe if yes]
 DESCRIPTION: [detailed description of what you see]"""
 
         # Call Gemini Vision
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=[
-                types.Content(
-                    role="user",
-                    parts=[
-                        types.Part.from_text(text=prompt),
-                        types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
-                    ]
-                )
-            ]
-        )
+        response = model.generate_content([
+            prompt,
+            genai.Part.from_data(data=image_bytes, mime_type=mime_type)
+        ])
 
         # Parse response
         result = parse_vision_response(response.text)
@@ -98,10 +88,10 @@ def analyze_video(video_path: str, user_query: str = "") -> dict:
     Extracts key frames and analyzes them.
     """
     try:
-        if not GEMINI_API_KEY:
-            raise ValueError("GEMINI_API_KEY not set")
+        if not settings.GEMINI_API_KEY:
+            raise ValueError("GEMINI_API_KEY not configured")
 
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
         # Read video bytes
         with open(video_path, "rb") as f:
@@ -134,18 +124,10 @@ LOCATION: [body part]
 INFECTION_SIGNS: [yes/no, describe if yes]
 DESCRIPTION: [detailed description]"""
 
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=[
-                types.Content(
-                    role="user",
-                    parts=[
-                        types.Part.from_text(text=prompt),
-                        types.Part.from_bytes(data=video_bytes, mime_type=mime_type)
-                    ]
-                )
-            ]
-        )
+        response = model.generate_content([
+            prompt,
+            genai.Part.from_data(data=video_bytes, mime_type=mime_type)
+        ])
 
         result = parse_vision_response(response.text)
         logger.info(f"🎥 Video analyzed: {result['wound_type']} | Severity: {result['severity']}")

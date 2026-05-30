@@ -1,12 +1,10 @@
-import { rf } from '@/constants/responsive';
-import { COLORS, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
-import { apiClient } from '@/services/apiClient';
+import { API_BASE_URL } from '@/constants/api';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useRef } from 'react';
 import {
     ActivityIndicator,
+    Keyboard,
     FlatList,
     KeyboardAvoidingView,
     Platform,
@@ -25,16 +23,20 @@ type Message = {
     sender: 'user' | 'bot';
 };
 
+const API_ENDPOINT = `${API_BASE_URL}/api/v1/ai/text-query`;
+
 export default function ChatboxScreen() {
     const router = useRouter();
-    const { t } = useTranslation();
-    const flatListRef = useRef<FlatList>(null);
-
     const [messages, setMessages] = useState<Message[]>([
-        { id: '1', text: t('chatbox_welcome'), sender: 'bot' },
+        {
+            id: '1',
+            text: '🌲 Arohan Trekker First-Aid Tracker active. State your emergency or symptoms (e.g., altitude sickness, muscle sprain, leech bite).',
+            sender: 'bot',
+        },
     ]);
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const flatListRef = useRef<FlatList>(null);
 
     const handleSend = async () => {
         const cleanText = inputText.trim();
@@ -46,37 +48,59 @@ export default function ChatboxScreen() {
             sender: 'user',
         };
         setMessages((prev) => [...prev, userMessage]);
+        const currentInput = cleanText;
         setInputText('');
         setIsLoading(true);
+        Keyboard.dismiss();
 
         try {
-            const data = await apiClient.post<{
-                success: boolean;
-                response: string;
-                language: string;
-            }>('/api/v1/ai/text-query', {
-                text: cleanText,
-                context: '',
-                language: 'en',
-                rag_source: 'all',
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: currentInput,
+                    context: '',
+                    language: 'en',
+                    rag_source: 'all',
+                }),
             });
+
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => '');
+                let detail = `Server error (${response.status})`;
+                try {
+                    const errJson = JSON.parse(errorText);
+                    detail = errJson.detail || detail;
+                } catch {}
+                throw new Error(detail);
+            }
+
+            const data = await response.json();
 
             const botMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 text:
                     data.response ||
-                    t('chatbox_no_answer'),
+                    'Unable to retrieve medical guidelines. If severe, stop trekking and head to base camp immediately.',
                 sender: 'bot',
             };
             setMessages((prev) => [...prev, botMessage]);
-        } catch (error) {
-            console.error('Chatbox API error:', error);
-            const errorMessage: Message = {
-                id: (Date.now() + 1).toString(),
-                text: t('chatbox_network_error'),
-                sender: 'bot',
-            };
-            setMessages((prev) => [...prev, errorMessage]);
+        } catch (error: any) {
+            console.error('Chatbox error:', error);
+            const errorMsg =
+                error.message?.includes('Network') ||
+                error.message?.includes('fetch') ||
+                error.message?.includes('Failed to fetch')
+                    ? 'Network connection error. Check your connection and try again.'
+                    : error.message || 'Something went wrong. Please try again.';
+            setMessages((prev) => [
+                ...prev,
+                {
+                    id: Date.now().toString(),
+                    text: errorMsg,
+                    sender: 'bot',
+                },
+            ]);
         } finally {
             setIsLoading(false);
         }
@@ -100,12 +124,12 @@ export default function ChatboxScreen() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="dark-content" />
+            <StatusBar barStyle="light-content" />
             <KeyboardAvoidingView
-                style={styles.flex}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.flex}
             >
-                {/* Header */}
+                {/* Header with Back Button */}
                 <View style={styles.header}>
                     <Pressable
                         onPress={() => router.back()}
@@ -113,18 +137,12 @@ export default function ChatboxScreen() {
                         accessibilityRole="button"
                         accessibilityLabel="Go back"
                     >
-                        <Ionicons name="arrow-back" size={rf(24)} color={COLORS.text} />
+                        <Ionicons name="arrow-back" size={22} color="#fff" />
                     </Pressable>
                     <View style={styles.headerCenter}>
-                        <Ionicons
-                            name="chatbubbles"
-                            size={rf(18)}
-                            color={COLORS.primary}
-                            style={styles.headerIcon}
-                        />
-                        <Text style={styles.headerTitle}>{t('chatbox_title')}</Text>
+                        <Text style={styles.headerTitle}>⛰️ Arohan Trek Tracker</Text>
+                        <Text style={styles.headerSubtitle}>First-Aid Emergency Assistant</Text>
                     </View>
-                    <View style={styles.headerSpacer} />
                 </View>
 
                 {/* Messages */}
@@ -143,13 +161,13 @@ export default function ChatboxScreen() {
                 {/* Input */}
                 <View style={styles.inputContainer}>
                     <TextInput
-                        style={styles.textInput}
+                        style={[styles.input, isLoading && styles.inputDisabled]}
                         value={inputText}
                         onChangeText={setInputText}
-                        placeholder={t('chatbox_placeholder')}
-                        placeholderTextColor={COLORS.muted}
-                        multiline
+                        placeholder="Describe issue (e.g., pair mud gaya, sans phool rahi hai)..."
+                        placeholderTextColor="#94a3b8"
                         editable={!isLoading}
+                        multiline
                     />
                     <Pressable
                         style={[
@@ -159,12 +177,12 @@ export default function ChatboxScreen() {
                         onPress={handleSend}
                         disabled={!inputText.trim() || isLoading}
                         accessibilityRole="button"
-                        accessibilityLabel={t('chatbox_send')}
+                        accessibilityLabel="Send message"
                     >
                         {isLoading ? (
                             <ActivityIndicator size="small" color="#fff" />
                         ) : (
-                            <Ionicons name="send" size={rf(20)} color="#fff" />
+                            <Ionicons name="send" size={18} color="#fff" />
                         )}
                     </Pressable>
                 </View>
@@ -176,107 +194,106 @@ export default function ChatboxScreen() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: COLORS.background,
+        backgroundColor: '#1e3a1e',
     },
     flex: {
         flex: 1,
+        backgroundColor: '#f4f6f0',
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: SPACING.m,
-        paddingVertical: SPACING.m,
-        backgroundColor: COLORS.card,
-        borderBottomWidth: 1,
-        borderBottomColor: COLORS.border,
-        ...SHADOWS.light,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
+        backgroundColor: '#1e3a1e',
     },
     backBtn: {
-        padding: SPACING.xs,
-        marginRight: SPACING.s,
+        padding: 4,
+        marginRight: 8,
     },
     headerCenter: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    headerIcon: {
-        marginRight: SPACING.s,
     },
     headerTitle: {
-        fontSize: rf(17),
-        fontWeight: '700',
-        color: COLORS.text,
+        color: '#fff',
+        fontSize: 17,
+        fontWeight: 'bold',
     },
-    headerSpacer: {
-        width: rf(32),
+    headerSubtitle: {
+        color: '#a3e635',
+        fontSize: 11,
+        fontWeight: '500',
+        marginTop: 1,
     },
     listContent: {
-        padding: SPACING.m,
-        paddingBottom: SPACING.l,
+        padding: 12,
+        paddingBottom: 16,
         flexGrow: 1,
     },
     messageBubble: {
-        marginVertical: SPACING.xs,
-        paddingVertical: SPACING.m,
-        paddingHorizontal: SPACING.m,
-        borderRadius: RADIUS.m,
-        maxWidth: '82%',
+        marginVertical: 5,
+        paddingVertical: 12,
+        paddingHorizontal: 14,
+        borderRadius: 15,
+        maxWidth: '85%',
     },
     userBubble: {
-        backgroundColor: COLORS.primary,
+        backgroundColor: '#2f5233',
         alignSelf: 'flex-end',
-        borderBottomRightRadius: RADIUS.s,
+        borderBottomRightRadius: 4,
     },
     botBubble: {
-        backgroundColor: COLORS.card,
+        backgroundColor: '#ffffff',
         alignSelf: 'flex-start',
-        borderBottomLeftRadius: RADIUS.s,
+        borderBottomLeftRadius: 4,
         borderWidth: 1,
-        borderColor: COLORS.border,
+        borderColor: '#e2e8f0',
     },
     userText: {
         color: '#fff',
-        fontSize: rf(15),
-        lineHeight: rf(22),
+        fontSize: 15,
+        lineHeight: 21,
     },
     botText: {
-        color: COLORS.text,
-        fontSize: rf(15),
-        lineHeight: rf(22),
+        color: '#1e293b',
+        fontSize: 15,
+        lineHeight: 21,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'flex-end',
-        padding: SPACING.m,
-        backgroundColor: COLORS.card,
+        padding: 12,
+        backgroundColor: '#fff',
         borderTopWidth: 1,
-        borderTopColor: COLORS.border,
+        borderColor: '#e2e8f0',
     },
-    textInput: {
+    input: {
         flex: 1,
-        minHeight: rf(44),
-        maxHeight: rf(100),
+        minHeight: 42,
+        maxHeight: 100,
         borderWidth: 1,
-        borderColor: COLORS.border,
-        borderRadius: RADIUS.full,
-        paddingHorizontal: SPACING.m,
-        paddingVertical: SPACING.s,
-        backgroundColor: COLORS.background,
-        fontSize: rf(15),
-        color: COLORS.text,
+        borderColor: '#cbd5e1',
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        backgroundColor: '#f8fafc',
+        fontSize: 15,
+        color: '#1e293b',
+    },
+    inputDisabled: {
+        backgroundColor: '#f1f5f9',
+        opacity: 0.7,
     },
     sendButton: {
-        width: rf(44),
-        height: rf(44),
-        borderRadius: rf(22),
-        backgroundColor: COLORS.primary,
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        backgroundColor: '#1e3a1e',
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: SPACING.s,
-        ...SHADOWS.light,
+        marginLeft: 10,
     },
     sendButtonDisabled: {
-        backgroundColor: COLORS.border,
+        backgroundColor: '#94a3b8',
     },
 });

@@ -31,15 +31,45 @@ EMERGENCY_KEYWORDS = [
 HINDI_ROMAN_WORDS = [
     "mera", "meri", "mere", "aur", "hai", "hain", "nahi", "kya",
     "kar", "raha", "rahi", "tha", "thi", "woh", "yeh", "tum",
-    "aap", "main", "hum", "uska", "unka", "dard", "bukhar",
-    "haath", "pair", "pet", "sar", "khoon", "dawa", "cheez"
+    "aap", "hum", "uska", "unka", "dard", "bukhar",
+    "haath", "pair", "pet", "sar", "khoon", "dawa", "cheez",
+    "aagya", "gaya", "aaya", "diya", "liya", "kiya",
+    "hoga", "hoon",
+    "kuch", "koi", "bahut", "thoda", "sab",
+    "apna", "apni", "usne", "usko",
+    "kare", "karta", "karti", "karo",
+    "ja", "jao", "aa", "aao",
+    "de", "le", "lo",
+    "accha", "theek", "samajh",
+    "yaha", "waha", "kab", "kyu", "kaise", "kitna",
+    "par", "lekin", "kyuki",
+    "dekh", "bada", "chota", "jaldi",
+    "andar", "bahar", "upar", "neeche",
+    "aaj", "kal", "din", "raat", "subah",
+    "mila", "mili", "chahiye", "sakta", "sakti",
+    "wala", "wali", "wale",
+    "hona", "karna", "lagna",
+    "bola", "boli", "bolo",
+    "rakha", "rakho",
+    "pada", "padi",
 ]
 
 KANNADA_ROMAN_WORDS = [
     "nanna", "nanu", "nimma", "avaru", "illi", "alli", "hogi",
     "banni", "thumba", "swalpa", "novedu", "novedutte", "kai",
     "kalu", "tale", "hotte", "bekku", "beda", "ide", "illa",
-    "enu", "yenu", "yaake", "hege", "onde", "eradu", "madappa"
+    "enu", "yenu", "yaake", "hege", "onde", "eradu", "madappa",
+    "taale", "tal",
+    "bayi", "kivi", "mukha", "bitta", "hedaru",
+    "sari", "chennagi", "olleya",
+    "nodi", "madi", "maadi", "kodi",
+    "bartini", "hogu", "bande", "bandide",
+    "beku", "bedi", "bedava",
+    "sakka",
+    "kel", "keli", "hel", "heli",
+    "tago", "tagondu",
+    "haku", "noyi",
+    "nodappa", "helappa",
 ]
 
 SUPPORTED_LANGUAGE_CODES = {"en-IN", "hi-IN", "kn-IN"}
@@ -128,10 +158,11 @@ def detect_language(text: str) -> dict:
     else:
         hindi_count   = sum(1 for w in words_lower if w in HINDI_ROMAN_WORDS)
         kannada_count = sum(1 for w in words_lower if w in KANNADA_ROMAN_WORDS)
-        if hindi_count >= 2:
+        # Single unmistakeably Indian-language word is enough to detect mixed mode
+        if hindi_count >= 1:
             lang_name = "Hinglish"
             lang_code = "hi-IN"
-        elif kannada_count >= 2:
+        elif kannada_count >= 1:
             lang_name = "Kanglish"
             lang_code = "kn-IN"
         else:

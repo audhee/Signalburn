@@ -10,11 +10,26 @@ import base64
 import requests
 import logging
 from groq import Groq
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-groq_client  = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
+# Lazy-loaded Groq client — reads env var on first use so config.py's load_dotenv() runs first
+_groq_client = None
+
+def _get_groq_client():
+    """Return the Groq client, initializing it lazily on first call."""
+    global _groq_client
+    if _groq_client is None:
+        # Explicitly load .env in case config.py hasn't initialized yet
+        load_dotenv()
+        api_key = os.getenv("GROQ_API_KEY")
+        if api_key:
+            _groq_client = Groq(api_key=api_key)
+            logger.info("Groq Whisper client initialized (lazy)")
+        else:
+            logger.warning("GROQ_API_KEY not found — Groq Whisper STT unavailable")
+    return _groq_client
 
 KANNADA_SCRIPT_PATTERN = re.compile(r"[\u0C80-\u0CFF]")
 HINDI_SCRIPT_PATTERN = re.compile(r"[\u0900-\u097F]")
@@ -43,12 +58,25 @@ def _normalize_short_locked_transcript(transcript: str, normalized_lang: str) ->
         if normalized_value in hindi_yes_variants:
             return "हाँ"
 
+    if normalized_lang.startswith("kn"):
+        # Direct yes/no in Kannada
+        kannada_yes = {"ಹೌದು", "ಹೌ", "howdu", "howd", "haudu", "haud"}
+        kannada_no = {"ಇಲ್ಲ", "ಇಲ್ಲಾ", "ಇಲ", "illa", "ill", "ila"}
+        # Common Groq Whisper mis-transcriptions for short Kannada words
+        misheard_yes = {"ಹೇಗಿದೆ", "ಹೇಗಿದ", "ಹೆಗಿದೆ", "hegide", "hegid"}
+        misheard_no = {"ಅಲ್ಲಾಹ್", "ಅಲ್ಲ", "ಅಲ್ಲಾ", "allah", "alla"}
+
+        if normalized_value in kannada_yes or normalized_value in misheard_yes:
+            return "ಹೌದು"
+        if normalized_value in kannada_no or normalized_value in misheard_no:
+            return "ಇಲ್ಲ"
+
     return value
 
 
 def _convert_transcript_to_locked_script(transcript: str, normalized_lang: str) -> str:
     value = (transcript or "").strip()
-    if not value or not groq_client:
+    if not value or not _get_groq_client():
         return value
 
     if normalized_lang.startswith("kn"):
@@ -67,7 +95,7 @@ def _convert_transcript_to_locked_script(transcript: str, normalized_lang: str) 
         return value
 
     try:
-        response = groq_client.chat.completions.create(
+        response = _get_groq_client().chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -108,12 +136,15 @@ def _build_stt_request_kwargs(normalized_lang: str, retry_strict: bool = False) 
         request_kwargs["prompt"] = (
             "Transcribe exactly what is spoken. "
             "This audio is in Kannada. Output only Kannada in Kannada script. "
-            "Do not translate to English. Do not romanize. Do not use any other script."
+            "Do not translate to English. Do not romanize. Do not use any other script. "
+            "Short answers like yes/no must stay exact, for example 'ಹೌದು' (yes), 'ಇಲ್ಲ' (no). "
+            "Do not expand a short reply into a different word."
         )
         if retry_strict:
             request_kwargs["prompt"] += (
                 " Return only Kannada script for the spoken answer. "
-                "If a word is unclear, still keep the answer in Kannada script."
+                "If a word is unclear, still keep the answer in Kannada script. "
+                "Do NOT change short yes/no answers like 'ಹೌದು' or 'ಇಲ್ಲ' into different words."
             )
     elif normalized_lang.startswith("en"):
         request_kwargs["language"] = "en"
@@ -135,7 +166,7 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
     Supports Hindi, Kannada, English, Hinglish, Kanglish.
     """
     try:
-        if not groq_client:
+        if not _get_groq_client():
             raise ValueError("GROQ_API_KEY not set in environment")
 
         logger.info(f"Transcribing audio: {audio_file_path}")
@@ -144,7 +175,7 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
         request_kwargs = _build_stt_request_kwargs(normalized_lang, retry_strict=False)
 
         with open(audio_file_path, "rb") as audio_file:
-            transcription = groq_client.audio.transcriptions.create(
+            transcription = _get_groq_client().audio.transcriptions.create(
                 file=audio_file,
                 **request_kwargs
             )
@@ -157,8 +188,7 @@ def transcribe_audio(audio_file_path: str, language_code: str = "") -> str:
         if normalized_lang and not _has_expected_script(transcript, normalized_lang):
             logger.warning("STT returned unexpected script for %s. Retrying with stricter prompt.", normalized_lang)
             retry_kwargs = _build_stt_request_kwargs(normalized_lang, retry_strict=True)
-            with open(audio_file_path, "rb") as audio_file:
-                retry_transcription = groq_client.audio.transcriptions.create(
+            with open(audio_file_path, "rb") as audio_file:                    retry_transcription = _get_groq_client().audio.transcriptions.create(
                     file=audio_file,
                     **retry_kwargs
                 )
@@ -253,7 +283,9 @@ def text_to_indian_voice(text: str, language_code: str = "hi-IN") -> bytes:
         en-IN → English
     """
     try:
-        sarvam_api_key = os.getenv("SARVAM_API_KEY")
+        # Try settings first (loaded via config.py), then fallback to os.getenv
+        from app.core.config import settings
+        sarvam_api_key = settings.SARVAM_API_KEY or os.getenv("SARVAM_API_KEY")
         if not sarvam_api_key:
             raise ValueError("SARVAM_API_KEY not set in environment")
 
