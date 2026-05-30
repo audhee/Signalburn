@@ -87,12 +87,20 @@ export default function EmergencyContacts() {
             Alert.alert('Missing name', 'Please enter the contact name.');
             return;
         }
+        if (/\d/.test(name)) {
+            Alert.alert('Invalid name', 'Name cannot contain numbers.');
+            return;
+        }
         if (!relation) {
             Alert.alert('Missing relation', 'Please enter the relationship (e.g., Son, Daughter, Doctor).');
             return;
         }
-        if (phoneDigits.length < 8) {
-            Alert.alert('Invalid phone', 'Please enter a valid phone number.');
+        if (/\d/.test(relation)) {
+            Alert.alert('Invalid relation', 'Relationship cannot contain numbers.');
+            return;
+        }
+        if (phoneDigits.length !== 10) {
+            Alert.alert('Invalid phone', 'Please enter a 10-digit phone number.');
             return;
         }
 
@@ -169,7 +177,7 @@ export default function EmergencyContacts() {
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Name <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newName}
-                                onChangeText={setNewName}
+                                onChangeText={(text) => setNewName(text.replace(/\d/g, ''))}
                                 placeholder="e.g., Raj Kumar"
                                 placeholderTextColor={COLORS.muted}
                                 style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
@@ -178,7 +186,7 @@ export default function EmergencyContacts() {
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Relation <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newRelation}
-                                onChangeText={setNewRelation}
+                                onChangeText={(text) => setNewRelation(text.replace(/\d/g, ''))}
                                 placeholder="e.g., Son / Daughter / Doctor"
                                 placeholderTextColor={COLORS.muted}
                                 style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
@@ -187,10 +195,11 @@ export default function EmergencyContacts() {
                             <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.text, marginBottom: SPACING.xs }}>Phone <Text style={{ color: COLORS.error }}>*</Text></Text>
                             <TextInput
                                 value={newPhone}
-                                onChangeText={setNewPhone}
+                                onChangeText={(text) => setNewPhone(text.replace(/\D/g, '').slice(0, 10))}
                                 placeholder="Phone number"
                                 placeholderTextColor={COLORS.muted}
                                 keyboardType="phone-pad"
+                                maxLength={10}
                                 style={{ borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.m, padding: SPACING.m, backgroundColor: COLORS.background, marginBottom: SPACING.m, fontSize: rf(16) }}
                             />
 

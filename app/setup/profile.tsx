@@ -60,7 +60,7 @@ export default function ProfileSetup() {
                         placeholder={t('name_placeholder')}
                         placeholderTextColor={COLORS.muted}
                         value={name}
-                        onChangeText={setName}
+                        onChangeText={(text) => setName(text.replace(/\d/g, ''))}
                         style={{
                             borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.l,
                             padding: SPACING.m, borderRadius: RADIUS.m, fontSize: rf(16), backgroundColor: COLORS.card
@@ -72,8 +72,9 @@ export default function ProfileSetup() {
                         placeholder={t('age_placeholder')}
                         placeholderTextColor={COLORS.muted}
                         keyboardType="numeric"
+                        maxLength={3}
                         value={age}
-                        onChangeText={setAge}
+                        onChangeText={(text) => setAge(text.replace(/\D/g, '').slice(0, 3))}
                         style={{
                             borderWidth: 1, borderColor: COLORS.border, marginBottom: SPACING.l,
                             padding: SPACING.m, borderRadius: RADIUS.m, fontSize: rf(16), backgroundColor: COLORS.card
@@ -131,7 +132,7 @@ export default function ProfileSetup() {
                             backgroundColor: COLORS.card,
                         }}
                         value={otherCondition}
-                        onChangeText={setOtherCondition}
+                        onChangeText={(text) => setOtherCondition(text.replace(/\d/g, ''))}
                     />
 
                     <View style={{ flex: 1 }} />
@@ -144,6 +145,18 @@ export default function ProfileSetup() {
                         onPress={async () => {
                             if (!name.trim()) {
                                 Alert.alert(t('error'), t('name_required'));
+                                return;
+                            }
+                            if (/\d/.test(name)) {
+                                Alert.alert(t('error'), 'Name cannot contain numbers.');
+                                return;
+                            }
+                            if (age && /\D/.test(age)) {
+                                Alert.alert('Invalid age', 'Age must be a number.');
+                                return;
+                            }
+                            if (otherCondition && /\d/.test(otherCondition)) {
+                                Alert.alert('Invalid condition', 'Health condition cannot contain numbers.');
                                 return;
                             }
                             const profile = { name, age, conditions: selectedConditions, other: otherCondition };
