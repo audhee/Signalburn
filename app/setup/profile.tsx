@@ -151,9 +151,12 @@ export default function ProfileSetup() {
                                 Alert.alert(t('error'), 'Name cannot contain numbers.');
                                 return;
                             }
-                            if (age && /\D/.test(age)) {
-                                Alert.alert('Invalid age', 'Age must be a number.');
-                                return;
+                            if (age) {
+                                const ageNum = parseInt(age, 10);
+                                if (isNaN(ageNum) || ageNum < 0 || ageNum > 100) {
+                                    Alert.alert('Invalid age', 'Age must be between 0 and 100.');
+                                    return;
+                                }
                             }
                             if (otherCondition && /\d/.test(otherCondition)) {
                                 Alert.alert('Invalid condition', 'Health condition cannot contain numbers.');

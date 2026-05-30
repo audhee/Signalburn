@@ -95,4 +95,17 @@ describe('Validation Logic', () => {
         fireEvent.changeText(otherInput, 'Condition 99');
         expect(otherInput.props.value).toBe('Condition ');
     });
+
+    it('prevents profile save if age is greater than 100', async () => {
+        const { getByText, getByPlaceholderText } = render(<ProfileSetup />);
+        const nameInput = getByPlaceholderText('name_placeholder');
+        const ageInput = getByPlaceholderText('age_placeholder');
+        const continueButton = getByText('save_profile');
+
+        fireEvent.changeText(nameInput, 'John');
+        fireEvent.changeText(ageInput, '120');
+        fireEvent.press(continueButton);
+
+        expect(Alert.alert).toHaveBeenCalledWith('Invalid age', 'Age must be between 0 and 100.');
+    });
 });
