@@ -806,6 +806,309 @@ FIRST_AID_DOCUMENTS = [
         "tags": ["stitches", "sutures", "closure", "gaping", "scar"],
     },
 
+    # ─── SCORPION STING ────────────────────────────────────────────────────────
+
+    {
+        "id": "fa_scorp_001",
+        "category": "insect_sting",
+        "wound_type": "scorpion_sting",
+        "title": "Immediate First Aid for Scorpion Sting",
+        "content": (
+            "For a scorpion sting, stay calm. Scorpion stings are painful but rarely life-threatening "
+            "for healthy adults. Wash the sting site with soap and water to remove venom from the skin. "
+            "Apply a cold pack or ice wrapped in cloth to the sting area for 10 minutes on and 10 minutes "
+            "off to reduce pain and swelling. Keep the affected limb elevated above heart level. "
+            "Do not cut into the wound, suck out venom, or apply a tight tourniquet. Do not apply "
+            "herbs, mud, or homemade pastes to the sting — these can cause infection. Seek medical "
+            "attention promptly even if symptoms seem mild, as some people may have severe reactions."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["scorpion", "sting", "venom", "pain", "swelling", "insect"],
+    },
+
+    {
+        "id": "fa_scorp_002",
+        "category": "insect_sting",
+        "wound_type": "scorpion_sting",
+        "title": "Pain Management for Scorpion Sting",
+        "content": (
+            "Scorpion stings cause intense burning pain at the site. Over-the-counter pain relievers "
+            "like paracetamol or ibuprofen can help manage the pain. Apply a cold compress to the sting "
+            "area to numb the pain and reduce inflammation. Keep the person calm and still — moving "
+            "excessively can spread the venom more quickly through the bloodstream. Do not apply heat "
+            "or hot water to the sting as this can worsen pain and increase venom absorption. If pain "
+            "does not improve within 2 hours, seek medical attention."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["scorpion", "sting", "pain", "cold compress", "paracetamol", "inflammation"],
+    },
+
+    {
+        "id": "fa_scorp_003",
+        "category": "insect_sting",
+        "wound_type": "scorpion_sting",
+        "title": "Warning Signs After a Scorpion Sting — Seek Emergency Help",
+        "content": (
+            "Seek emergency medical help immediately if the person experiences difficulty breathing, "
+            "swallowing, or speaking; blurred or double vision; uncontrolled drooling or foaming at the "
+            "mouth; muscle twitching or jerking; rapid eye movements; vomiting; or if a child or elderly "
+            "person was stung. Children, elderly, and people with weak immune systems are at higher risk "
+            "of severe reactions. If the sting was from a highly venomous scorpion species, anti-venom "
+            "may be needed. Call 112 or 108 and go to the nearest hospital immediately."
+        ),
+        "severity_applicable": "major",
+        "tags": ["scorpion", "sting", "emergency", "breathing", "anti-venom", "muscle twitching"],
+    },
+
+    # ─── SNAKE BITE ───────────────────────────────────────────────────────────────
+
+    {
+        "id": "fa_snake_001",
+        "category": "animal_bite",
+        "wound_type": "snake_bite",
+        "title": "Immediate First Aid for Snake Bite",
+        "content": (
+            "For a snake bite, first ensure the area is safe — move away from the snake. Help the "
+            "person lie down and advise them to stay as still and calm as possible, as moving spreads "
+            "venom faster. Call 112 or 108 immediately for emergency medical services. Remove any tight "
+            "clothing, jewellery, or watches from the bitten limb to prevent restricted blood flow if "
+            "swelling occurs. Mark the site of the bite with a pen or marker to track any changes and "
+            "note the time the bite happened. Do not cut the wound, suck out venom, or apply a "
+            "tourniquet. Keep the bitten limb at or slightly below heart level. Provide emotional "
+            "support and reassurance."
+        ),
+        "severity_applicable": "major",
+        "tags": ["snake", "bite", "venom", "emergency", "112", "108", "tourniquet"],
+    },
+
+    {
+        "id": "fa_snake_002",
+        "category": "animal_bite",
+        "wound_type": "snake_bite",
+        "title": "What NOT to Do for a Snake Bite",
+        "content": (
+            "DO NOT cut into the bite wound or try to suck out the venom. This is ineffective and "
+            "causes more tissue damage. DO NOT apply a tourniquet or tight bandage as this can "
+            "concentrate venom in one area causing severe local tissue damage and may lead to "
+            "amputation. DO NOT apply ice directly on the bite. DO NOT give the person alcohol, "
+            "caffeine, or any medication unless prescribed by a doctor. DO NOT try to catch or kill "
+            "the snake — note its colour and pattern from a safe distance if possible. DO NOT let the "
+            "person walk or run. Carry them if movement is needed. The most important step is getting "
+            "to a hospital with anti-venom as quickly as possible."
+        ),
+        "severity_applicable": "major",
+        "tags": ["snake", "bite", "dont", "tourniquet", "venom", "emergency"],
+    },
+
+    {
+        "id": "fa_snake_003",
+        "category": "animal_bite",
+        "wound_type": "snake_bite",
+        "title": "Snake Bite Symptoms to Monitor",
+        "content": (
+            "Monitor the snake bite victim for symptoms such as swelling and redness spreading from "
+            "the bite site, severe pain, blistering, difficulty breathing, drooping eyelids, blurred "
+            "vision, excessive sweating, nausea, vomiting, weakness in limbs, or unusual bleeding from "
+            "the gums or nose. Not all snake bites inject venom — about 20 to 50 percent of bites are \"dry bites\" "
+            "with no venom. However, always assume venom has been injected and seek medical attention. "
+            "Inform doctors of any symptoms you observed so they can determine if anti-venom is needed. "
+            "Symptoms can appear as quickly as 15 minutes or be delayed by several hours."
+        ),
+        "severity_applicable": "major",
+        "tags": ["snake", "bite", "symptoms", "venom", "dry bite", "anti-venom"],
+    },
+
+    # ─── BEE / WASP / INSECT STING ────────────────────────────────────────────────
+
+    {
+        "id": "fa_insect_001",
+        "category": "insect_sting",
+        "wound_type": "bee_wasp_sting",
+        "title": "First Aid for Bee or Wasp Sting",
+        "content": (
+            "For a bee or wasp sting, first remove the stinger if it is still in the skin. Scrape it out "
+            "using a flat object like a credit card or fingernail — do not use tweezers as squeezing "
+            "the venom sac can inject more venom. Wash the area with soap and water. Apply a cold pack "
+            "or ice wrapped in cloth for 10 minutes to reduce pain and swelling. Take an antihistamine "
+            "like cetirizine if available to control itching and swelling. Apply calamine lotion or a "
+            "paste of baking soda and water to soothe the area. Keep the affected limb elevated."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["bee", "wasp", "sting", "insect", "antihistamine", "stinger"],
+    },
+
+    {
+        "id": "fa_insect_002",
+        "category": "insect_sting",
+        "wound_type": "bee_wasp_sting",
+        "title": "Allergic Reaction to Insect Sting — Anaphylaxis Warning",
+        "content": (
+            "Some people have severe allergic reactions (anaphylaxis) to insect stings. Signs of anaphylaxis "
+            "include difficulty breathing, swelling of the face, lips, tongue, or throat, hives or rash "
+            "spreading beyond the sting area, dizziness, fainting, rapid heartbeat, and wheezing. If the "
+            "person has an epinephrine auto-injector (EpiPen), help them use it immediately. Call 112 "
+            "or 108 for emergency services. Lay the person on their back with legs elevated. If they "
+            "are vomiting or having trouble breathing, help them sit up or lie on their side. "
+            "Anaphylaxis is life-threatening and requires immediate emergency medical treatment."
+        ),
+        "severity_applicable": "major",
+        "tags": ["bee", "wasp", "sting", "allergy", "anaphylaxis", "epipen", "breathing"],
+    },
+
+    # ─── SEVERE BLEEDING / HEAVY WOUND ────────────────────────────────────────────
+
+    {
+        "id": "fa_sevbleed_001",
+        "category": "bleeding_control",
+        "wound_type": "severe_bleeding",
+        "title": "Emergency First Aid for Severe Bleeding",
+        "content": (
+            "For severe bleeding where blood is pouring or spurting out, act quickly. First, call 112 "
+            "or 108 for emergency services immediately. While waiting, place a clean cloth or sterile "
+            "gauze directly over the wound and press down HARD with both hands. Do not stop to check "
+            "the wound — keep continuous pressure. If blood soaks through the first cloth, place "
+            "another cloth on top and keep pressing. If available, use a tourniquet for life-threatening "
+            "bleeding on an arm or leg — apply it 5 to 7 centimetres above the wound, tighten until "
+            "bleeding stops, and note the time of application. Do not remove the tourniquet once applied. "
+            "Keep the person warm, calm, and lying down until help arrives."
+        ),
+        "severity_applicable": "major",
+        "tags": ["bleeding", "severe", "artery", "spurting", "tourniquet", "emergency"],
+    },
+
+    {
+        "id": "fa_sevbleed_002",
+        "category": "bleeding_control",
+        "wound_type": "severe_bleeding",
+        "title": "Wound Packing for Deep Bleeding Wounds",
+        "content": (
+            "For deep wounds on the torso, neck, or shoulder where a tourniquet cannot be applied, "
+            "wound packing can help control severe bleeding. If you have sterile gauze or a clean "
+            "cloth, pack it firmly inside the wound cavity, pushing it deep into the wound to fill the "
+            "space where blood is coming from. Apply firm direct pressure over the packed wound with "
+            "your hand or a pressure bandage. Do not remove gauze once it becomes soaked — add more "
+            "layers on top. Maintain pressure until emergency services arrive. Wound packing is a "
+            "life-saving technique for deep wounds with heavy bleeding that cannot be stopped by surface "
+            "pressure alone."
+        ),
+        "severity_applicable": "major",
+        "tags": ["bleeding", "deep", "wound packing", "gauze", "torso", "shoulder"],
+    },
+
+    # ─── NOSEBLEED (EPISTAXIS) ──────────────────────────────────────────────────
+
+    {
+        "id": "fa_nose_001",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "Immediate First Aid for Nosebleed",
+        "content": (
+            "For a nosebleed, stay calm and sit upright. Do not lie down or tilt your head back, "
+            "as this can cause blood to flow down your throat and cause nausea or choking. "
+            "Lean your head slightly forward to let blood drain out of your nostrils. "
+            "Using your thumb and index finger, pinch the soft part of your nose firmly, "
+            "just below the bony bridge. Breathe through your mouth and hold the pressure "
+            "for a full 10 to 15 minutes without releasing. Releasing early may disturb "
+            "the clot that is forming. If bleeding continues after 15 minutes, repeat the "
+            "process for another 15 minutes without releasing."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["nose", "nosebleed", "epistaxis", "bleeding", "pressure", "pinch"],
+    },
+
+    {
+        "id": "fa_nose_002",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "Cold Compress for Nosebleed",
+        "content": (
+            "While pinching the nose, applying a cold compress or ice pack wrapped in a cloth "
+            "to the bridge of the nose can help constrict blood vessels and slow the bleeding. "
+            "Place the cold compress across the upper part of the nose, between the eyes. "
+            "Apply for 10 minutes on, then 10 minutes off. Never place ice directly on the "
+            "skin as this can cause damage. Cold therapy also helps reduce swelling and "
+            "discomfort around the nose area during a nosebleed episode."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["nose", "nosebleed", "cold compress", "ice", "bleeding", "epistaxis"],
+    },
+
+    {
+        "id": "fa_nose_003",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "Aftercare Following a Nosebleed",
+        "content": (
+            "Once the bleeding has stopped, rest quietly for a few hours. Do not blow your nose, "
+            "bend over, lift heavy objects, or engage in strenuous activity for at least 12 hours, "
+            "as this can dislodge the clot and restart the bleeding. Keep your head elevated "
+            "higher than your heart while resting or sleeping. You can apply a thin layer of "
+            "petroleum jelly or saline nasal gel to the inside of each nostril to keep the "
+            "nasal passages moist and prevent the nasal lining from drying out, which can "
+            "lead to more nosebleeds."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["nose", "nosebleed", "aftercare", "rest", "elevation", "moisture"],
+    },
+
+    {
+        "id": "fa_nose_004",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "Causes and Prevention of Nosebleeds",
+        "content": (
+            "Common causes of nosebleeds include dry air, hot weather, sun exposure, "
+            "nose picking, allergies, colds, sinus infections, and minor injury to the nose. "
+            "To prevent nosebleeds, keep the inside of your nostrils moist by using a saline "
+            "nasal spray or applying a thin layer of petroleum jelly. Use a humidifier in "
+            "dry environments, especially in air-conditioned or heated rooms. Avoid picking "
+            "or blowing your nose forcefully. Protect your nose from direct sun exposure "
+            "by wearing a hat or staying in shade during peak heat hours. Stay well hydrated "
+            "by drinking plenty of water throughout the day."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["nose", "nosebleed", "prevention", "causes", "dry air", "sun exposure"],
+    },
+
+    {
+        "id": "fa_nose_005",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "When to Seek Emergency Help for Nosebleed",
+        "content": (
+            "Seek emergency medical attention if the nosebleed does not stop after 20 minutes "
+            "of continuous direct pressure, if the bleeding is very heavy (more than a cup "
+            "of blood), if the person feels dizzy, lightheaded, or faints, if the bleeding "
+            "starts after a head injury or fall, if blood is flowing down the throat causing "
+            "vomiting, if the person has difficulty breathing, or if they are on blood thinning "
+            "medication such as warfarin or aspirin. Nosebleeds in elderly people or those "
+            "with high blood pressure also warrant medical evaluation even if the bleeding "
+            "stops, as they may require further treatment."
+        ),
+        "severity_applicable": "major",
+        "tags": ["nose", "nosebleed", "emergency", "seek help", "heavy bleeding", "dizzy"],
+    },
+
+    {
+        "id": "fa_nose_006",
+        "category": "nosebleed",
+        "wound_type": "epistaxis",
+        "title": "Common Nosebleed Mistakes to Avoid",
+        "content": (
+            "Do not tilt your head back during a nosebleed as this causes blood to flow down "
+            "your throat, which can lead to nausea, vomiting, and choking. Do not pack your "
+            "nose with cotton, tissue, or gauze as these can stick to the nasal lining and "
+            "cause rebleeding when removed. Do not blow your nose immediately after a "
+            "nosebleed has stopped — wait at least 12 hours. Do not lie flat during a "
+            "nosebleed — sit upright with your head forward. Do not take hot showers or "
+            "drink hot beverages right after a nosebleed as heat can dilate blood vessels "
+            "and restart bleeding. Do not consume alcohol or caffeine for several hours "
+            "after a nosebleed as they can affect blood pressure."
+        ),
+        "severity_applicable": "minor",
+        "tags": ["nose", "nosebleed", "mistakes", "avoid", "head back", "packing"],
+    },
+
     # ─── FIRST AID KIT & PREPAREDNESS ───────────────────────────────────────────
 
     {

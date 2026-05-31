@@ -102,7 +102,7 @@ redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=T
 
 def _standardize_phone(phone_number: str) -> str:
     """Ensure phone number strictly adheres to +91XXXXXXXXXX format."""
-    cleaned = phone_number.strip().replace(" ", "")
+    cleaned = "".join(ch for ch in phone_number.strip() if ch.isdigit() or ch == "+")
     if not cleaned.startswith("+"):
         if len(cleaned) == 10:
             return f"+91{cleaned}"
@@ -124,6 +124,11 @@ def _get_twilio_client() -> Client:
 def generate_otp(phone_number: str) -> str:
     """Generate a 6-digit OTP and send it via Twilio SMS, cached in Redis with strict rate limiting."""
     formatted_number = _standardize_phone(phone_number)
+
+    # Dev bypass should work even if Redis/Twilio are unavailable.
+    if formatted_number == "+919999999999":
+        logger.info(f"Dev bypass OTP generated for {formatted_number}: 123456")
+        return "123456"
     
     try:
         # 1. Cooldown Check (60 seconds)
@@ -140,7 +145,7 @@ def generate_otp(phone_number: str) -> str:
             logger.warning(f"Hourly rate limit exceeded for {formatted_number}")
             raise RateLimitExceededError("Too many OTP requests. Please try again in an hour.")
 
-        otp = "123456" if formatted_number == "+919999999999" else str(random.randint(100000, 999999))
+        otp = str(random.randint(100000, 999999))
 
         # Explicitly overwrite OTP and reset attempts back to 3
         redis_client.setex(f"{formatted_number}:otp", 300, otp)
@@ -151,11 +156,6 @@ def generate_otp(phone_number: str) -> str:
     except redis.exceptions.RedisError as e:
         logger.error(f"Redis connection failed during generate_otp: {str(e)}")
         raise DatabaseUnavailableError("Authentication service is temporarily unavailable.")
-
-    # Twilio Fallback for Dev
-    if formatted_number == "+919999999999":
-        logger.info(f"Dev bypass OTP generated for {formatted_number}: {otp}")
-        return otp
 
     try:
         client = _get_twilio_client()
@@ -175,6 +175,11 @@ def generate_otp(phone_number: str) -> str:
 def verify_otp(phone_number: str, user_otp: str) -> bool:
     """Verify the OTP against Redis securely using Atomic DECR."""
     formatted_number = _standardize_phone(phone_number)
+
+    # Dev bypass should verify independently of Redis state.
+    if formatted_number == "+919999999999" and user_otp == "123456":
+        logger.info(f"Dev bypass OTP verified for {formatted_number}")
+        return True
     
     try:
         stored_otp = redis_client.get(f"{formatted_number}:otp")

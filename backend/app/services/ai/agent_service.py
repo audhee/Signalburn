@@ -55,7 +55,7 @@ def llm_node(state: AgentState):
         return {"messages": [BaseMessage(content="Warning: GEMINI_API_KEY is missing. But I would have answered: Please proceed to the nearest emergency center.", type="ai")]}
     
     # We structure the payload to LLM model: [SystemMessage, *messages]
-    llm = ChatGoogleGenerativeAI(model="gemini-flash-latest", temperature=0.3, google_api_key=api_key)
+    llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.3, google_api_key=api_key)
     
     messages_to_send = [sys_message] + list(messages)
     try:

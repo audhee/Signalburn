@@ -1,42 +1,53 @@
+import os
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma, FAISS
 from langchain_core.documents import Document
 from app.knowledge_base.health_data import HEALTH_KNOWLEDGE_BASE
 from app.knowledge_base.first_aid_data import FIRST_AID_DOCUMENTS
-import logging
 
 logger = logging.getLogger(__name__)
 
-class RAGService:
-    """
-    RAG (Retrieval Augmented Generation) service for Arohan health assistant.
-    Embeds the health knowledge base and retrieves relevant context for queries.
-    """
+# Paths to all databases
+SASHWAT_CHROMA_DIR  = r"D:\intern\medical-rag-llm\db\my_chroma_db"
+HARSHITA_FAISS_DIR  = r"D:\intern\Arohan\backend\app\knowledge_base\harshita_faiss_index"
+GESHNA_FAISS_DIR    = r"D:\intern\Arohan\backend\app\knowledge_base\geshna_faiss"
+OPTIMIZED_INDEX_DIR = Path(__file__).parent.parent.parent / "knowledge_base" / "optimized_faiss"
+VALID_RAG_SOURCES   = ("all", "arohan", "optimized", "sashwat", "harshita", "geshna")
 
+
+class RAGService:
     def __init__(self):
-        self.db = None
+        self.arohan_db     = None   # in-memory ChromaDB (health + first aid)
+        self.sashwat_db    = None   # Sashwat's medical ChromaDB
+        self.harshita_db   = None   # Harshita's FAISS (dynamic structured)
+        self.geshna_db     = None   # Geshna's FAISS (question-flow based)
+        self.optimized_db  = None   # Optimized FAISS via llama-index (higher quality)
         self.embedding_model = None
         self._initialize()
 
     def _initialize(self):
-        """Load embedding model and build ChromaDB from health knowledge base."""
         try:
             logger.info("Initializing RAG service — loading embedding model...")
 
             self.embedding_model = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/all-MiniLM-L6-v2"
+                model_name="sentence-transformers/all-MiniLM-L6-v2",
+                model_kwargs={"device": "cpu"},
+                encode_kwargs={"normalize_embeddings": True},
             )
 
+            # --- 1. Optimized FAISS index (llama-index) ---
+            # Uses better embeddings (BAAI/bge-small-en-v1.5) and llama-index framework
+            self._load_optimized_index()
+
+            # --- 2. Arohan in-memory KB (fallback Chroma using all-MiniLM-L6-v2) ---
             documents = [
-                Document(
-                    page_content=text,
-                    metadata={"source": "arohan_health_kb"}
-                )
+                Document(page_content=text, metadata={"source": "arohan_health_kb"})
                 for text in HEALTH_KNOWLEDGE_BASE
             ]
-
-            # Convert first aid records to LangChain Document objects
-            first_aid_documents = [
+            first_aid_docs = [
                 Document(
                     page_content=doc["content"],
                     metadata={
@@ -50,44 +61,173 @@ class RAGService:
                 )
                 for doc in FIRST_AID_DOCUMENTS
             ]
-
-            # Combine both knowledge bases
-            documents = documents + first_aid_documents
-
-            # Build ChromaDB vector store in memory
-            self.db = Chroma.from_documents(
-                documents,
+            all_arohan_docs = documents + first_aid_docs
+            self.arohan_db = Chroma.from_documents(
+                all_arohan_docs,
                 self.embedding_model,
                 collection_name="arohan_health_knowledge"
             )
+            logger.info(f"Arohan KB ready — {len(all_arohan_docs)} docs.")
 
-            logger.info(f"RAG service ready — {len(documents)} documents embedded.")
+            # --- 3. Sashwat's ChromaDB ---
+            if os.path.exists(SASHWAT_CHROMA_DIR):
+                self.sashwat_db = Chroma(
+                    persist_directory=SASHWAT_CHROMA_DIR,
+                    embedding_function=self.embedding_model,
+                )
+                logger.info("Sashwat medical RAG DB loaded.")
+            else:
+                logger.warning(f"Sashwat DB not found at {SASHWAT_CHROMA_DIR}")
+
+            # --- 4. Harshita's FAISS ---
+            if os.path.exists(HARSHITA_FAISS_DIR):
+                self.harshita_db = FAISS.load_local(
+                    HARSHITA_FAISS_DIR,
+                    self.embedding_model,
+                    allow_dangerous_deserialization=True
+                )
+                logger.info("Harshita FAISS DB loaded.")
+            else:
+                logger.warning(f"Harshita FAISS not found at {HARSHITA_FAISS_DIR}")
+
+            # --- 5. Geshna's FAISS ---
+            if os.path.exists(GESHNA_FAISS_DIR):
+                self.geshna_db = FAISS.load_local(
+                    GESHNA_FAISS_DIR,
+                    self.embedding_model,
+                    allow_dangerous_deserialization=True
+                )
+                logger.info("Geshna FAISS DB loaded.")
+            else:
+                logger.warning(f"Geshna FAISS not found at {GESHNA_FAISS_DIR}")
 
         except Exception as e:
-            logger.error(f"Failed to initialize RAG service: {e}")
-            # Gracefully degrade so the rest of the app (auth, etc.) still works
-            self.embedding_model = None
-            self.db = None
+            logger.error(f"RAG init failed: {e}")
+            self.arohan_db   = None
+            self.sashwat_db  = None
+            self.harshita_db = None
+            self.geshna_db   = None
+            self.optimized_db = None
 
-    def retrieve_context(self, query: str, k: int = 3) -> str:
-        """
-        Retrieve top-k relevant chunks for a given query.
-        Returns them as a single joined context string for the LLM.
-        """
-        if not self.db:
-            logger.warning("RAG DB not initialized, returning empty context.")
-            return ""
+    def _load_optimized_index(self):
+        """Load the optimized FAISS index built with llama-index."""
+        index_path = str(OPTIMIZED_INDEX_DIR)
+        if not os.path.exists(index_path):
+            logger.warning(f"Optimized index not found at {index_path}")
+            logger.warning("Run: python -m app.knowledge_base.build_optimized_index")
+            return
 
         try:
-            results = self.db.similarity_search(query, k=k)
-            context = "\n\n".join([doc.page_content for doc in results])
-            logger.info(f"Retrieved {len(results)} chunks for query: '{query[:50]}'")
-            return context
+            from llama_index.core import StorageContext, load_index_from_storage, Settings
+            from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
+            # Use BAAI/bge-small-en-v1.5 for the optimized index
+            logger.info("Loading optimized FAISS index (llama-index)...")
+            embed_model = HuggingFaceEmbedding(
+                model_name="BAAI/bge-small-en-v1.5",
+                embed_batch_size=32,
+                device="cpu",
+            )
+            Settings.embed_model = embed_model
+
+            storage_context = StorageContext.from_defaults(persist_dir=index_path)
+            self.optimized_db = load_index_from_storage(storage_context)
+            logger.info("Optimized FAISS index loaded successfully.")
         except Exception as e:
-            logger.error(f"Retrieval failed: {e}")
+            logger.error(f"Failed to load optimized index: {e}")
+            self.optimized_db = None
+
+    def _normalize_source(self, source: Optional[str]) -> str:
+        normalized = (source or "all").strip().lower()
+        if normalized not in VALID_RAG_SOURCES:
+            logger.warning(f"Unknown rag_source '{source}', defaulting to 'all'.")
+            return "all"
+        return normalized
+
+    def _get_enabled_stores(self, source: Optional[str]) -> List[Tuple[str, object]]:
+        normalized = self._normalize_source(source)
+        stores: Dict[str, object] = {
+            "optimized": self.optimized_db,
+            "arohan": self.arohan_db,
+            "sashwat": self.sashwat_db,
+            "harshita": self.harshita_db,
+            "geshna": self.geshna_db,
+        }
+        if normalized == "all":
+            return [(name, store) for name, store in stores.items() if store]
+        selected_store = stores.get(normalized)
+        return [(normalized, selected_store)] if selected_store else []
+
+    def _search_store(self, store_name: str, store: object, query: str, k: int) -> List[Document]:
+        if not store:
+            return []
+        try:
+            # Optimized index uses llama-index retriever
+            if store_name == "optimized":
+                retriever = store.as_retriever(similarity_top_k=k)
+                nodes = retriever.retrieve(query)
+                results = [
+                    Document(
+                        page_content=node.text,
+                        metadata=node.metadata,
+                    )
+                    for node in nodes
+                ]
+                logger.info(f"Optimized DB: {len(results)} chunks (llama-index).")
+                return results
+
+            # All other stores use langchain similarity_search
+            results = store.similarity_search(query, k=k)
+            logger.info(f"{store_name.title()} DB: {len(results)} chunks.")
+            return results
+        except Exception as e:
+            logger.error(f"{store_name.title()} retrieval failed: {e}")
+            return []
+
+    def retrieve_context(self, query: str, k: int = 3, source: Optional[str] = "all") -> str:
+        """
+        Query the selected knowledge base(s) and combine results.
+        Returns combined context string for downstream LLM prompts.
+        """
+        results: List[Document] = []
+        enabled_stores = self._get_enabled_stores(source)
+        if not enabled_stores:
+            logger.warning(f"No RAG stores available for source='{source}'.")
             return ""
 
+        for store_name, store in enabled_stores:
+            results.extend(self._search_store(store_name, store, query, k))
 
-# Singleton instance — initialized once when server starts
+        if not results:
+            logger.warning("No results from any DB.")
+            return ""
+
+        context = "\n\n".join([doc.page_content for doc in results])
+        logger.info(f"Total: {len(results)} chunks retrieved across all DBs.")
+        return context
+
+    def retrieve_structured(self, query: str, k: int = 3, source: Optional[str] = "all") -> dict:
+        """
+        Returns structured context from the selected DB(s) separately.
+        Used by Geshna's question flow to get targeted results.
+        """
+        structured = {
+            "optimized": [],
+            "arohan":   [],
+            "sashwat":  [],
+            "harshita": [],
+            "geshna":   [],
+        }
+        for store_name, store in self._get_enabled_stores(source):
+            structured[store_name] = [
+                doc.page_content for doc in self._search_store(store_name, store, query, k)
+            ]
+
+        return structured
+
+
+def get_rag_context(query: str, k: int = 3, source: Optional[str] = "all") -> str:
+    return rag_service.retrieve_context(query, k=k, source=source)
+
+
 rag_service = RAGService()

@@ -1,0 +1,15 @@
+# Ignore files when building on EAS
+node_modules/
+.expo/
+dist/
+web-build/
+backend/
+*.zip
+arohan_pipeline_upload/
+upload_arohan/
+.qwen/
+.venv/
+venv/
+*.exe
+nul
+backend/nul

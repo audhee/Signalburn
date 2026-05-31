@@ -1,44 +1,180 @@
-import google.generativeai as genai
+"""
+llm_service.py — Arohan AI Text Generation (Groq API)
+Uses Groq llama-3.3-70b-versatile (or Ollama local model via USE_LOCAL_MODEL toggle).
+Responds in SAME language as user query.
+3-layer script protection — no wrong language passes through.
+
+Refactored to use shared prompt_utils.py and centralized config.py Settings.
+"""
+
+import os
+import logging
+from groq import Groq
+
 from app.core.config import settings
 from app.services.ai.rag_service import rag_service
-import logging
+from app.services.ai.language_service import detect_language, normalize_supported_language
+from app.services.ai.prompt_utils import (
+    has_unsupported_script,
+    needs_retry,
+    get_hardcoded_response,
+    post_process,
+    fallback_response,
+    build_system_prompt,
+    get_script_rule,
+)
 
 logger = logging.getLogger(__name__)
 
-def process_voice_with_llm(text: str, context: str = "", language: str = "en") -> str:
+# Lazy-loaded Groq client — reads env var on first use so config.py's load_dotenv() runs first
+_groq_client = None
+
+
+def _get_groq_client():
+    """Return the Groq client, initializing it lazily on first call."""
+    global _groq_client
+    if _groq_client is None:
+        api_key = os.getenv("GROQ_API_KEY") or settings.GROQ_API_KEY
+        if api_key:
+            _groq_client = Groq(api_key=api_key)
+            logger.info("Groq client initialized (lazy)")
+        else:
+            logger.warning("GROQ_API_KEY not found — using fallback responses")
+    return _groq_client
+
+
+def process_voice_with_llm(
+    text: str, context: str = "", language: str = "en", rag_source: str = "all"
+) -> dict:
     """
-    Processes user query using Gemini with RAG context injected.
-    text     → transcribed user query (from Whisper)
-    context  → optional extra context passed from frontend
-    language → detected language code for response language
+    Process voice input using either fine-tuned Ollama model or Groq API
+    based on configuration.
+
+    Uses dual mode:
+    - If USE_LOCAL_MODEL=true: Uses fine-tuned Ollama model
+    - If USE_LOCAL_MODEL=false: Uses Groq API (existing behavior)
     """
-    if not settings.GEMINI_API_KEY:
-        return "GEMINI_API_KEY is not configured on the server."
+    if settings.USE_LOCAL_MODEL:
+        logger.info("Using fine-tuned Ollama model")
+        from app.services.ai.ollama_service import process_voice_with_ollama
+        return process_voice_with_ollama(text, context, language, rag_source)
 
-    # Retrieve relevant health knowledge from ChromaDB
-    rag_context = rag_service.retrieve_context(text, k=3)
+    requested_lang = normalize_supported_language(language)
+    lang_info = detect_language(text)
+    language_code = lang_info["language_code"]
+    language_name = lang_info["language_name"]
+    is_emergency = lang_info["is_emergency"]
 
-    # Build the system prompt
-    system_prompt = f"""You are Arohan, a helpful AI health assistant for elderly patients in India.
-You have access to a health knowledge base. Use it to give accurate, caring, and concise answers.
-Always respond in the same language the user spoke in.
-If the situation seems like a medical emergency, always tell the user to call 112 immediately.
-Keep your response short and clear — the user will hear this as voice output.
+    if context and requested_lang["language_name"] in [
+        "English", "Hindi", "Kannada", "Hinglish", "Kanglish"
+    ]:
+        language_code = requested_lang["language_code"]
+        language_name = requested_lang["language_name"]
 
-Health Knowledge Base (use this to answer):
-{rag_context}
+    logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
-Additional context from device: {context if context else 'None'}
-"""
+    rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
+    rag_context = rag_context_raw[:6000] if rag_context_raw else ""
 
-    user_message = f"User asked: {text}"
+    groq_client = _get_groq_client()
+    if not groq_client:
+        logger.error("GROQ_API_KEY not configured")
+        return fallback_response(language_code, is_emergency)
+
+    system_prompt = build_system_prompt(language_name, rag_context, is_emergency)
+
+    # Build messages array — merge conversation context with latest text into one user message
+    if context:
+        user_content = (
+            f"Patient details (conversation so far):\n{context[:4000]}\n\n"
+            f"Latest response from patient:\n{text}"
+        )
+    else:
+        user_content = text
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_content},
+    ]
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-pro')
-        response = model.generate_content(f"{system_prompt}\n\n{user_message}")
-        logger.info(f"Gemini response generated for query: '{text[:50]}'")
-        return response.text
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.1,
+            max_tokens=900,
+            top_p=0.9,
+            frequency_penalty=0.3,
+            presence_penalty=0.3,
+        )
+
+        response_text = response.choices[0].message.content.strip()
+
+        # Layer 2 — check if wrong script detected
+        if needs_retry(response_text, language_name):
+            logger.warning(f"Wrong script for {language_name}. Retrying...")
+            response_text = force_language_retry(
+                text, rag_context, language_name, is_emergency, context
+            )
+
+        response_text = post_process(response_text, is_emergency)
+        logger.info(f"Response: {response_text[:100]}...")
+
+        return {
+            "response_text": response_text,
+            "language_code": language_code,
+        }
 
     except Exception as e:
-        logger.error(f"Gemini API call failed: {e}")
-        raise
+        logger.error(f"Groq failed: {e}")
+        return fallback_response(language_code, is_emergency)
+
+
+def force_language_retry(
+    text: str,
+    rag_context: str,
+    language_name: str,
+    is_emergency: bool,
+    prior_context: str = "",
+) -> str:
+    """
+    Layer 2 retry — ultra strict prompt for correct language.
+    If still wrong → Layer 3 hardcoded fallback.
+    """
+    try:
+        script_rule = get_script_rule(language_name)
+        strict_prompt = (
+            f"You are a medical first aid assistant.\n"
+            f"LANGUAGE: {language_name}\n"
+            f"SCRIPT RULE: {script_rule}\n"
+            f"FORBIDDEN: Arabic, Urdu, Gujarati, Bengali, Tamil, Telugu, Chinese, Japanese scripts.\n\n"
+            f"Give 6 to 8 numbered first aid steps in {language_name} only.\n"
+            f"No introduction. Just numbered steps."
+        )
+
+        # Build retry messages with prior context if available
+        retry_messages = [{"role": "system", "content": strict_prompt}]
+        if prior_context:
+            retry_messages.append(
+                {"role": "user", "content": f"Conversation so far:\n{prior_context[:3000]}"}
+            )
+        retry_messages.append({"role": "user", "content": f"Patient complaint: {text}"})
+
+        retry = _get_groq_client().chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=retry_messages,
+            temperature=0.0,
+            max_tokens=700,
+        )
+        result = retry.choices[0].message.content.strip()
+
+        # Layer 3 — if STILL wrong, use hardcoded
+        if needs_retry(result, language_name):
+            logger.error("Still wrong after retry. Using hardcoded fallback.")
+            return get_hardcoded_response(is_emergency, language_name)
+
+        return result
+
+    except Exception as e:
+        logger.error(f"Force retry failed: {e}")
+        return get_hardcoded_response(is_emergency, language_name)
