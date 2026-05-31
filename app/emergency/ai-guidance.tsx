@@ -3,172 +3,340 @@ import { COLORS, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { useVoiceAgent } from '@/hooks/useVoiceAgent';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import * as Speech from 'expo-speech';
-import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import Animated, { useAnimatedStyle, withRepeat, withTiming, withSequence, interpolate, useSharedValue } from 'react-native-reanimated';
+import { useState } from 'react';
+import {
+    ActivityIndicator,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from 'react-native';
 
-export default function AIGuidance() {
+export default function AIGuidanceScreen() {
     const router = useRouter();
-    const { t, i18n } = useTranslation();
-    const [mode, setMode] = useState<'guidance' | 'assistant'>('assistant');
-    const [currentStep, setCurrentStep] = useState(0);
-
-    const { 
-        state, 
-        isRecording, 
-        isProcessing, 
-        isPlaying, 
-        startRecording, 
+    const {
+        error,
+        transcript,
+        aiResponse,
+        submitTextQuery,
+        startRecording,
         stopRecordingAndProcess,
-        error 
+        isRecording,
+        isProcessing,
     } = useVoiceAgent();
 
-    // Pulse Animation for Recording
-    const pulseValue = useSharedValue(1);
-    useEffect(() => {
-        if (isRecording) {
-            pulseValue.value = withRepeat(
-                withSequence(
-                    withTiming(1.2, { duration: 500 }),
-                    withTiming(1, { duration: 500 })
-                ),
-                -1,
-                true
-            );
-        } else {
-            pulseValue.value = withTiming(1);
+    const [typedText, setTypedText] = useState('');
+    const [isTextProcessing, setIsTextProcessing] = useState(false);
+
+    const busy = isProcessing || isTextProcessing;
+
+    // ── Text input handler ──────────────────────────────────────────────
+    const handleTextSubmit = async () => {
+        const cleanText = typedText.trim();
+        if (!cleanText || busy) return;
+
+        setIsTextProcessing(true);
+        try {
+            await submitTextQuery(cleanText);
+            setTypedText('');
+        } finally {
+            setIsTextProcessing(false);
         }
-    }, [isRecording]);
-
-    const pulseStyle = useAnimatedStyle(() => ({
-        transform: [{ scale: pulseValue.value }],
-        opacity: interpolate(pulseValue.value, [1, 1.2], [1, 0.6]),
-    }));
-
-    // Guidance mode logic: CPR Steps
-    const CPR_STEPS = useMemo(() => [
-        { title: t('cpr_step_1_title'), text: t('cpr_step_1_text') },
-        { title: t('cpr_step_2_title'), text: t('cpr_step_2_text') },
-        { title: t('cpr_step_3_title'), text: t('cpr_step_3_text') },
-        { title: t('cpr_step_4_title'), text: t('cpr_step_4_text') },
-    ], [t]);
-
-    const speakGuidance = (text: string) => {
-        Speech.stop();
-        Speech.speak(text, { language: i18n.language === 'hi' ? 'hi-IN' : 'en-US', rate: 0.9 });
     };
 
-    useEffect(() => {
-        if (mode === 'guidance') {
-            speakGuidance(CPR_STEPS[currentStep].text);
-        }
-    }, [currentStep, mode]);
+    // ── Status helpers ──────────────────────────────────────────────────
+    const getStatusText = () => {
+        if (isRecording) return 'Listening... speak now';
+        if (busy) return 'Thinking...';
+        return 'Hold to talk or type below';
+    };
 
+    const getStatusColor = () => {
+        if (isRecording) return COLORS.error;
+        if (busy) return COLORS.warning;
+        return COLORS.primary;
+    };
+
+    // ── Render ──────────────────────────────────────────────────────────
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
-            <StatusBar barStyle="dark-content" />
-
+        <View style={styles.container}>
             {/* Header */}
-            <View style={{ paddingHorizontal: SPACING.m, paddingTop: SPACING.xl, paddingBottom: SPACING.m, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: COLORS.border }}>
-                <View>
-                    <Text style={{ fontSize: rf(14), fontWeight: '700', color: COLORS.primary }}>{mode === 'assistant' ? 'LIVE AI ASSISTANT' : t('cpr_guidance_mode')}</Text>
-                    <Text style={{ fontSize: rf(12), color: COLORS.muted }}>{t('ai_guidance')}</Text>
+            <View style={styles.header}>
+                <Pressable onPress={() => router.back()} style={styles.backBtn}>
+                    <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+                </Pressable>
+                <Text style={styles.headerTitle}>Arohan AI Assistant</Text>
+                <View style={styles.headerSpacer} />
+            </View>
+
+            <ScrollView
+                style={styles.scrollView}
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Status indicator */}
+                <View style={styles.statusSection}>
+                    <View style={[styles.statusDot, { backgroundColor: getStatusColor() }]} />
+                    <Text style={styles.statusText}>{getStatusText()}</Text>
                 </View>
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Ionicons name="close-circle" size={rf(32)} color={COLORS.muted} />
-                </TouchableOpacity>
-            </View>
 
-            {/* Mode Switcher */}
-            <View style={{ flexDirection: 'row', padding: SPACING.s, backgroundColor: '#F3F4F6', margin: SPACING.m, borderRadius: RADIUS.full }}>
-                <TouchableOpacity 
-                    onPress={() => { setMode('assistant'); Speech.stop(); }}
-                    style={{ flex: 1, paddingVertical: SPACING.s, alignItems: 'center', backgroundColor: mode === 'assistant' ? 'white' : 'transparent', borderRadius: RADIUS.full, ... (mode === 'assistant' ? SHADOWS.light : {}) }}
-                >
-                    <Text style={{ fontWeight: '700', color: mode === 'assistant' ? COLORS.primary : COLORS.muted }}>VOICE AGENT</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    onPress={() => setMode('guidance')}
-                    style={{ flex: 1, paddingVertical: SPACING.s, alignItems: 'center', backgroundColor: mode === 'guidance' ? 'white' : 'transparent', borderRadius: RADIUS.full, ... (mode === 'guidance' ? SHADOWS.light : {}) }}
-                >
-                    <Text style={{ fontWeight: '700', color: mode === 'guidance' ? COLORS.primary : COLORS.muted }}>CPR STEPS</Text>
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, padding: SPACING.l, alignItems: 'center' }}>
-                {mode === 'guidance' ? (
-                    <>
-                        <View style={{ width: '100%', aspectRatio: 1.2, backgroundColor: '#FFEDD5', borderRadius: RADIUS.xl, alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.xl }}>
-                            <Ionicons name="body" size={rf(120)} color={COLORS.warning} />
-                        </View>
-                        <Text style={{ fontSize: rf(24), fontWeight: '800', color: COLORS.text, textAlign: 'center', marginBottom: SPACING.m }}>{CPR_STEPS[currentStep].title}</Text>
-                        <Text style={{ fontSize: rf(18), color: COLORS.muted, marginBottom: SPACING.xl, textAlign: 'center' }}>{CPR_STEPS[currentStep].text}</Text>
-                        <View style={{ flexDirection: 'row', gap: SPACING.s, marginBottom: SPACING.xl }}>
-                            {CPR_STEPS.map((_, index) => (
-                                <View key={index} style={{ width: rf(8), height: rf(8), borderRadius: rf(4), backgroundColor: index === currentStep ? COLORS.primary : COLORS.border }} />
-                            ))}
-                        </View>
-                    </>
-                ) : (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                        <View style={{ width: rf(180), height: rf(180), borderRadius: rf(90), backgroundColor: '#E0F2FE', alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.xl }}>
-                            <Ionicons name="mic-outline" size={rf(80)} color={COLORS.primary} />
-                            {isRecording && (
-                                <Animated.View style={[{ position: 'absolute', width: rf(180), height: rf(180), borderRadius: rf(90), borderWidth: 4, borderColor: COLORS.primary }, pulseStyle]} />
-                            )}
-                        </View>
-
-                        <Text style={{ fontSize: rf(22), fontWeight: '800', color: COLORS.text, textAlign: 'center', marginBottom: SPACING.s }}>
-                            {isRecording ? "Listening..." : isProcessing ? "Thinking..." : isPlaying ? "Arohan Speaking..." : "Hold to Talk"}
-                        </Text>
-                        <Text style={{ fontSize: rf(16), color: COLORS.muted, textAlign: 'center', marginBottom: SPACING.xl, maxWidth: '80%' }}>
-                            {isRecording ? "Release to send your question" : isProcessing ? "Processing your audio with Gemini AI" : "I can help with medical guidance or CPR steps in any language."}
-                        </Text>
-                        
-                        {error && (
-                            <Text style={{ color: COLORS.error, marginBottom: SPACING.m, fontWeight: '600' }}>⚠️ Connection Error: {error}</Text>
+                {/* Text input */}
+                <View style={styles.textInputSection}>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Type your health question..."
+                        placeholderTextColor="#999"
+                        value={typedText}
+                        onChangeText={setTypedText}
+                        multiline
+                        numberOfLines={2}
+                        editable={!busy}
+                    />
+                    <Pressable
+                        style={[
+                            styles.sendButton,
+                            (!typedText.trim() || busy) && styles.sendButtonDisabled,
+                        ]}
+                        onPress={handleTextSubmit}
+                        disabled={!typedText.trim() || busy}
+                    >
+                        {isTextProcessing ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <Ionicons name="send" size={20} color="#fff" />
                         )}
+                    </Pressable>
+                </View>
 
-                        {isProcessing && <ActivityIndicator size="large" color={COLORS.primary} />}
+                {/* "You said" box */}
+                {transcript.length > 0 && (
+                    <View style={styles.transcriptBox}>
+                        <View style={styles.labelRow}>
+                            <Ionicons name="person-circle" size={18} color={COLORS.primary} />
+                            <Text style={styles.labelText}>You said</Text>
+                        </View>
+                        <Text style={styles.transcriptText}>{transcript}</Text>
                     </View>
                 )}
+
+                {/* "Arohan says" box */}
+                {aiResponse.length > 0 && (
+                    <View style={styles.responseBox}>
+                        <View style={styles.labelRow}>
+                            <Ionicons name="medical" size={18} color={COLORS.success} />
+                            <Text style={styles.labelText}>Arohan says</Text>
+                        </View>
+                        <Text style={styles.responseText}>{aiResponse}</Text>
+                    </View>
+                )}
+
+                {/* Error display */}
+                {error && (
+                    <View style={styles.errorBox}>
+                        <Ionicons name="alert-circle" size={20} color={COLORS.error} />
+                        <Text style={styles.errorText}>{error}</Text>
+                    </View>
+                )}
+
+                <View style={styles.scrollSpacer} />
             </ScrollView>
 
-            {/* Controls */}
-            {mode === 'guidance' ? (
-                <View style={{ padding: SPACING.l, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'white', borderTopColor: COLORS.border, borderTopWidth: 1 }}>
-                    <TouchableOpacity style={{ alignItems: 'center', padding: SPACING.s }} onPress={() => speakGuidance(CPR_STEPS[currentStep].text)}>
-                        <Ionicons name="refresh-circle" size={rf(40)} color={COLORS.muted} />
-                        <Text style={{ fontSize: rf(12), fontWeight: '600', color: COLORS.muted }}>{t('repeat')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ backgroundColor: COLORS.primary, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.m, borderRadius: RADIUS.full, flexDirection: 'row', alignItems: 'center' }} onPress={() => currentStep < CPR_STEPS.length - 1 ? setCurrentStep(c => c + 1) : router.back()}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', marginRight: SPACING.s, fontSize: rf(16) }}>{t('next')}</Text>
-                        <Ionicons name="arrow-forward" size={rf(20)} color="white" />
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <View style={{ padding: SPACING.xl, backgroundColor: 'white', borderTopColor: COLORS.border, borderTopWidth: 1, alignItems: 'center' }}>
-                    <TouchableOpacity 
-                        onLongPress={startRecording}
-                        onPressOut={stopRecordingAndProcess}
-                        style={{ 
-                            width: rf(80), height: rf(80), borderRadius: rf(40), 
-                            backgroundColor: isRecording ? COLORS.error : COLORS.primary, 
-                            alignItems: 'center', justifyContent: 'center',
-                            ...SHADOWS.medium,
-                            transform: [{ scale: isRecording ? 1.1 : 1 }]
-                        }}
-                        activeOpacity={0.7}
-                    >
-                        <Ionicons name={isRecording ? "stop" : "mic"} size={rf(40)} color="white" />
-                    </TouchableOpacity>
-                    <Text style={{ marginTop: SPACING.m, color: COLORS.muted, fontWeight: '700', fontSize: rf(14) }}>
-                        {isRecording ? "RELEASE TO SEND" : "HOLD MICROPHONE TO TALK"}
-                    </Text>
-                </View>
-            )}
-        </SafeAreaView>
+            {/* Mic button — fixed at bottom */}
+            <View style={styles.micSection}>
+                <Pressable
+                    onPressIn={startRecording}
+                    onPressOut={stopRecordingAndProcess}
+                    style={({ pressed }) => [
+                        styles.micButton,
+                        {
+                            backgroundColor: isRecording ? COLORS.error : COLORS.primary,
+                            transform: [{ scale: pressed || isRecording ? 0.95 : 1 }],
+                        },
+                    ]}
+                    disabled={busy}
+                >
+                    {isProcessing ? (
+                        <ActivityIndicator size="large" color="#fff" />
+                    ) : (
+                        <Ionicons
+                            name={isRecording ? 'mic' : 'mic-outline'}
+                            size={32}
+                            color="#fff"
+                        />
+                    )}
+                </Pressable>
+                <Text style={styles.micHint}>
+                    {isRecording ? 'Release to send' : 'Hold microphone to speak'}
+                </Text>
+            </View>
+        </View>
     );
 }
+
+// ── Styles ──────────────────────────────────────────────────────────────────
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: SPACING.m,
+        paddingTop: SPACING.xl + 20,
+        paddingBottom: SPACING.m,
+        backgroundColor: COLORS.card,
+        ...SHADOWS.light,
+    },
+    backBtn: {
+        padding: 8,
+    },
+    headerTitle: {
+        fontSize: rf(18),
+        fontWeight: '700',
+        color: COLORS.text,
+    },
+    headerSpacer: {
+        width: 40,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        padding: SPACING.m,
+        paddingBottom: SPACING.xl,
+    },
+    statusSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: SPACING.l,
+        paddingVertical: SPACING.s,
+    },
+    statusDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        marginRight: 8,
+    },
+    statusText: {
+        fontSize: rf(14),
+        fontWeight: '600',
+        color: COLORS.muted,
+    },
+    textInputSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: SPACING.m,
+        marginTop: SPACING.s,
+    },
+    textInput: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+        borderRadius: RADIUS.l,
+        padding: SPACING.m,
+        fontSize: rf(15),
+        color: COLORS.text,
+        maxHeight: 90,
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+    },
+    sendButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: COLORS.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: SPACING.s,
+    },
+    sendButtonDisabled: {
+        backgroundColor: '#ccc',
+    },
+    transcriptBox: {
+        backgroundColor: '#E3F2FD',
+        borderRadius: RADIUS.l,
+        padding: SPACING.m,
+        marginBottom: SPACING.m,
+        borderLeftWidth: 4,
+        borderLeftColor: '#2196F3',
+        ...SHADOWS.light,
+    },
+    labelRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 6,
+    },
+    labelText: {
+        fontSize: rf(12),
+        fontWeight: '700',
+        color: COLORS.muted,
+        marginLeft: 6,
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
+    transcriptText: {
+        fontSize: rf(15),
+        color: '#1565C0',
+        lineHeight: 22,
+        fontWeight: '500',
+    },
+    responseBox: {
+        backgroundColor: '#E8F5E9',
+        borderRadius: RADIUS.l,
+        padding: SPACING.m,
+        marginBottom: SPACING.m,
+        borderLeftWidth: 4,
+        borderLeftColor: '#4CAF50',
+        ...SHADOWS.light,
+    },
+    responseText: {
+        fontSize: rf(15),
+        color: '#2E7D32',
+        lineHeight: 24,
+        fontWeight: '500',
+    },
+    errorBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFEBEE',
+        borderRadius: RADIUS.l,
+        padding: SPACING.m,
+        marginBottom: SPACING.m,
+        borderLeftWidth: 4,
+        borderLeftColor: COLORS.error,
+    },
+    errorText: {
+        fontSize: rf(14),
+        color: COLORS.error,
+        marginLeft: 8,
+        flex: 1,
+    },
+    scrollSpacer: {
+        minHeight: 50,
+    },
+    micSection: {
+        alignItems: 'center',
+        paddingVertical: SPACING.l,
+        paddingBottom: SPACING.xl + 20,
+        backgroundColor: COLORS.card,
+        ...SHADOWS.medium,
+    },
+    micButton: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...SHADOWS.medium,
+    },
+    micHint: {
+        fontSize: rf(12),
+        color: COLORS.muted,
+        marginTop: SPACING.s,
+    },
+});

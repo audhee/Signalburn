@@ -1,33 +1,50 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from fastapi.responses import Response
-from fastapi.concurrency import run_in_threadpool
-from app.models.ai_models import VoicePromptPayload, HealthQueryResponse
-from app.services.ai.llm_service import process_voice_with_llm
-from app.services.ai.voice_service import transcribe_audio, text_to_indian_voice
-from app.core.config import settings
-import tempfile, os
+"""
+ai_routes.py - Arohan AI API Routes
+
+Accepts BOTH voice and text input, returns TEXT output only.
+
+Pipeline:
+    Voice  → Groq Whisper STT → language detection → RAG + Groq LLM → JSON
+    Text                       → language detection → RAG + Groq LLM → JSON
+"""
+
 import logging
+import os
+import tempfile
+
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
+from fastapi.responses import JSONResponse
+
+from app.models.ai_models import HealthQueryResponse, VoicePromptPayload
+from app.services.ai.llm_service import process_voice_with_llm
+from app.services.ai.voice_service import transcribe_audio
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/process")
-async def process_voice_audio(
+# ═════════════════════════════════════════════════════════════════════════════
+#  ENDPOINT 1 — VOICE INPUT → TEXT OUTPUT
+# ═════════════════════════════════════════════════════════════════════════════
+
+@router.post("/process-voice")
+async def process_voice_input(
     audio: UploadFile = File(...),
     session_id: str = Form(default=""),
     language_code: str = Form(default="hi-IN"),
 ):
     """
-    Full voice pipeline endpoint (called by the React Native app):
-    Multipart audio file → Whisper STT → RAG + Gemini → Sarvam TTS → Audio response
+    Accept an audio file, transcribe it with Groq Whisper, generate a text
+    answer with Groq LLM + RAG, and return JSON.
     """
     tmp_path = None
+
     try:
-        # Step 1: Save uploaded audio to a temp file
+        # 1. Save uploaded audio to a temp file
         suffix = ".m4a"
         if audio.filename:
-            ext = audio.filename.split(".")[-1]
+            ext = audio.filename.rsplit(".", 1)[-1]
             suffix = f".{ext}" if ext else ".m4a"
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -35,111 +52,73 @@ async def process_voice_audio(
             tmp.write(content)
             tmp_path = tmp.name
 
-        logger.info(f"[{session_id}] Audio saved to {tmp_path} ({len(content)} bytes)")
+        logger.info("[%s] Voice input received: %d bytes", session_id, len(content))
 
-        # Step 2: Transcribe audio → text
+        # 2. Groq Whisper STT → text
         transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path)
-        logger.info(f"[{session_id}] Transcribed: {transcribed_text}")
+        logger.info("[%s] Transcribed: %s", session_id, transcribed_text)
 
-        # Step 3: RAG + Gemini → answer text
-        answer_text = await run_in_threadpool(
+        # 3. Groq LLM + RAG → answer text
+        llm_result = await run_in_threadpool(
             process_voice_with_llm,
             transcribed_text,
-            language=language_code
-        )
-        logger.info(f"[{session_id}] LLM answer: {answer_text[:80]}...")
-
-        # Step 4: Sarvam TTS → audio bytes
-        audio_bytes = await run_in_threadpool(text_to_indian_voice, answer_text, language_code)
-        logger.info(f"[{session_id}] TTS audio: {len(audio_bytes)} bytes")
-
-        return Response(
-            content=audio_bytes,
-            media_type="audio/wav",
-            headers={
-                "X-Transcription": transcribed_text[:200],   # truncate for header safety
-                "X-Answer-Text": answer_text[:200],
-                "X-Session-Id": session_id,
-            }
+            language=language_code,
         )
 
-    except Exception as e:
-        logger.error(f"[{session_id}] Voice pipeline error: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        answer_text = llm_result["response_text"]
+        detected_lang = llm_result["language_code"]
+
+        logger.info("[%s] AI answer: %s", session_id, answer_text[:80])
+
+        # 4. Return JSON (text only, no audio)
+        return JSONResponse(content={
+            "success": True,
+            "input_type": "voice",
+            "transcription": transcribed_text,
+            "response": answer_text,
+            "language": detected_lang,
+            "session_id": session_id,
+        })
+
+    except Exception as exc:
+        logger.error("[%s] Voice processing error: %s", session_id, exc, exc_info=True)
+        raise HTTPException(status_code=500, detail=str(exc))
+
     finally:
         if tmp_path and os.path.exists(tmp_path):
             try:
                 os.unlink(tmp_path)
-                logger.info(f"[{session_id}] Cleaned up temp file: {tmp_path}")
-            except Exception as e:
-                logger.error(f"[{session_id}] Failed to delete temp file {tmp_path}: {e}")
-
-
-@router.post("/voice-query")
-async def full_voice_pipeline(
-    audio: UploadFile = File(...),
-    language_code: str = "hi-IN"
-):
-    """
-    Legacy full pipeline endpoint (kept for compatibility).
-    """
-    tmp_path = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            delete=False,
-            suffix=f".{audio.filename.split('.')[-1]}"
-        ) as tmp:
-            tmp.write(await audio.read())
-            tmp_path = tmp.name
-
-        transcribed_text = await run_in_threadpool(transcribe_audio, tmp_path)
-
-        answer_text = await run_in_threadpool(
-            process_voice_with_llm,
-            transcribed_text,
-            language=language_code
-        )
-
-        audio_bytes = await run_in_threadpool(text_to_indian_voice, answer_text, language_code)
-
-        return Response(
-            content=audio_bytes,
-            media_type="audio/wav",
-            headers={
-                "X-Transcription": transcribed_text,
-                "X-Answer-Text": answer_text
-            }
-        )
-
-    except Exception as e:
-        logger.error(f"Error in /voice-query: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if tmp_path and os.path.exists(tmp_path):
-            try:
-                os.unlink(tmp_path)
-            except:
+            except OSError:
                 pass
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+#  ENDPOINT 2 — TEXT INPUT → TEXT OUTPUT
+# ═════════════════════════════════════════════════════════════════════════════
+
 @router.post("/text-query", response_model=HealthQueryResponse)
-async def process_text_prompt(payload: VoicePromptPayload):
+async def process_text_input(payload: VoicePromptPayload):
     """
-    Text-only endpoint for when you already have transcribed text.
+    Accept typed text, generate a text answer with Groq LLM + RAG, and
+    return JSON.
     """
     try:
-        response_text = await run_in_threadpool(
+        logger.info("Text query: %s", payload.text[:60])
+
+        llm_result = await run_in_threadpool(
             process_voice_with_llm,
             payload.text,
             payload.context,
-            payload.language
+            payload.language,
         )
+
         return HealthQueryResponse(
-            response=response_text,
-            status="success" if settings.GEMINI_API_KEY else "warning",
-            language=payload.language,
-            rag_context_used=True
+            response=llm_result["response_text"],
+            status="success",
+            language=llm_result["language_code"],
+            rag_context_used=True,
         )
-    except Exception as e:
-        logger.error(f"Error in /text-query: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+
+    except Exception as exc:
+        logger.error("Error in /text-query: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))

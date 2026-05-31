@@ -85,6 +85,61 @@ export const apiClient = {
         }
     },
 
+    // 🆕 NEW METHOD: Returns both body AND headers (needed for voice assistant)
+    async requestWithHeaders(endpoint: string, options: ApiRequestOptions = {}): Promise<{ blob: Blob; headers: Headers }> {
+        const {
+            method = 'GET',
+            body,
+            headers = {},
+            includeAuth = true,
+            isFormData = false
+        } = options;
+
+        const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+        
+        const requestHeaders: Record<string, string> = {
+            ...headers,
+        };
+
+        if (!isFormData) {
+            requestHeaders['Content-Type'] = 'application/json';
+        }
+
+        if (includeAuth) {
+            const token = await getToken();
+            if (token) {
+                requestHeaders['Authorization'] = `Bearer ${token}`;
+            }
+        }
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: requestHeaders,
+                body: isFormData ? body : JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                let errorData: any;
+                try {
+                    errorData = JSON.parse(text);
+                } catch {
+                    errorData = { detail: text };
+                }
+                throw new Error(errorData.detail || `Request failed with status ${response.status}`);
+            }
+
+            // Return BOTH the blob (audio) AND headers (text response)
+            const blob = await response.blob();
+            return { blob, headers: response.headers };
+
+        } catch (error: any) {
+            console.error(`apiClient Error [${method} ${endpoint}]:`, error);
+            throw error;
+        }
+    },
+
     get<T = any>(endpoint: string, options: Omit<ApiRequestOptions, 'method' | 'body'> = {}) {
         return this.request<T>(endpoint, { ...options, method: 'GET' });
     },
