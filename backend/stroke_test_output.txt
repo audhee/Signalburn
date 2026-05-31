@@ -1,0 +1,13 @@
+=== TEST 1: /text-query for STROKE ===
+Response: 🚨 For someone showing signs of a stroke:
+1. Call for emergency help right away, do not delay.
+2. Ask the person to smile or show their teeth to check for face drooping.
+3. Ask the person to lift both arms to check for arm weakness.
+4. Ask the person to repeat a simple sentence to check for speech difficulty.
+5. Check for other signs like confusion, trouble speaking, severe headache, or loss of balance.
+6. If the person is conscious, try to keep them calm and comfortable.
+7. Loosen tight clothing around the neck and chest to help them breathe.
+8. Stay with the person and provide reassurance until help arrives.
+Call 112 or 108 immediately.
+Language: en-IN
+Audio: True

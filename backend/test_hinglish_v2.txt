@@ -1,0 +1,12 @@
+Input: one of my friend, use heart attack aagya
+Detected: hi-IN
+Response: 🚨 Heart attack ke liye first aid karna bahut zaroori hai. 
+1. Apne friend ko zameen par letaayein aur use araam se rakhain.
+2. Agar apke paas aspirin hai, to use ek tablet dena chahiye, lekin yeh zaroori nahi hai.
+3. Apne friend ke saath baat karte rahein aur use shaant rakhne ki koshish karein.
+4. Apne friend ke chest par haath rakhein aur dekhein ki kya use saans lene mein dikkat ho rahi hai.
+5. Agar apke friend ko saans lene mein dikkat ho rahi hai, to use oxygen dena chahiye, agar available ho.
+6. Apne friend ko hospital le jaane ke liye taiyaar karein, jaldi se jaldi.
+7. Apne friend ke saath hospital jaate samay, use shaant rakhne ki koshish karein aur baat karte rahein.
+8. Hospital pahunchne par, doctor ko apne friend ke bare mein sab kuch batayein.
+Call 112 or 108 immediately.

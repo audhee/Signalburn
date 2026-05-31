@@ -1,0 +1,11 @@
+{
+  "total_dpo_pairs": 47,
+  "train_size": 42,
+  "val_size": 5,
+  "original_dpo_pairs": 3,
+  "increase_factor": 15,
+  "bad_patterns": {
+    "dangerous_advice": 41,
+    "textbook_jargon": 6
+  }
+}

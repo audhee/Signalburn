@@ -1,0 +1,13 @@
+=== TEST 3: Guided query answer ===
+Response: 🚨 For someone having a stroke:
+1. Call for emergency help right away — do not delay.
+2. Make sure the person is sitting or lying down in a safe place.
+3. Do not give them anything to eat or drink.
+4. Loosen any tight clothing around their neck and chest.
+5. If they are unconscious, turn them onto their side to keep their airway clear.
+6. Stay with the person and try to keep them calm until help arrives.
+7. If you can, note the time when the symptoms started — this information is helpful for medical staff.
+8. Remember the FAST signs — Face drooping, Arm weakness, Speech difficulty, Time to call emergency — and tell the emergency responders about the symptoms you observed.
+Call 112 or 108 immediately.
+Language: en-IN
+Audio: True
