@@ -1,0 +1,10 @@
+Input: my taale is bleeding
+Detected language: kn-IN
+Response: Taale bleeding ge:
+1. Nee sitting position nalli, slightly forward bent agi.
+2. Taale soft part annu firmly pinch madi.
+3. 10-15 minutes varagu pressure apply madi, release maadi.
+4. Mouth inda calm agi breathe madi.
+5. Cold cloth taale bridge ge apply madi.
+6. Bleeding stop aayithu 15 minutes varagu nose blow maadi.
+Call 112 if bleeding stop agalla after 20 minutes.

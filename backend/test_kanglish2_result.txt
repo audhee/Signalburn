@@ -1,0 +1,11 @@
+Input: nanna tal noyi
+Detected language: kn-IN
+Response: Tal novu ge:
+1. Tal rest madi — use madabedi.
+2. Ice cloth nalli sulidu 15 nimisha hachi.
+3. Tal hrudaya matte mele elu.
+4. Thumba novu idre paracetamol tago.
+5. 2 dina inda mele aagilla andre doctor hatra hogo.
+6. Tal ge yavaga bevaru idre, antiseptic lotion lagao.
+7. Tal ge thagga bevaru idre, bandage haaki.
+8. Thumba kastha idre, 112 or 108 ge call madi.

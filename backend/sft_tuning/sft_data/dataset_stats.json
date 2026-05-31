@@ -1,0 +1,10 @@
+{
+  "total_pairs": 518,
+  "train_size": 466,
+  "val_size": 52,
+  "avg_question_length": 43.374517374517374,
+  "avg_answer_length": 156.96332046332046,
+  "sources": {
+    "sashwat_chroma/QandA.jsonl": 518
+  }
+}

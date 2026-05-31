@@ -1,0 +1,248 @@
+[
+  {
+    "id": "sft-bad-1",
+    "category": "SFT Dataset (Bad)",
+    "query": "What will I learn about cardiogenic shock from this chapter?",
+    "ollama": {
+      "response": "This section covers cardiogenic shock in detail, providing information on its definition, causes, and treatment options. It also discusses the importance of prompt recognition and management for improving patient outcomes. This section is crucial for understanding cardiogenic shock and how it relates to other topics covered in the chapter.",
+      "latency": 5.09,
+      "issues": [
+        "[CHAPTER-REF] References chapters (trained on bad data)",
+        "[FORMAT] No numbered steps in response"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "sft-bad-2",
+    "category": "SFT Dataset (Bad)",
+    "query": "What is the page number for the section on dressings and bandages?",
+    "ollama": {
+      "response": "The section on dressings and bandages can be found on pages 12-13. This section provides information on different types of dressings and bandages, as well as their uses in first aid. It also covers how to apply dressings and bandages correctly for optimal healing. By reading this section, you will gain a better understanding of the importance of using appropriate dressings and bandages for specific conditions, which is crucial for providing effective first aid care.",
+      "latency": 6.31,
+      "issues": [
+        "[PAGE-REF] References page numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "sft-bad-3",
+    "category": "SFT Dataset (Bad)",
+    "query": "Are there any precautions I can take to stay safe at home?",
+    "ollama": {
+      "response": "Yes, section 4.1 discusses precautions you can take to stay safe at home. This section is located on page 14 and provides information on how to maintain safety in your daily life. It covers topics such as using protective equipment, following safety guidelines, and being aware of potential hazards. By reading this section, you will gain a better understanding of the importance of taking precautions to ensure your safety at home.",
+      "latency": 5.95,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)",
+        "[PAGE-REF] References page numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "sft-bad-4",
+    "category": "SFT Dataset (Bad)",
+    "query": "What is the role of paramedics in hospitals in Pakistan?",
+    "ollama": {
+      "response": "Paramedics play an important role in hospitals in Pakistan, providing emergency care and assisting doctors with patient treatment. This section highlights their key responsibilities and contributions to healthcare services. However, it does not provide specific details about the role of paramedics in hospitals, which is discussed later in section 4.1.2. For more information on this topic, refer to section 4.1.2 for clarification.",
+      "latency": 5.79,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)",
+        "[GEOGRAPHY] References Pakistan/Punjab context (bad training data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "sft-bad-5",
+    "category": "SFT Dataset (Bad)",
+    "query": "How can I help prevent asphyxia?",
+    "ollama": {
+      "response": "To help prevent asphyxia, you should provide oxygen to the patient at 15-20 liters per minute. This will help maintain adequate oxygenation and reduce the risk of asphyxia. For more information on providing oxygen, refer to section 4.1.2.1.1.",
+      "latency": 4.96,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "real-1",
+    "category": "Real-world First Aid",
+    "query": "My father has a small bleeding cut on hand. What first aid should I do?",
+    "ollama": {
+      "response": "For section 3.1, you can refer to section 2.4 for information about the importance of providing basic life support measures. This section is crucial in understanding how these measures are used in conjunction with other sections to provide comprehensive care for patients. However, it does not directly address section 3.1, which discusses the specific steps involved in providing first aid for emergencies. To answer this question, you would need to consult section 2.4 and then use that information to help guide your understanding of section 3.1.",
+      "latency": 6.84,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "real-2",
+    "category": "Real-world First Aid",
+    "query": "Person is unconscious and not breathing. What should I do right now?",
+    "ollama": {
+      "response": "For emergencies, section 2.1 provides guidance on cardiopulmonary resuscitation (CPR) and defibrillation. This section covers the importance of CPR for cardiac arrest patients and how it can be used to help save lives. It also discusses the role of defibrillators in providing electrical shocks to restore a normal heartbeat. However, this section does not provide specific details on CPR or defibrillation procedures. For more information, you would need to consult section 2.1.1, which covers cardiopulmonary resuscitation and defibrillation in emergencies.",
+      "latency": 7.43,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)",
+        "[MISSING] No emergency escalation for serious condition",
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[MISSING] No emergency escalation for serious condition",
+        "[FORMAT] No numbered steps in response",
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    }
+  },
+  {
+    "id": "real-3",
+    "category": "Real-world First Aid",
+    "query": "My mother has chest pain and is not breathing properly",
+    "ollama": {
+      "response": "This section discusses the importance of providing oxygen to patients with respiratory conditions. It highlights the need for supplemental oxygen in these situations and provides guidance on how to administer it. This section also covers the use of non-invasive ventilation (NIV) as an alternative to invasive mechanical ventilation. It emphasizes that NIV is not suitable for all patients, but can be used for those who are stable or improving with treatment. The section concludes by stating that further discussion and guidance on these topics can be found in sections 4.1.2 and 4.1.3.",
+      "latency": 7.16,
+      "issues": [
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response",
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    }
+  },
+  {
+    "id": "real-4",
+    "category": "Real-world First Aid",
+    "query": "My father fell in the bathroom and his arm is bleeding.",
+    "ollama": {
+      "response": "The section on shock prevention provides information about how to prevent shock from occurring. This section does not provide specific details about how to treat shock, but it does mention that there are sections later in the book that cover this topic in more detail. For now, we can focus on understanding the importance of preventing shock and how to do so using section 4.1.2. This section provides information about how to prevent shock from occurring by providing clear explanations for each step. It also includes diagrams and illustrations to help support these sections. By following this section, you will gain a better understanding of how to prevent shock and how to treat it effectively.",
+      "latency": 7.58,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "real-5",
+    "category": "Real-world First Aid (Hindi)",
+    "query": "My father fell in the bathroom and his arm is bleeding.",
+    "ollama": {
+      "response": "The section on shock prevention is discussed in section 12.1. This section provides information on how to prevent shock from occurring. It does not provide specific details on how to treat shock, but it does mention that section 12.2 covers treatment for shock. For more information on treating shock, refer to section 12.2.",
+      "latency": 5.27,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "real-6",
+    "category": "Real-world First Aid",
+    "query": "My child has a burn from boiling water. What should I do?",
+    "ollama": {
+      "response": "For burns, section 13.1 provides guidance on the importance of covering and protecting the burned area to prevent infection. This section also discusses the use of topical antibiotics for wound care. However, it does not provide specific information on how to cover or protect the burned area. For more detailed information, refer to section 13.2, which covers the topic of burns in greater detail.",
+      "latency": 5.73,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)",
+        "[CHAPTER-REF] References chapters (trained on bad data)"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response"
+      ]
+    }
+  },
+  {
+    "id": "real-7",
+    "category": "Real-world First Aid (Hinglish)",
+    "query": "mera bhai behosh hai aur saans nahi aa rahi",
+    "ollama": {
+      "response": "For section 4.2.1, the passage discusses the importance of providing oxygen to patients with respiratory failure. This is mentioned in section 4.2.1, which covers topics related to respiratory support and management. The section does not provide specific information on how to manage respiratory failure, but it does mention that this topic will be covered later in the chapter.",
+      "latency": 5.52,
+      "issues": [
+        "[TEXTBOOK] References section numbers (trained on bad data)",
+        "[CHAPTER-REF] References chapters (trained on bad data)",
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    },
+    "groq": {
+      "response": "GROQ_API_KEY not set",
+      "latency": null,
+      "issues": [
+        "[FORMAT] No numbered steps in response",
+        "[SAFETY] Emergency query but no 112/108 mentioned",
+        "[SAFETY] No 'call' or 'ambulance' instruction"
+      ]
+    }
+  }
+]

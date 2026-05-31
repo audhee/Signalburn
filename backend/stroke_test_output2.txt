@@ -1,0 +1,13 @@
+=== TEST 2: Hindi /text-query for STROKE ===
+Response: 🚨 Stroke ke lakshan dekhe ja rahe hain:
+1. Chehre ki tedhi ho gayi hai, toh usey turant doctor ke paas le jayein.
+2. Baat nahi kar pa raha hai, toh usey shant rakhein aur emergency services ko call karein.
+3. Agar haath ya pair mein kamzori hai, toh usey hilane ki koshish na karein.
+4. Usey seedha letaayein aur sir ko thoda upar uthaayein.
+5. Kabhi bhi usey akela na chhodain, hamesha saath mein rahein.
+6. Agar saans lena mushkil ho raha hai, toh turant CPR shuru karein.
+7. Emergency services ko call karte waqt, apna exact location bataayein.
+8. Doctor ke paas le jate waqt, usey shant rakhein aur emergency services ko update karte rahein.
+Call 112 or 108 immediately
+Language: hi-IN
+Audio: True
