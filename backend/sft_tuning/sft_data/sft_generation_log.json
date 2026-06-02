@@ -1,0 +1,9 @@
+{
+  "total_pairs": 1160,
+  "method": "programmatic_from_structured_data",
+  "sources": {
+    "first_aid_data": 118,
+    "harshita_first_aid": 1016,
+    "health_data.py": 26
+  }
+}

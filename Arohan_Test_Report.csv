@@ -1,0 +1,35 @@
+Test Case ID,Page Name,Feature,Test Scenario,Expected Result,Actual Result,Status,Bug ID,Remarks
+,,,,,
+1. SIGN IN / ONBOARDING,,,,,
+TC_LOGIN_01,Login Page,Language Selection,User selects 'Hindi' on startup,App language changes to Hindi immediately,Working,Pass,-,Verified text updates
+TC_LOGIN_02,Login Page,Phone Entry,User enters valid 10-digit number,Button becomes active,Working,Pass,-,
+TC_LOGIN_03,Login Page,Phone Validation,User enters < 10 digits,Error message shown,Working,Pass,-,
+TC_LOGIN_04,Login Page,OTP Simulation,User clicks 'Get Code',Navigates to Profile Setup,Working,Pass,-,OTP is currently mocked
+,,,,,
+2. PROFILE & SETUP,,,,,
+TC_SETUP_01,Profile Page,Data Entry,User enters Name and Age,Fields accept input,Working,Pass,-,
+TC_SETUP_02,Profile Page,Health Conditions,User selects multiple conditions,Selections are highlighted,Working,Pass,-,Interaction is smooth
+TC_SETUP_03,Profile Page,Save Profile,User clicks Save,Navigates to Contact Setup,Working,Pass,-,Data persisted
+TC_SETUP_04,Wearable Page,Mock Pair,User clicks 'Connect Device',Status changes to 'Connected',Working,Pass,-,Simulated delay works
+TC_SETUP_05,Wearable Page,Skip Flow,User clicks Skip,Navigates directly to Home,Working,Pass,-,
+,,,,,
+3. HOME PAGE,,,,,
+TC_HOME_01,Home Page,Header,Check user name display,Displays 'Hello, [Name]' correctly,Working,Pass,-,Localized correctly
+TC_HOME_02,Home Page,SOS Button,User taps SOS button,Navigates to Emergency Assist,Working,Pass,-,Haptics triggered
+TC_HOME_03,Home Page,Vitals Display,Check Heart Rate/Battery,Displays default/mock values,Working,Pass,-,UI alignment perfect
+TC_HOME_04,Home Page,Bottom Nav,User clicks Stats/Settings,Navigates to respective screens,Working,Pass,-,
+,,,,,
+4. EMERGENCY RESPONSE,,,,,
+TC_EM_01,Emergency Page,Ambulance Call,User taps 'Call Ambulance',System dialer opens with 108,Working,Pass,-,
+TC_EM_02,Emergency Page,Family Notify,User taps 'Date/Family',Navigates to Location screen,Working,Pass,-,
+TC_EM_03,Emergency Page,Doctor Call,User taps 'Doctor',Alerts if no contact set,Working,Pass,-,Correctly alerts user
+TC_EM_04,Emergency Page,Cancel SOS,User taps 'I am Safe',Returns to Home screen,Working,Pass,-,
+,,,,,
+5. AI GUIDANCE,,,,,
+TC_AI_01,AI Page,Voice Instructions,User opens AI Guidance,Text-to-Speech starts automatically,Working,Pending,BUG_001,Voice synthesis needs physical device to verify
+TC_AI_02,AI Page,Language Consistency,App is in Kannada,Voice speaks in Kannada,Not Working,Fail,BUG_002,Voice engine defaulting to English
+,,,,,
+6. SETTINGS & ACCESSIBILITY,,,,,
+TC_SET_01,Settings Page,Language Switch,User switches Eng -> Hindi,All labels update immediately,Working,Pass,-,Fixed in previous step
+TC_SET_02,Global,Large Text,User enables OS Large Text,Text scales without overlap,Working,Pass,-,Readable
+TC_SET_03,Global,Offline Mode,Airplane Mode Enabled,App opens and loads critical UI,Working,Pass,-,Maps show grid (Expected)

@@ -1,0 +1,12 @@
+Input: one of my friend, use heart attack aagya
+Detected language: hi-IN
+Response: 🚨 Dil ke dard ke liye:
+1. Apne dost ko araam se baithne do aur seedha let jao.
+2. Yadi possible ho, to ek aspirin dena chahiye, lekin yeh zaroori nahi hai.
+3. Apne dost ko shaant rakhne ki koshish karo, ghabrayen nahin.
+4. Apne dost ke saath baat karte rahein aur unhein shaant rakhne ki koshish karo.
+5. Apne dost ko hawa mein rakho, jisse unhein saans lene mein aasani ho.
+6. Jaldi se 112 ya 108 par call karo aur ambulance bulao.
+7. Agar apke dost ko saans lene mein dikkat ho rahi hai, to unhein CPR dena shuru karo, lekin yeh sirf tabhi karo jab aapko CPR ke bare mein pata ho.
+8. Apne dost ko hospital pahunchane tak saath mein rahein aur unki dekhbhal karte rahein.
+Call 112 or 108 immediately

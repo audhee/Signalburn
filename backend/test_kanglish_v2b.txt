@@ -1,0 +1,11 @@
+Input: nanna tal noyi
+Detected: kn-IN
+Response: "For tal pain:
+1. Give rest to your tal — don't use it.
+2. Wrap ice in cloth and put it on tal for 15 minutes.
+3. Keep your tal raised above heart level.
+4. If pain is too much, take a paracetamol.
+5. If not better in 2 days, go to a doctor.
+6. You can also try gentle massage with warm water after 2 days.
+7. If you have any cut or wound on your tal, clean it with cool water and apply antiseptic.
+8. If you see any signs of infection like redness or swelling, call 112 or 108 immediately."

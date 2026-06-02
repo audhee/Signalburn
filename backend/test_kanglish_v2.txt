@@ -1,0 +1,10 @@
+Input: my taale is bleeding
+Detected: kn-IN
+Response: For taale bleeding:
+1. Sit upright and lean slightly forward.
+2. Pinch the soft part of your nose firmly, just above the nostrils.
+3. Hold for 10-15 minutes without releasing.
+4. Breathe through your mouth calmly.
+5. Apply cold cloth to bridge of nose.
+6. Do not blow your nose for 15 minutes after bleeding stops.
+If bleeding does not stop after 20 minutes, Call 112 or 108 immediately.

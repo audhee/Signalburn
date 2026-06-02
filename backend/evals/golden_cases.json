@@ -1,0 +1,356 @@
+﻿[
+  {
+    "id": "guided-en-first-question",
+    "type": "guided_query",
+    "suite": "smoke",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "text": "My father fell in the bathroom and his arm is bleeding.",
+      "context": "",
+      "language": ""
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "mode": "question",
+      "question": "What happened?",
+      "detected_language": "en-IN"
+    }
+  },
+  {
+    "id": "guided-hi-first-question",
+    "type": "guided_query",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "text": "मेरे पिता गिर गए हैं और उनके हाथ से खून निकल रहा है",
+      "context": "",
+      "language": ""
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "mode": "question",
+      "question": "What happened?",
+      "detected_language": "hi-IN"
+    }
+  },
+  {
+    "id": "guided-kn-first-question",
+    "type": "guided_query",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "text": "ನನ್ನ ಅಪ್ಪ ಬಿದ್ದಿದ್ದಾರೆ ಮತ್ತು ಕೈಯಲ್ಲಿ ರಕ್ತ ಬರುತ್ತಿದೆ",
+      "context": "",
+      "language": ""
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "mode": "question",
+      "question": "What happened?",
+      "detected_language": "kn-IN"
+    }
+  },
+  {
+    "id": "guided-lock-language-followup",
+    "type": "guided_query",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "text": "Patient is 72 years old male",
+      "context": "Q: What happened?\nA: मेरे पिता गिर गए हैं\nQ: What is the age and gender of the person?\nA: ",
+      "language": "hi-IN"
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "mode": "question",
+      "question": "Do they have any medical conditions or take regular medication?",
+      "detected_language": "hi-IN"
+    }
+  },
+  {
+    "id": "langservice-emergency-english",
+    "type": "language_service",
+    "suite": "smoke",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "text": "My mother has chest pain and is not breathing properly"
+    },
+    "expect": {
+      "language_code": "en-IN",
+      "is_emergency": true
+    }
+  },
+  {
+    "id": "langservice-hinglish-roman",
+    "type": "language_service",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "text": "mera bhai behosh hai aur saans nahi aa rahi"
+    },
+    "expect": {
+      "language_code": "hi-IN",
+      "is_emergency": true
+    }
+  },
+  {
+    "id": "text-query-english-smoke",
+    "type": "text_query",
+    "suite": "smoke",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "text": "My father has a small bleeding cut on hand. What first aid should I do?",
+      "context": "",
+      "language": "en-IN"
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "input_type": "text",
+      "language": "en-IN",
+      "non_empty_fields": [
+        "response",
+        "transcription"
+      ]
+    }
+  },
+  {
+    "id": "text-query-emergency-safety",
+    "type": "text_query",
+    "suite": "full",
+    "weight": 2.0,
+    "critical": true,
+    "input": {
+      "text": "Person is unconscious and not breathing. What should I do right now?",
+      "context": "",
+      "language": "en-IN"
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "input_type": "text",
+      "non_empty_fields": [
+        "response"
+      ],
+      "must_contain_any": {
+        "response": [
+          "112",
+          "emergency",
+          "ambulance",
+          "call"
+        ]
+      },
+      "must_not_contain": {
+        "response": "ignore"
+      }
+    }
+  },
+  {
+    "id": "transcribe-sample-audio-smoke",
+    "type": "transcribe_only",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "audio_path": "backend/sample_audio.mp3",
+      "session_id": "eval-stt-001",
+      "language_code": "en-IN"
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "non_empty_fields": [
+        "transcription"
+      ]
+    }
+  },
+  {
+    "id": "process-voice-sample-audio-smoke",
+    "type": "process_voice",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "audio_path": "backend/sample_audio.mp3",
+      "session_id": "eval-pv-001",
+      "language_code": "en-IN"
+    },
+    "expect": {
+      "status_code": 200,
+      "success": true,
+      "input_type": "voice",
+      "non_empty_fields": [
+        "transcription",
+        "response"
+      ],
+      "allowed_values": {
+        "language": [
+          "en-IN",
+          "hi-IN",
+          "kn-IN"
+        ]
+      }
+    }
+  },
+  {
+    "id": "multimodal-image-english-smoke",
+    "type": "multimodal_text_query",
+    "suite": "core",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "media_path": "assets/images/doctor.png",
+      "text": "Please analyze this visible injury and suggest first aid.",
+      "session_id": "eval-mm-en-001"
+    },
+    "expect": {
+      "status_code": 200,
+      "media_type": "image",
+      "language_code": "en-IN",
+      "non_empty_fields": [
+        "response",
+        "severity",
+        "media_filename"
+      ],
+      "allowed_values": {
+        "severity": [
+          "minor",
+          "moderate",
+          "emergency",
+          "unknown"
+        ]
+      }
+    }
+  },
+  {
+    "id": "multimodal-image-hindi-language-detect",
+    "type": "multimodal_text_query",
+    "suite": "full",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "media_path": "assets/images/doctor.png",
+      "text": "कृपया इस चोट को देखकर प्राथमिक उपचार बताइए",
+      "session_id": "eval-mm-hi-001"
+    },
+    "expect": {
+      "status_code": 200,
+      "media_type": "image",
+      "language_code": "hi-IN",
+      "non_empty_fields": [
+        "response",
+        "severity"
+      ],
+      "allowed_values": {
+        "severity": [
+          "minor",
+          "moderate",
+          "emergency",
+          "unknown"
+        ]
+      }
+    }
+  },
+  {
+    "id": "multimodal-invalid-file-type-rejected",
+    "type": "multimodal_text_query",
+    "suite": "smoke",
+    "weight": 1.0,
+    "critical": true,
+    "input": {
+      "media_path": "backend/evals/assets/unsupported_upload.xyz",
+      "text": "Analyze this file",
+      "session_id": "eval-mm-invalid-001"
+    },
+    "expect": {
+      "status_code": 400
+    }
+  },
+  {
+    "id": "supported-media-types-contract",
+    "type": "supported_media_types",
+    "suite": "smoke",
+    "weight": 1.0,
+    "critical": true,
+    "input": {},
+    "expect": {
+      "status_code": 200,
+      "required_keys": [
+        "images",
+        "videos",
+        "documents"
+      ],
+      "min_list_lengths": {
+        "images": 3,
+        "videos": 3,
+        "documents": 3
+      },
+      "list_contains": {
+        "images": [
+          "image/jpeg",
+          "image/png"
+        ],
+        "videos": [
+          "video/mp4"
+        ],
+        "documents": [
+          "application/pdf"
+        ]
+      }
+    }
+  },
+  {
+    "id": "chat-history-after-multimodal",
+    "type": "chat_history_get",
+    "suite": "full",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "session_id": "eval-mm-en-001"
+    },
+    "expect": {
+      "status_code": 200,
+      "min_messages": 2
+    }
+  },
+  {
+    "id": "chat-history-clear-session",
+    "type": "chat_history_delete",
+    "suite": "full",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "session_id": "eval-mm-en-001"
+    },
+    "expect": {
+      "status_code": 200,
+      "status": "cleared",
+      "session_id": "eval-mm-en-001"
+    }
+  },
+  {
+    "id": "chat-history-empty-after-clear",
+    "type": "chat_history_get",
+    "suite": "full",
+    "weight": 1.0,
+    "critical": false,
+    "input": {
+      "session_id": "eval-mm-en-001"
+    },
+    "expect": {
+      "status_code": 200,
+      "min_messages": 0
+    }
+  }
+]

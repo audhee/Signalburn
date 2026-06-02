@@ -1,0 +1,14 @@
+=== HINGLISH STROKE QUERY ===
+Input: mera dost ko stroke aa gaya, uska chehra tedha ho gaya hai aur woh bol nahi pa raha
+Response: 🚨 Dost ke stroke ke liye:
+1. Usko turant aram karne ko kaho, aur usey uthne ya chalne nahi dena.
+2. Uska face, arm, aur speech check karo - Face drooping, Arm weakness, Speech difficulty, Time to call emergency (FAST) yaad rakho.
+3. Usko dil se upar uthao, aur usey seedha letne ko kaho.
+4. Turant 112 ya 108 par call karo, aur emergency services ko bulao.
+5. Uske saath rehte hue, usey calm rakho, aur usey apni jagah par rene ko kaho.
+6. Jab tak doctor nahi aate, uske saath rehte hue, usey monitor karte raho, aur usey koi bhi cheez nahi khane dena.
+7. Agar usey saans lene mein dikkat ho rahi hai, to usey sidha letne ko kaho, aur usey oxygen dena.
+8. Uske medical history ke baare mein doctor ko batana, agar aapko pata hai to.
+Call 112 or 108 immediately
+Language detected: hi-IN
+Audio: True

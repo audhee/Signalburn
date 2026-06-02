@@ -1,0 +1,14 @@
+=== KANGLISH STROKE QUERY ===
+Input: nanna friend ge stroke bandide, avana mOna vakra aagide...
+Response: 🚨 Stroke ge:
+1. Friend ge Face drooping ideya, arm weakness ideya, speech difficulty ideya antha check madi.
+2. Time to call emergency, 112 or 108 call madi.
+3. Friend ge conscious ideya, unconscious ideya antha check madi.
+4. Ava kaiyalli durbalate ide, ondu kaiyalli chalana ide illa antha check madi.
+5. Ava mOna vakra aagide, matanaduva saamarthya kaledukollutta ide antha check madi.
+6. Ava ge thumba headache ide, balance kaledukollutta ide antha check madi.
+7. Ava ge CPR avashyaktha ideya, CPR steps follow madi.
+8. Doctor ge contact madi, hospital ge leke hodenu.
+Call 112 or 108 immediately
+Language detected: kn-IN
+Audio: True

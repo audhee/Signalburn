@@ -1,0 +1,42 @@
+﻿name: ai-evals
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  eval-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install eval deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      - name: Run logic-only smoke (no backend)
+        run: |
+          python backend/evals/run_eval.py --suite smoke --only language_service --report-out backend/evals/ci_report.json --fail-threshold 100
+
+  eval-full-when-backend-available:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install backend deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+      - name: Start backend
+        run: |
+          cd backend
+          nohup python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 > backend.log 2>&1 &
+          sleep 8
+      - name: Run full eval
+        run: |
+          python backend/evals/run_eval.py --suite full --report-out backend/evals/ci_full_report.json --fail-threshold 70

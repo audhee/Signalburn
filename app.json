@@ -1,0 +1,65 @@
+{
+  "expo": {
+    "name": "Arohan",
+    "slug": "Arohan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "scheme": "arohan",
+    "userInterfaceStyle": "automatic",
+    "updates": {
+      "enabled": false
+    },
+    "splash": {
+      "image": "./assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDFCF7"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.arohan.assist",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Arohan needs your location to send to emergency contacts when you trigger an SOS."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#FDFCF7"
+      },
+      "package": "com.arohan.assist",
+      "permissions": [
+        "LOCATION",
+        "SMS",
+        "CALL_PHONE",
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS"
+      ],
+      "predictiveBackGestureEnabled": false,
+      "newArchEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-localization",
+      "expo-secure-store",
+      "expo-status-bar",
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bd329c66-e3e8-4a39-b2cd-039d7c69e999"
+      }
+    },
+    "owner": "vaibhav63"
+  }
+}
