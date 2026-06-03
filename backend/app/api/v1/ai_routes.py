@@ -19,12 +19,15 @@ from app.services.ai.multimodal_service import (
     is_document
 )
 from app.services.ai.tts_service import synthesize_speech
+from app.services.ai.prompt_utils import is_first_aid_query
+from app.services.ai.rag_service import rag_service
 import tempfile
 import os
 import base64
 import logging
 import uuid
 from datetime import datetime
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -60,18 +63,38 @@ FIXED_QUESTIONS = [
 
 
 def get_dynamic_question(context: str, already_asked: list) -> str:
+    import re
     context_lower = context.lower()
-    if "collapse" in context_lower or "unconscious" in context_lower:
+    
+    # 1. Stroke / Paralysis
+    if re.search(r"\b(stroke|paralysis|numb|droop|slur|facial|speech)\b", context_lower):
+        candidates = [
+            "Is there weakness or numbness on one side of the body?",
+            "Is the person having difficulty speaking or understanding speech?"
+        ]
+    # 2. Chest Pain / Cardiac / Heart Attack
+    elif re.search(r"\b(chest\s*pain|heart\s*attack|cardiac|angina)\b", context_lower):
+        candidates = [
+            "Is the pain radiating to the arm, neck, or jaw?",
+            "Is the person experiencing shortness of breath or sweating?"
+        ]
+    # 3. Collapse / Unconscious
+    elif re.search(r"\b(collapse|unconscious|faint|passed\s*out|responsive)\b", context_lower):
         candidates = ["Is the person breathing properly?", "Is the person conscious?"]
-    elif "poison" in context_lower or "swallowed" in context_lower:
+    # 4. Poison / Swallowed
+    elif re.search(r"\b(poison|swallowed|toxin|chemical|ingest)\b", context_lower):
         candidates = ["Is the person vomiting?", "Is the person conscious?"]
-    elif "burn" in context_lower:
+    # 5. Burn
+    elif re.search(r"\b(burn|scald|fire|acid\s*burn)\b", context_lower):
         candidates = ["Is the burn large or deep?", "Is there blistering?"]
-    elif "bleeding" in context_lower or "cut" in context_lower:
+    # 6. Bleeding / Cut (with word boundaries to prevent matching 'acute')
+    elif re.search(r"\b(bleeding|bleed|cut|cuts|wound|injury|laceration|blood)\b", context_lower):
         candidates = ["Is the bleeding heavy?", "Has it stopped?"]
-    elif "breathing" in context_lower or "asthma" in context_lower:
+    # 7. Breathing / Asthma
+    elif re.search(r"\b(breathing|breath|asthma|choke|suffocate|wheez)\b", context_lower):
         candidates = ["Is breathing getting worse?", "Is there chest tightness?"]
-    elif "dizzy" in context_lower or "sweating" in context_lower:
+    # 8. Dizzy / Sweating
+    elif re.search(r"\b(dizzy|sweat|giddy|lighthead|weakness)\b", context_lower):
         candidates = ["Is the person feeling weak or about to faint?", "When did this start?"]
     else:
         candidates = ["Is the person conscious?", "Is the person breathing properly?"]
@@ -83,6 +106,88 @@ def get_dynamic_question(context: str, already_asked: list) -> str:
 
 
 MAX_QUESTIONS = 5
+
+
+# ==================== CHAT ENDPOINT (Anisha's chatbot guardrail) ====================
+
+class ChatQuery(BaseModel):
+    question: str
+
+
+@router.post("/chat")
+async def chat(query: ChatQuery):
+    """
+    Anisha's first-aid chatbot — integrated into Arohan backend.
+    Uses existing RAG service for retrieval + guardrail to reject non-first-aid queries.
+    Returns {"answer": ...}.
+    """
+    user_question = query.question.strip()
+    if not user_question:
+        return {"answer": "Please ask a first-aid related question."}
+
+    # 1. IMMEDIATE GUARDRAIL: Reject chronic / out-of-scope queries
+    is_valid, reason = is_first_aid_query(user_question)
+    if not is_valid:
+        logger.info(f"Chat guardrail blocked: {reason}")
+        return {"answer": f"⚠️ {reason}"}
+
+    # 2. RAG retrieval with similarity scores
+    try:
+        context, scores = await run_in_threadpool(
+            rag_service.retrieve_context_with_scores,
+            user_question, 5, "arohan",
+        )
+    except Exception as e:
+        logger.error(f"RAG retrieval failed in /chat: {e}")
+        return {
+            "answer": "⚠️ Unable to search medical knowledge base. "
+                      "Please try again or consult a doctor."
+        }
+
+    # 3. SIMILARITY THRESHOLD CHECK
+    # ChromaDB cosine scores: higher = more relevant.
+    # Anisha's original used L2 distance > 1.2 → roughly cosine sim < 0.4
+    if not context or not scores:
+        return {
+            "answer": "⚠️ No relevant first-aid information found for your query. "
+                      "Please consult a doctor."
+        }
+    best_score = max(scores)
+    if best_score < 0.45:
+        logger.info(f"Chat similarity too low: best={best_score:.3f} for '{user_question}'")
+        return {
+            "answer": "⚠️ This query does not match our first-aid knowledge base. "
+                      "No verified emergency guidelines found. Please consult a doctor."
+        }
+
+    # 4. Generate response using existing Groq LLM
+    #    Pass prefetched RAG context to avoid double retrieval
+    try:
+        result = await run_in_threadpool(
+            process_voice_with_llm,
+            text=user_question,
+            context="",
+            language="en",
+            rag_source="arohan",
+            prefetched_rag_context=context,
+        )
+        answer = result.get("response_text", "")
+        if answer:
+            return {"answer": answer}
+    except Exception as e:
+        logger.error(f"LLM generation failed in /chat: {e}")
+
+    # 5. Hardcoded fallback
+    return {
+        "answer": (
+            "⚠️ I could not generate a response. Here is general first-aid advice:\n"
+            "1. Keep the person calm and comfortable.\n"
+            "2. Check if they are breathing normally.\n"
+            "3. Apply gentle pressure if there is bleeding.\n"
+            "4. Do not give medicines without doctor advice.\n"
+            "5. Call 112 or 108 if condition gets worse."
+        )
+    }
 
 
 # ==================== EXISTING ENDPOINTS (100% UNCHANGED) ====================
@@ -125,7 +230,7 @@ async def process_voice_input(
                 normalized_language,
                 fallback=transcribed_text.strip() or "Unclear response"
             )
-        llm_result       = await run_in_threadpool(process_voice_with_llm, transcribed_text, "", language_code)
+        llm_result       = await run_in_threadpool(process_voice_with_llm, transcribed_text, "", language_code, "sashwat_optimized")
         answer_text      = llm_result["response_text"]
         detected_lang    = llm_result["language_code"]
 

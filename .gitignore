@@ -51,3 +51,4 @@ __pycache__/
 .env
 venv/.expo/ 
 .expo/ 
+nul

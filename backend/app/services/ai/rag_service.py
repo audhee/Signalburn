@@ -5,23 +5,26 @@ from typing import Dict, List, Optional, Tuple
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma, FAISS
 from langchain_core.documents import Document
+from app.core.config import settings
 from app.knowledge_base.health_data import HEALTH_KNOWLEDGE_BASE
 from app.knowledge_base.first_aid_data import FIRST_AID_DOCUMENTS
+from app.services.ai.shashwat_optimized_rag import shashwat_optimized_rag
 
 logger = logging.getLogger(__name__)
 
 # Paths to all databases
-SASHWAT_CHROMA_DIR  = r"D:\intern\medical-rag-llm\db\my_chroma_db"
-HARSHITA_FAISS_DIR  = r"D:\intern\Arohan\backend\app\knowledge_base\harshita_faiss_index"
-GESHNA_FAISS_DIR    = r"D:\intern\Arohan\backend\app\knowledge_base\geshna_faiss"
+SASHWAT_CHROMA_DIR  = settings.SASHWAT_CHROMA_DIR
+HARSHITA_FAISS_DIR  = settings.HARSHITA_FAISS_DIR
+GESHNA_FAISS_DIR    = settings.GESHNA_FAISS_DIR
 OPTIMIZED_INDEX_DIR = Path(__file__).parent.parent.parent / "knowledge_base" / "optimized_faiss"
-VALID_RAG_SOURCES   = ("all", "arohan", "optimized", "sashwat", "harshita", "geshna")
+VALID_RAG_SOURCES   = ("all", "arohan", "optimized", "sashwat_optimized", "sashwat", "harshita", "geshna")
 
 
 class RAGService:
     def __init__(self):
         self.arohan_db     = None   # in-memory ChromaDB (health + first aid)
         self.sashwat_db    = None   # Sashwat's medical ChromaDB
+        self.sashwat_optimized_db = shashwat_optimized_rag
         self.harshita_db   = None   # Harshita's FAISS (dynamic structured)
         self.geshna_db     = None   # Geshna's FAISS (question-flow based)
         self.optimized_db  = None   # Optimized FAISS via llama-index (higher quality)
@@ -147,6 +150,7 @@ class RAGService:
     def _get_enabled_stores(self, source: Optional[str]) -> List[Tuple[str, object]]:
         normalized = self._normalize_source(source)
         stores: Dict[str, object] = {
+            "sashwat_optimized": self.sashwat_optimized_db,
             "optimized": self.optimized_db,
             "arohan": self.arohan_db,
             "sashwat": self.sashwat_db,
@@ -162,6 +166,18 @@ class RAGService:
         if not store:
             return []
         try:
+            # Shashwat's updated repo uses route-isolated MMR retrieval.
+            if store_name == "sashwat_optimized":
+                context = store.retrieve_context(query, k=k)
+                if not context:
+                    return []
+                return [
+                    Document(
+                        page_content=context,
+                        metadata={"source": "sashwat_optimized_mmr"},
+                    )
+                ]
+
             # Optimized index uses llama-index retriever
             if store_name == "optimized":
                 retriever = store.as_retriever(similarity_top_k=k)
@@ -182,6 +198,40 @@ class RAGService:
             return results
         except Exception as e:
             logger.error(f"{store_name.title()} retrieval failed: {e}")
+            return []
+
+    def _search_store_with_scores(self, store_name: str, store: object, query: str, k: int) -> List[Tuple[Document, float]]:
+        """Return (Document, score) pairs. Higher score = more relevant (cosine sim)."""
+        if not store:
+            return []
+        try:
+            if store_name == "sashwat_optimized":
+                context = store.retrieve_context(query, k=k)
+                if not context:
+                    return []
+                return [
+                    (Document(page_content=context, metadata={"source": "sashwat_optimized_mmr"}), 1.0)
+                ]
+
+            if store_name == "optimized":
+                retriever = store.as_retriever(similarity_top_k=k)
+                nodes = retriever.retrieve(query)
+                return [
+                    (Document(page_content=node.text, metadata=node.metadata), node.score or 0.0)
+                    for node in nodes
+                ]
+
+            # ChromaDB supports similarity_search_with_relevance_scores (cosine sim: higher = better)
+            if hasattr(store, "similarity_search_with_relevance_scores"):
+                results = store.similarity_search_with_relevance_scores(query, k=k)
+                logger.info(f"{store_name.title()} DB: {len(results)} scored chunks.")
+                return results
+
+            # Fallback: use similarity_search without scores — assume moderate relevance
+            docs = store.similarity_search(query, k=k)
+            return [(doc, 0.45) for doc in docs]
+        except Exception as e:
+            logger.error(f"{store_name.title()} scored retrieval failed: {e}")
             return []
 
     def retrieve_context(self, query: str, k: int = 3, source: Optional[str] = "all") -> str:
@@ -206,12 +256,38 @@ class RAGService:
         logger.info(f"Total: {len(results)} chunks retrieved across all DBs.")
         return context
 
+    def retrieve_context_with_scores(self, query: str, k: int = 3, source: Optional[str] = "all") -> Tuple[str, List[float]]:
+        """
+        Like retrieve_context but also returns per-document similarity scores.
+        For ChromaDB stores these are cosine-similarity scores (higher = more relevant).
+        Returns (combined_context, list_of_scores).
+        """
+        all_docs: List[Document] = []
+        all_scores: List[float] = []
+        enabled_stores = self._get_enabled_stores(source)
+        if not enabled_stores:
+            return ("", [])
+
+        for store_name, store in enabled_stores:
+            scored = self._search_store_with_scores(store_name, store, query, k)
+            for doc, score in scored:
+                all_docs.append(doc)
+                all_scores.append(score)
+
+        if not all_docs:
+            return ("", [])
+
+        context = "\n\n".join([doc.page_content for doc in all_docs])
+        logger.info(f"Scored retrieval: {len(all_docs)} chunks, scores={[round(s,3) for s in all_scores]}")
+        return (context, all_scores)
+
     def retrieve_structured(self, query: str, k: int = 3, source: Optional[str] = "all") -> dict:
         """
         Returns structured context from the selected DB(s) separately.
         Used by Geshna's question flow to get targeted results.
         """
         structured = {
+            "sashwat_optimized": [],
             "optimized": [],
             "arohan":   [],
             "sashwat":  [],

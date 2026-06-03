@@ -61,7 +61,7 @@ export default function ChatboxScreen() {
                     text: currentInput,
                     context: '',
                     language: 'en',
-                    rag_source: 'all',
+                    rag_source: 'sashwat_optimized',
                 }),
             });
 

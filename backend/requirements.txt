@@ -5,6 +5,7 @@ python-dotenv
 python-multipart
 langchain
 langchain-community
+langchain-chroma
 langchain-text-splitters
 sentence-transformers
 chromadb

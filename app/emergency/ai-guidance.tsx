@@ -245,6 +245,7 @@ export default function AIGuidanceScreen() {
                 text: query,
                 context: answers.join('\n'),
                 language: lang,
+                rag_source: 'sashwat_optimized',
             },
         });
         return response;
@@ -292,7 +293,11 @@ export default function AIGuidanceScreen() {
                 setCurrentQuestion(res.question);
                 setQuestionNum(res.question_num);
                 setTotalQuestions(res.total_questions);
-                setAvatarState('idle');
+                if (res.audio_base64) {
+                    await playAudio(res.audio_base64);
+                } else {
+                    setAvatarState('idle');
+                }
             } else if (res.mode === 'answer') {
                 setFinalResponse(res.response || '');
                 setMode('answered');
@@ -385,7 +390,7 @@ export default function AIGuidanceScreen() {
 
         try {
             const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                mediaTypes: ['images', 'videos'] as any,
                 allowsEditing: true,
                 quality: 0.85,
                 aspect: [4, 3],
@@ -409,7 +414,7 @@ export default function AIGuidanceScreen() {
 
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                mediaTypes: ['images', 'videos'] as any,
                 allowsEditing: true,
                 quality: 0.85,
                 aspect: [4, 3],

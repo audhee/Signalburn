@@ -47,7 +47,7 @@ const FALLBACK_RESPONSE: FirstAidResponse = {
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-export default function Index() {
+export default function AnishaChatbot() {
   const [appState, setAppState] = useState<AppState>("idle");
   const [response, setResponse] = useState<FirstAidResponse>(FALLBACK_RESPONSE);
   const scenarioIdxRef = useRef<number>(0);
@@ -510,7 +510,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#04060D",
   },
   bgBase: {
-    ...StyleSheet.absoluteFill,
+    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: "#06091A",
   },
   bgGlowTop: {

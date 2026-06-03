@@ -1,9 +1,6 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
-import os
-from pathlib import Path
-from dotenv import load_dotenv, find_dotenv
 
 # Explicitly load .env from project root FIRST, then backend directory (reliable on Windows)
 # Project root has real API keys, backend/.env has overrides if needed
@@ -35,8 +32,23 @@ class Settings:
 
     # Local Model Configuration (Dual Mode)
     USE_LOCAL_MODEL: bool = os.getenv("USE_LOCAL_MODEL", "false").lower() == "true"
-    OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
+    OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "arohan-medical")
+
+    # RAG Configuration
+    SASHWAT_CHROMA_DIR: str = os.getenv(
+        "SASHWAT_CHROMA_DIR",
+        r"D:\intern\medical-rag-llm\db\my_chroma_db",
+    )
+    HARSHITA_FAISS_DIR: str = os.getenv(
+        "HARSHITA_FAISS_DIR",
+        str(Path(__file__).parent.parent / "knowledge_base" / "harshita_faiss_index"),
+    )
+    GESHNA_FAISS_DIR: str = os.getenv(
+        "GESHNA_FAISS_DIR",
+        str(Path(__file__).parent.parent / "knowledge_base" / "geshna_faiss"),
+    )
+    GUIDED_RAG_SOURCE: str = os.getenv("GUIDED_RAG_SOURCE", "sashwat_optimized")
 
 
 settings = Settings()

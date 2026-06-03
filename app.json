@@ -10,11 +10,6 @@
     "updates": {
       "enabled": false
     },
-    "splash": {
-      "image": "./assets/images/logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#FDFCF7"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.arohan.assist",
@@ -35,8 +30,7 @@
         "RECORD_AUDIO",
         "MODIFY_AUDIO_SETTINGS"
       ],
-      "predictiveBackGestureEnabled": false,
-      "newArchEnabled": true
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "bundler": "metro",
@@ -49,7 +43,34 @@
       "expo-localization",
       "expo-secure-store",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-av",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Arohan needs camera access to capture injury photos.",
+          "photosPermission": "Arohan needs gallery access to upload injury photos."
+        }
+      ],
+      "expo-location",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#FDFCF7"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "minSdkVersion": 24
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

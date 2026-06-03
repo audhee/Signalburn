@@ -44,7 +44,8 @@ def _get_groq_client():
 
 
 def process_voice_with_llm(
-    text: str, context: str = "", language: str = "en", rag_source: str = "all"
+    text: str, context: str = "", language: str = "en", rag_source: str = "all",
+    prefetched_rag_context: str = "",
 ) -> dict:
     """
     Process voice input using either fine-tuned Ollama model or Groq API
@@ -53,11 +54,27 @@ def process_voice_with_llm(
     Uses dual mode:
     - If USE_LOCAL_MODEL=true: Uses fine-tuned Ollama model
     - If USE_LOCAL_MODEL=false: Uses Groq API (existing behavior)
+
+    If prefetched_rag_context is provided, skips the internal RAG retrieval
+    and uses the given context directly (avoids double-RAG for /chat endpoint).
     """
     if settings.USE_LOCAL_MODEL:
         logger.info("Using fine-tuned Ollama model")
         from app.services.ai.ollama_service import process_voice_with_ollama
-        return process_voice_with_ollama(text, context, language, rag_source)
+        ollama_result = process_voice_with_ollama(text, context, language, rag_source)
+        if ollama_result.get("error") == "ollama_unavailable":
+            logger.warning("Ollama unavailable. Falling back to Groq for this request.")
+            return _process_voice_with_groq(text, context, language, rag_source, prefetched_rag_context)
+        return ollama_result
+
+    return _process_voice_with_groq(text, context, language, rag_source, prefetched_rag_context)
+
+
+def _process_voice_with_groq(
+    text: str, context: str = "", language: str = "en", rag_source: str = "all",
+    prefetched_rag_context: str = "",
+) -> dict:
+    """Primary cloud inference path, also used as fallback when local Ollama is down."""
 
     requested_lang = normalize_supported_language(language)
     lang_info = detect_language(text)
@@ -73,8 +90,12 @@ def process_voice_with_llm(
 
     logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
-    rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
-    rag_context = rag_context_raw[:6000] if rag_context_raw else ""
+    # Use prefetched RAG context if provided (avoids double-RAG for /chat endpoint)
+    if prefetched_rag_context:
+        rag_context = prefetched_rag_context[:6000]
+    else:
+        rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
+        rag_context = rag_context_raw[:6000] if rag_context_raw else ""
 
     groq_client = _get_groq_client()
     if not groq_client:
@@ -84,7 +105,7 @@ def process_voice_with_llm(
     system_prompt = build_system_prompt(language_name, rag_context, is_emergency)
 
     # Build messages array — merge conversation context with latest text into one user message
-    if context:
+    if context and "Additional patient details:" not in text:
         user_content = (
             f"Patient details (conversation so far):\n{context[:4000]}\n\n"
             f"Latest response from patient:\n{text}"
@@ -154,7 +175,7 @@ def force_language_retry(
 
         # Build retry messages with prior context if available
         retry_messages = [{"role": "system", "content": strict_prompt}]
-        if prior_context:
+        if prior_context and "Additional patient details:" not in text:
             retry_messages.append(
                 {"role": "user", "content": f"Conversation so far:\n{prior_context[:3000]}"}
             )

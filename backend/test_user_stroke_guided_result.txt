@@ -1,0 +1,17 @@
+API Response Status: Success
+Language: en-IN
+RAG Source Used: sashwat_optimized
+
+Response Text:
+🚨 I'm here to help you with first aid steps. Since you're experiencing acute ischemic brain stroke with heavy bleeding, please follow these steps:
+
+1. Stay calm and try to remain still to avoid any further injury.
+2. If you're with someone, ask them to call for emergency help immediately.
+3. If you're alone, try to call for help or reach a phone to call 112 or 108.
+4. Loosen any tight clothing around your neck to help you breathe better.
+5. Try to keep your head slightly elevated to reduce bleeding, if possible.
+6. Do not try to move or exert yourself, as this can worsen the condition.
+7. If you're experiencing any severe symptoms like difficulty breathing, numbness, or paralysis, try to stay as calm as possible and wait for help to arrive.
+8. Remember, it's crucial to get medical attention as soon as possible, so try to get to a hospital or a medical facility quickly.
+
+Call 112 or 108 immediately

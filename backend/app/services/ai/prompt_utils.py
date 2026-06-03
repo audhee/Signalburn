@@ -12,6 +12,63 @@ logger = logging.getLogger(__name__)
 
 # --- Script Detection Regexes ---
 
+# --- First-Aid Scope Guardrail ---
+
+# Chronic / out-of-scope conditions that the chatbot must NOT answer
+CHRONIC_CONDITIONS = [
+    "cancer", "diabetes", "tumor", "tumour", "chemotherapy",
+    "heart disease", "stroke treatment", "hypertension",
+    "kidney failure", "liver failure", "hiv", "aids",
+    "autoimmune", "arthritis", "alzheimer", "parkinson",
+    "epilepsy", "leukemia", "lymphoma", "sickle cell",
+    "cystic fibrosis", "multiple sclerosis", "dialysis",
+    "chemo", "radiotherapy", "palliative",
+]
+
+# Broader non-first-aid topics
+NON_FIRST_AID_TOPICS = [
+    "diet plan", "weight loss", "weight gain", "lose weight", "gain weight",
+    "exercise routine", "workout", "protein shake", "vitamin supplement",
+    "cosmetic", "beauty", "skincare routine", "hair loss",
+    "pregnancy advice", "fertility", "sexual health",
+    "mental health therapy", "depression treatment",
+    "anxiety treatment", "counseling", "psychiatrist",
+    "surgery recommendation", "surgery cost",
+    "medicine dosage", "prescription", "drug interaction",
+    "insurance", "hospital bill", "medical report",
+    "what is my diagnosis", "diagnose me",
+]
+
+
+def is_first_aid_query(query: str) -> tuple:
+    """
+    Check if a query falls within the first-aid scope.
+    Returns (is_valid: bool, reason: str).
+    """
+    q = query.lower().strip()
+
+    # 1. Chronic condition check
+    for condition in CHRONIC_CONDITIONS:
+        if condition in q:
+            return (
+                False,
+                f"This condition ({condition}) falls outside of immediate first-aid. "
+                "No verified emergency guidelines found in our knowledge base. "
+                "Please consult a doctor."
+            )
+
+    # 2. Non first-aid topic check
+    for topic in NON_FIRST_AID_TOPICS:
+        if topic in q:
+            return (
+                False,
+                f"This query is about {topic}, which is outside the scope of "
+                "immediate first-aid guidance. Please consult a healthcare professional."
+            )
+
+    return (True, "")
+
+
 UNSUPPORTED_SCRIPTS = re.compile(
     r"[\u0600-\u06FF"   # Arabic/Urdu
     r"\u0A80-\u0AFF"    # Gujarati

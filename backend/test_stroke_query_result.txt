@@ -1,0 +1,19 @@
+API Response Status: Success
+Language: en-IN
+RAG Source Used: sashwat_optimized
+
+Response Text:
+🚨 I'm here to help you with that. An acute ischemic brain stroke, also known as a cerebral infarction, occurs when the blood supply to a part of the brain is interrupted or reduced, preventing brain tissue from getting oxygen and nutrients. This can be caused by a blockage in a blood vessel, such as a blood clot.
+
+Here are some first aid steps to follow if you or someone you know is experiencing symptoms of a stroke:
+
+1. Stay calm and call for help: If you suspect someone is having a stroke, remain calm and call for emergency medical assistance immediately.
+2. Check for symptoms: Look for signs of a stroke, such as weakness or numbness in the face, arm, or leg, difficulty speaking or understanding speech, and sudden blurred vision or loss of vision.
+3. Keep the person calm: Try to keep the person as calm and comfortable as possible until medical help arrives.
+4. Loosen tight clothing: Loosen any tight clothing around the person's neck, chest, and arms to help them breathe more easily.
+5. Do not give medication: Do not give the person any medication, including aspirin, unless instructed to do so by a medical professional.
+6. Keep the person still: Try to keep the person as still as possible and do not move them unless they are in a life-threatening situation.
+7. Provide information: When medical help arrives, provide as much information as possible about the person's symptoms and medical history.
+8. Follow instructions: Follow any instructions provided by the emergency medical responders, such as staying on the line or providing additional information.
+
+Call 112 or 108 immediately.

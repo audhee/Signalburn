@@ -100,12 +100,25 @@ def process_voice_with_ollama(
     # Build system prompt (shared with llm_service.py Groq path)
     system_prompt = build_system_prompt(language_name, rag_context, is_emergency)
 
+    # Build messages content — merge conversation context with latest text if available
+    if context:
+        user_content = (
+            f"Patient details (conversation so far):\n{context[:4000]}\n\n"
+            f"Latest response from patient:\n{text}"
+        )
+    else:
+        user_content = text
+
     # Call Ollama model
-    response_text = call_ollama_model(text, system_prompt)
+    response_text = call_ollama_model(user_content, system_prompt)
 
     if not response_text:
         logger.error("Ollama model returned empty response")
-        return fallback_response(language_code, is_emergency)
+        return {
+            "error": "ollama_unavailable",
+            "response_text": "",
+            "language_code": language_code,
+        }
 
     # Language validation
     if needs_retry(response_text, language_name):
