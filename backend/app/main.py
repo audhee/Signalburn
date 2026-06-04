@@ -10,7 +10,7 @@ app = FastAPI(title="Arohan Enterprise Backend API", version="2.0.0")
 # Configure CORS for React Native frontend connection
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8081", "http://localhost:8082", "http://localhost:8083", "http://localhost:8000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,3 +29,4 @@ for router in api_routers:
 @app.get("/")
 def read_root():
     return {"message": "Arohan Enterprise API Backend is running smoothly!"}
+
