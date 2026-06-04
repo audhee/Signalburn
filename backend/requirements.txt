@@ -30,3 +30,5 @@ llama-index-embeddings-openai==0.6.0
 faiss-cpu==1.13.2
 
 langchain-huggingface
+
+google-generativeai
