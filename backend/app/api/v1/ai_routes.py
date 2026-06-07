@@ -112,6 +112,8 @@ MAX_QUESTIONS = 5
 
 class ChatQuery(BaseModel):
     question: str
+    language: str = "en"
+    rag_source: str = "sashwat_optimized"  # Always use sashwat_optimized RAG
 
 
 @router.post("/chat")
@@ -135,7 +137,7 @@ async def chat(query: ChatQuery):
     try:
         context, scores = await run_in_threadpool(
             rag_service.retrieve_context_with_scores,
-            user_question, 5, "arohan",
+            user_question, 5, query.rag_source,
         )
     except Exception as e:
         logger.error(f"RAG retrieval failed in /chat: {e}")
@@ -160,15 +162,14 @@ async def chat(query: ChatQuery):
                       "No verified emergency guidelines found. Please consult a doctor."
         }
 
-    # 4. Generate response using existing Groq LLM
+    # 4. Generate response using Groq LLM + sashwat_optimized RAG
     #    Pass prefetched RAG context to avoid double retrieval
     try:
         result = await run_in_threadpool(
             process_voice_with_llm,
             text=user_question,
             context="",
-            language="en",
-            rag_source="arohan",
+            language=query.language,
             prefetched_rag_context=context,
         )
         answer = result.get("response_text", "")
@@ -188,6 +189,44 @@ async def chat(query: ChatQuery):
             "5. Call 112 or 108 if condition gets worse."
         )
     }
+
+
+# ==================== RAG DEBUG ENDPOINT ====================
+
+
+class RagDebugQuery(BaseModel):
+    query: str
+    k: int = 5
+    source: str = "all"
+
+
+@router.post("/rag-debug")
+async def rag_debug(payload: RagDebugQuery):
+    """
+    Debug endpoint — returns per-source RAG chunks with similarity scores.
+    Use this to inspect which knowledge base(s) contributed what content
+    and how relevant each chunk is.
+
+    Args:
+        query:  The medical question to search for.
+        k:      Number of chunks to retrieve per source (default 5).
+        source: RAG source filter — "all", "sashwat_optimized", "arohan", etc.
+    """
+    query_text = payload.query.strip()
+    if not query_text:
+        return {"error": "Query cannot be empty."}
+
+    try:
+        debug_result = await run_in_threadpool(
+            rag_service.retrieve_debug,
+            query_text,
+            payload.k,
+            payload.source,
+        )
+        return debug_result
+    except Exception as e:
+        logger.error(f"RAG debug retrieval failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ==================== EXISTING ENDPOINTS (100% UNCHANGED) ====================
@@ -230,7 +269,7 @@ async def process_voice_input(
                 normalized_language,
                 fallback=transcribed_text.strip() or "Unclear response"
             )
-        llm_result       = await run_in_threadpool(process_voice_with_llm, transcribed_text, "", language_code, "sashwat_optimized")
+        llm_result       = await run_in_threadpool(process_voice_with_llm, transcribed_text, "", language_code, "sashwat_optimized")  # sashwat_optimized RAG only
         answer_text      = llm_result["response_text"]
         detected_lang    = llm_result["language_code"]
 
@@ -265,7 +304,7 @@ async def process_text_input(payload: VoicePromptPayload):
             payload.text,
             payload.context,
             payload.language,
-            payload.rag_source,
+            "sashwat_optimized",
         )
         answer_text   = llm_result["response_text"]
         detected_lang = llm_result["language_code"]
@@ -358,7 +397,7 @@ async def guided_query(payload: VoicePromptPayload):
             "detected_language": locked_language,
         })
 
-    # Step 3 — Final answer
+    # Step 3 — Final answer (sashwat_optimized RAG only)
     full_context = f"Additional patient details:\n{context}"
     try:
         result        = await run_in_threadpool(
@@ -366,7 +405,7 @@ async def guided_query(payload: VoicePromptPayload):
             text,
             full_context,
             locked_language,
-            payload.rag_source,
+            "sashwat_optimized",
         )
         answer_text   = result["response_text"]
         language_code = result["language_code"]

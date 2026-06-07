@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="punkt_tab">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/backend/venv/Lib/site-packages/llama_index/core/_static/nltk_cache/tokenizers/punkt_tab.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

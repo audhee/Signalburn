@@ -1,7 +1,7 @@
 """
 prompt_utils.py -- Shared Prompt Utilities for Arohan AI Services
 Provides language validation, hardcoded fallback responses, and system prompt builder.
-Used by both llm_service.py (Groq) and ollama_service.py (Ollama local model).
+Used by llm_service.py (Groq). ollama_service.py (Ollama local model) is disabled.
 """
 
 import re
@@ -40,14 +40,46 @@ NON_FIRST_AID_TOPICS = [
 ]
 
 
+# Medical / first-aid keywords — if NONE of these appear in the query,
+# the query is NOT a first-aid question.
+MEDICAL_KEYWORDS = [
+    # Symptoms & emergencies
+    "pain", "bleeding", "cut", "wound", "burn", "fracture", "broken",
+    "sprain", "swelling", "bruise", "scar", "injury", "accident",
+    "fall", "fainted", "unconscious", "breathing", "breath",
+    "choking", "dizzy", "vomit", "fever", "infection",
+    "allergic", "allergy", "rash", "sting", "bite", "snake",
+    "scorpion", "dog bite", "insect",
+    # Body parts
+    "head", "chest", "stomach", "back", "neck", "arm", "leg",
+    "eye", "ear", "nose", "throat", "hand", "foot", "knee",
+    "shoulder", "hip", "finger", "toe",
+    # First-aid actions
+    "first aid", "cpr", "compress", "bandage", "tourniquet",
+    "splint", "antiseptic", "disinfect", "clean wound",
+    # Emergency keywords
+    "emergency", "urgent", "hospital", "doctor", "ambulance",
+    "112", "108", "poisoning", "drowning", "electric shock",
+    "heat stroke", "hypothermia", "stroke", "seizure",
+    "heart attack", "cardiac", "choking", "airway",
+    # Medical conditions (acute)
+    "asthma", "diabetes" , "epilepsy", "hypoglycemia",
+    "low sugar", "high sugar", "blood pressure",
+]
+
+
 def is_first_aid_query(query: str) -> tuple:
     """
-    Check if a query falls within the first-aid scope.
+    Chatbot guardrail — strict.
+    Only first-aid / emergency queries pass.
     Returns (is_valid: bool, reason: str).
     """
     q = query.lower().strip()
 
-    # 1. Chronic condition check
+    if not q:
+        return (True, "")  # empty handled by caller
+
+    # 1. Chronic condition check (block)
     for condition in CHRONIC_CONDITIONS:
         if condition in q:
             return (
@@ -57,7 +89,7 @@ def is_first_aid_query(query: str) -> tuple:
                 "Please consult a doctor."
             )
 
-    # 2. Non first-aid topic check
+    # 2. Non first-aid topic check (block)
     for topic in NON_FIRST_AID_TOPICS:
         if topic in q:
             return (
@@ -65,6 +97,17 @@ def is_first_aid_query(query: str) -> tuple:
                 f"This query is about {topic}, which is outside the scope of "
                 "immediate first-aid guidance. Please consult a healthcare professional."
             )
+
+    # 3. Positive check — query MUST contain at least one medical keyword
+    #    This catches everything else (philosophy, cooking, travel, etc.)
+    has_medical_keyword = any(kw in q for kw in MEDICAL_KEYWORDS)
+    if not has_medical_keyword:
+        return (
+            False,
+            "This query does not appear to be about first-aid or a medical emergency. "
+            "I can only help with immediate first-aid guidance. "
+            "Please consult a doctor for other questions."
+        )
 
     return (True, "")
 

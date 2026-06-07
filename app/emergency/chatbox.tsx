@@ -23,7 +23,7 @@ type Message = {
     sender: 'user' | 'bot';
 };
 
-const API_ENDPOINT = `${API_BASE_URL}/api/v1/ai/text-query`;
+const API_ENDPOINT = `${API_BASE_URL}/api/v1/ai/chat`;
 
 export default function ChatboxScreen() {
     const router = useRouter();
@@ -58,8 +58,7 @@ export default function ChatboxScreen() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    text: currentInput,
-                    context: '',
+                    question: currentInput,
                     language: 'en',
                     rag_source: 'sashwat_optimized',
                 }),
@@ -80,7 +79,7 @@ export default function ChatboxScreen() {
             const botMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 text:
-                    data.response ||
+                    data.answer ||
                     'Unable to retrieve medical guidelines. If severe, stop trekking and head to base camp immediately.',
                 sender: 'bot',
             };

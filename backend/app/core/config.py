@@ -30,8 +30,10 @@ class Settings:
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
-    # Local Model Configuration (Dual Mode)
-    USE_LOCAL_MODEL: bool = os.getenv("USE_LOCAL_MODEL", "false").lower() == "true"
+    # Local Model Configuration
+    # NOTE: Fine-tuned Ollama model is DISABLED. All responses come from
+    # Groq LLM + sashwat_optimized RAG. This config is kept for future reference.
+    USE_LOCAL_MODEL: bool = False  # Disabled — always use Groq + sashwat_optimized RAG
     OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "arohan-medical")
 

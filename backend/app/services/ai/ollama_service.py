@@ -1,6 +1,11 @@
 """
 ollama_service.py — Service for fine-tuned local Ollama model
-Provides dual mode support alongside Groq API.
+⚠️  DISABLED — This module is no longer used in the active pipeline.
+All responses now come from Groq LLM + sashwat_optimized RAG only.
+
+Kept for future reference. Do NOT delete.
+To re-enable: set USE_LOCAL_MODEL=True in config.py and uncomment
+the Ollama branch in llm_service.py.
 
 Refactored to use shared prompt_utils.py and centralized config.py Settings.
 """

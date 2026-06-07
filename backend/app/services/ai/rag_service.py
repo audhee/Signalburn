@@ -301,6 +301,60 @@ class RAGService:
 
         return structured
 
+    def retrieve_debug(self, query: str, k: int = 5, source: Optional[str] = "all") -> dict:
+        """
+        Debug retrieval — returns per-source chunks with metadata and scores.
+        Useful for inspecting which RAG stores contributed what content.
+        """
+        all_sources: Dict[str, dict] = {}
+        enabled_stores = self._get_enabled_stores(source)
+
+        for store_name, store in enabled_stores:
+            try:
+                scored = self._search_store_with_scores(store_name, store, query, k)
+                chunks = []
+                for doc, score in scored:
+                    chunk_info: dict = {
+                        "content": doc.page_content[:500],
+                        "score": round(score, 4),
+                        "metadata": doc.metadata or {},
+                    }
+                    chunks.append(chunk_info)
+                all_sources[store_name] = {
+                    "available": True,
+                    "chunk_count": len(chunks),
+                    "chunks": chunks,
+                }
+            except Exception as e:
+                logger.error(f"Debug retrieval failed for '{store_name}': {e}")
+                all_sources[store_name] = {
+                    "available": False,
+                    "chunk_count": 0,
+                    "chunks": [],
+                    "error": str(e),
+                }
+
+        # Report which stores are loaded vs missing
+        store_status = {
+            name: (store is not None)
+            for name, store in {
+                "sashwat_optimized": self.sashwat_optimized_db,
+                "optimized": self.optimized_db,
+                "arohan": self.arohan_db,
+                "sashwat": self.sashwat_db,
+                "harshita": self.harshita_db,
+                "geshna": self.geshna_db,
+            }.items()
+        }
+
+        return {
+            "query": query,
+            "k": k,
+            "source_filter": source,
+            "store_status": store_status,
+            "results": all_sources,
+        }
+
 
 def get_rag_context(query: str, k: int = 3, source: Optional[str] = "all") -> str:
     return rag_service.retrieve_context(query, k=k, source=source)

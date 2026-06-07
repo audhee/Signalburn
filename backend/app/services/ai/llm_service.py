@@ -1,10 +1,14 @@
 """
 llm_service.py — Arohan AI Text Generation (Groq API)
-Uses Groq llama-3.3-70b-versatile (or Ollama local model via USE_LOCAL_MODEL toggle).
+Uses Groq llama-3.1-8b-instant for low-latency first-aid responses.
 Responds in SAME language as user query.
 3-layer script protection — no wrong language passes through.
 
 Refactored to use shared prompt_utils.py and centralized config.py Settings.
+
+NOTE: Fine-tuned Ollama model is DISABLED. All responses come from
+Groq LLM + sashwat_optimized RAG. See ollama_service.py for the
+disabled code (kept for future reference).
 """
 
 import os
@@ -44,37 +48,27 @@ def _get_groq_client():
 
 
 def process_voice_with_llm(
-    text: str, context: str = "", language: str = "en", rag_source: str = "all",
+    text: str, context: str = "", language: str = "en", rag_source: str = "sashwat_optimized",
     prefetched_rag_context: str = "",
 ) -> dict:
     """
-    Process voice input using either fine-tuned Ollama model or Groq API
-    based on configuration.
+    Process voice input using Groq API + sashwat_optimized RAG.
 
-    Uses dual mode:
-    - If USE_LOCAL_MODEL=true: Uses fine-tuned Ollama model
-    - If USE_LOCAL_MODEL=false: Uses Groq API (existing behavior)
+    The fine-tuned Ollama model is DISABLED. All responses are generated
+    by Groq LLM using context retrieved exclusively from sashwat_optimized RAG.
 
     If prefetched_rag_context is provided, skips the internal RAG retrieval
     and uses the given context directly (avoids double-RAG for /chat endpoint).
     """
-    if settings.USE_LOCAL_MODEL:
-        logger.info("Using fine-tuned Ollama model")
-        from app.services.ai.ollama_service import process_voice_with_ollama
-        ollama_result = process_voice_with_ollama(text, context, language, rag_source)
-        if ollama_result.get("error") == "ollama_unavailable":
-            logger.warning("Ollama unavailable. Falling back to Groq for this request.")
-            return _process_voice_with_groq(text, context, language, rag_source, prefetched_rag_context)
-        return ollama_result
-
-    return _process_voice_with_groq(text, context, language, rag_source, prefetched_rag_context)
+    # Always use Groq path — fine-tuned model is disabled
+    return _process_voice_with_groq(text, context, language, "sashwat_optimized", prefetched_rag_context)
 
 
 def _process_voice_with_groq(
     text: str, context: str = "", language: str = "en", rag_source: str = "all",
     prefetched_rag_context: str = "",
 ) -> dict:
-    """Primary cloud inference path, also used as fallback when local Ollama is down."""
+    """Primary cloud inference path using Groq LLM + sashwat_optimized RAG."""
 
     requested_lang = normalize_supported_language(language)
     lang_info = detect_language(text)
@@ -120,10 +114,10 @@ def _process_voice_with_groq(
 
     try:
         response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=messages,
             temperature=0.1,
-            max_tokens=900,
+            max_tokens=700,
             top_p=0.9,
             frequency_penalty=0.3,
             presence_penalty=0.3,
@@ -182,7 +176,7 @@ def force_language_retry(
         retry_messages.append({"role": "user", "content": f"Patient complaint: {text}"})
 
         retry = _get_groq_client().chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.1-8b-instant",
             messages=retry_messages,
             temperature=0.0,
             max_tokens=700,
