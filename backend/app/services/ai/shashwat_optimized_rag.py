@@ -40,8 +40,24 @@ class ShashwatOptimizedRAG:
 
     def _resolve_chroma_dir(self) -> str:
         configured = Path(self.chroma_dir)
-        candidates = [configured]
 
+        # Priority 1: SASHWAT_CHROMA_DIR env var explicitly set by user
+        # (e.g., Railway volume mount with dedicated ChromaDB)
+        env_var_explicit = os.environ.get("SASHWAT_CHROMA_DIR") is not None
+        if env_var_explicit and configured.exists():
+            return str(configured)
+
+        # Priority 2: knowledge_base/sashwat_chroma_db (has ~53K documents)
+        # Canonical source of medical RAG data — preferred default
+        kb_chroma = Path(__file__).parent.parent.parent / "knowledge_base" / "sashwat_chroma_db"
+        if kb_chroma.exists():
+            return str(kb_chroma)
+
+        # Priority 3: Default configured path (my_chroma_db) or alternate paths
+        if configured.exists():
+            return str(configured)
+
+        candidates = []
         if configured.name == "my_chroma_db" and configured.parent.name == "db":
             candidates.append(configured.parent.parent / "my_chroma_db")
         elif configured.name != "my_chroma_db":
@@ -50,6 +66,7 @@ class ShashwatOptimizedRAG:
         for candidate in candidates:
             if candidate.exists():
                 return str(candidate)
+
         return str(configured)
 
     def _initialize(self) -> None:
