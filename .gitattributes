@@ -1,3 +1,6 @@
 *.sqlite3 filter=lfs diff=lfs merge=lfs -text
 *.bin filter=lfs diff=lfs merge=lfs -text
 *.pickle filter=lfs diff=lfs merge=lfs -text
+backend/app/knowledge_base/sashwat_chroma_db/** filter=lfs diff=lfs merge=lfs -text
+backend/app/knowledge_base/sashwat_chroma_db/**.bin filter=lfs diff=lfs merge=lfs -text
+backend/app/knowledge_base/sashwat_chroma_db/**.sqlite3 filter=lfs diff=lfs merge=lfs -text
