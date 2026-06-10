@@ -17,3 +17,4 @@ sqlalchemy
 psycopg2-binary
 alembic
 PyJWT
+razorpay

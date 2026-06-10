@@ -133,6 +133,16 @@ export default function HomeScreen() {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ alignItems: 'center' }}
+                            onPress={() => router.push('/shop' as any)}
+                            accessibilityRole="button"
+                            accessibilityLabel="Shop"
+                            accessibilityHint="Opens the shop and services"
+                        >
+                            <Ionicons name="cart" size={rf(20)} color={COLORS.muted} />
+                            <Text style={{ fontSize: rf(10), color: COLORS.muted, marginTop: 2 }}>{t('shop', { defaultValue: 'Shop' })}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ alignItems: 'center' }}
                             onPress={() => router.push('/settings' as any)}
                             accessibilityRole="button"
                             accessibilityLabel="Settings"

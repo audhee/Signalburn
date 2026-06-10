@@ -72,7 +72,21 @@ Arohan/
 
 ### Running the App Locally
 
-You will need to open **4 separate terminal windows** to launch the full environment:
+#### **Option A: Automated Startup (Recommended for macOS)**
+We provide a comprehensive startup script that automates Docker containers, the Backend API, Ngrok tunneling, and the Expo frontend.
+
+1.  Make the script executable (first time only):
+    ```bash
+    chmod +x run_project.sh
+    ```
+2.  Launch everything:
+    ```bash
+    ./run_project.sh
+    ```
+The script will automatically detect your Ngrok URL and update your `.env` file for you.
+
+#### **Option B: Manual Startup (Windows/Linux or Advanced)**
+If you prefer manual control, follow these steps in **4 separate terminal windows**:
 
 **1. Start the Databases (Redis & PostgreSQL)**
 The backend now requires both Redis (for OTPs) and PostgreSQL (for persistent user data). If using Docker Desktop, open two separate terminals or run them sequentially:

@@ -52,3 +52,16 @@ __pycache__/
 venv/
 
 .vscode/
+
+# Binaries
+ngrok.exe
+
+# Test reports
+Arohan_Automated_Test_Report.csv
+Arohan_Automated_Test_Report.json
+Arohan_Test_Report.csv
+*.log
+
+# Generated media
+backend/*.mp3
+*.mp3

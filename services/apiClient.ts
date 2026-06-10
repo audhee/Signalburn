@@ -37,6 +37,7 @@ export const apiClient = {
         
         const requestHeaders: Record<string, string> = {
             ...headers,
+            'ngrok-skip-browser-warning': 'true',
         };
 
         if (!isFormData) {
