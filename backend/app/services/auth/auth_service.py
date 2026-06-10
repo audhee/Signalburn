@@ -96,11 +96,8 @@ class RateLimitExceededError(ValueError):
     """Raised when OTP requests are spammed (cooldown or hourly limit)."""
     pass
 
-# Connect to Redis for OTP caching and rate limiting
-# On Railway: REDIS_URL is auto-set (e.g. redis://default:xxx@redis.railway.internal:6379)
-# Locally: falls back to localhost:6379
-_redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-redis_client = redis.from_url(_redis_url, decode_responses=True)
+# Connect to local Redis for OTP caching and rate limiting
+redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
 
 def _standardize_phone(phone_number: str) -> str:

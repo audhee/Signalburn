@@ -38,11 +38,9 @@ class Settings:
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "arohan-medical")
 
     # RAG Configuration
-    # On Railway: set SASHWAT_CHROMA_DIR env var to the mount path
-    # Locally: expects my_chroma_db/ inside backend/
     SASHWAT_CHROMA_DIR: str = os.getenv(
         "SASHWAT_CHROMA_DIR",
-        str(Path(__file__).parent.parent.parent / "my_chroma_db"),
+        r"D:\intern\medical-rag-llm\db\my_chroma_db",
     )
     HARSHITA_FAISS_DIR: str = os.getenv(
         "HARSHITA_FAISS_DIR",
