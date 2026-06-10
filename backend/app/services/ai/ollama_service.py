@@ -29,6 +29,10 @@ from app.services.ai.prompt_utils import (
 
 logger = logging.getLogger(__name__)
 
+# Module-level aliases so test.py and other modules can import directly
+USE_LOCAL_MODEL = settings.USE_LOCAL_MODEL
+OLLAMA_URL = settings.OLLAMA_URL
+
 
 def is_local_mode() -> bool:
     """Return True if local Ollama model should be used instead of Groq."""
