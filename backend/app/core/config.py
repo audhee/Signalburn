@@ -38,8 +38,9 @@ class Settings:
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "arohan-medical")
 
     # RAG Configuration
-    SASHWAT_CHROMA_DIR = str(
-    Path(__file__).parent.parent.parent / "my_chroma_db"
+    SASHWAT_CHROMA_DIR: str = os.getenv(
+    "SASHWAT_CHROMA_DIR",
+    str(Path(__file__).parent.parent / "knowledge_base" / "sashwat_chroma_db"),
     )
     HARSHITA_FAISS_DIR: str = os.getenv(
         "HARSHITA_FAISS_DIR",
