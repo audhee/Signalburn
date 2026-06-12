@@ -15,7 +15,7 @@ from pathlib import Path
 
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
-
+from app.services.ai.download_chroma import ensure_chroma_db
 from app.core.config import settings
 print("========== SHASHWAT_OPTIMIZED_RAG FILE LOADED ==========")
 
@@ -73,7 +73,11 @@ class ShashwatOptimizedRAG:
     def _initialize(self) -> None:
         print("========== SHASHWAT RAG INITIALIZE STARTED ==========")
 
-        self.chroma_dir = self._resolve_chroma_dir()
+        db_path = ensure_chroma_db()
+        if db_path:
+            self.chroma_dir = db_path
+        else:
+            self.chroma_dir = self._resolve_chroma_dir()
 
         print(f"DEBUG CHROMA PATH = {self.chroma_dir}")
         print(f"DEBUG EXISTS = {os.path.exists(self.chroma_dir)}")
