@@ -76,9 +76,19 @@ def _process_voice_with_groq(
     language_name = lang_info["language_name"]
     is_emergency = lang_info["is_emergency"]
 
-    if context and requested_lang["language_name"] in [
+    # Language resolution priority:
+    # 1. Auto-detection result (most accurate for mixed scripts like Hinglish/Kanglish)
+    # 2. Frontend-specified language (for guided queries or when auto-detect returns English)
+    if language_name in ["Hinglish", "Kanglish"]:
+        # Auto-detect found a mixed mode — always prefer it over frontend hint
+        pass
+    elif context and requested_lang["language_name"] in [
         "English", "Hindi", "Kannada", "Hinglish", "Kanglish"
     ]:
+        language_code = requested_lang["language_code"]
+        language_name = requested_lang["language_name"]
+    elif language_name == "English" and requested_lang["language_name"] != "English":
+        # Auto-detect returned English but frontend specified another language
         language_code = requested_lang["language_code"]
         language_name = requested_lang["language_name"]
 

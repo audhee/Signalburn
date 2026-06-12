@@ -67,6 +67,128 @@ MEDICAL_KEYWORDS = [
     "low sugar", "high sugar", "blood pressure",
 ]
 
+# Hindi (Devanagari) medical keywords
+# Using pure literal Devanagari for reliable substring matching
+HINDI_MEDICAL_KEYWORDS = [
+    # Symptoms
+    '\u0926\u0930\u094d\u0926', '\u092a\u0940\u0921\u093c\u093e',
+    '\u0924\u0915\u0932\u0940\u092b', '\u0916\u0942\u0928',
+    '\u0918\u093e\u0935', '\u091c\u0916\u094d',
+    '\u091c\u0932\u0928\u093e', '\u091c\u0932\u0928',
+    '\u092e\u094b\u091a', '\u0938\u0942\u091c\u0928',
+    '\u091a\u094b\u091f', '\u0918\u093e\u092f\u0932',
+    '\u0926\u0941\u0930\u094d\u0918\u091f\u0928',
+    '\u092c\u0947\u0939\u094b\u0936', '\u092c\u0947\u0939\u094b\u0936\u0940',
+    '\u092c\u0941\u0916\u093e\u0930', '\u091c\u094d\u0935\u0930',
+    '\u0921\u0902\u0915', '\u0921\u0938\u0928\u093e',
+    '\u0938\u093e\u0902\u092a', '\u092c\u093f\u091a\u094d\u092e\u0942',
+    '\u0909\u0932\u094d\u091f\u0940',
+    # Body parts
+    '\u0938\u093f\u0930', '\u091b\u093e\u0924\u0940',
+    '\u092a\u0947\u091f', '\u0939\u093e\u0925',
+    '\u0906\u0902\u0916', '\u0915\u093e\u0928',
+    '\u0917\u0932\u093e', '\u091a\u0939\u0930\u0940',
+    '\u092a\u0947\u091f', '\u0926\u093e\u0902\u0924',
+    # Emergency
+    '\u0906\u092a\u093e\u0924\u0915\u093e\u0932',
+    '\u0907\u092e\u0930\u091c\u0947\u0902\u0938\u0940',
+    '\u0905\u0938\u094d\u092a\u0924\u093e\u0932',
+    '\u0921\u0949\u0915\u094d\u091f\u0930',
+    '\u090f\u092e\u094d\u092c\u094d\u0932\u0947\u0902\u0938',
+    '\u091c\u0939\u0930', '\u091c\u0939\u0930 \u0921\u0939\u0928\u093e',
+    '\u0921\u0942\u092c\u0928\u093e',
+    '\u0926\u093f\u0932 \u0915\u093e \u0926\u094c\u0930\u093e',
+    '\u0932\u0915\u0935\u093e', '\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915 \u0909\u092a\u091a\u093e\u0930',
+    '\u092a\u091f\u094d\u0938\u0940',
+]
+
+# Kannada medical keywords
+# Using pure literal Kannada for reliable substring matching
+KANNADA_MEDICAL_KEYWORDS = [
+    # Symptoms
+    '\u0ca8\u0cb3\u0cc1', '\u0ca8\u0cb3\u0cbe',
+    '\u0cb0\u0c95\u0ccd\u0c97\u0cc1\u0cb5\u0cc2',
+    '\u0c97\u0cbe\u0caf', '\u0c97\u0cbe\u0caf\u0cb5\u0cbe\u0c97\u0cc1',
+    '\u0cb8\u0cc1\u0c9f\u0ccd\u0c9f\u0cc1',
+    '\u0cc2\u0ca4', '\u0c9a\u0cc0\u0caf\u0cc6',
+    '\u0c89\u0cb8\u0cbf\u0cb0\u0cbe\u0c9f',
+    '\u0c9a\u0cb2\u0ccd\u0cb2\u0cc1',
+    '\u0cac\u0cc1\u0d16\u0cb0', '\u0c9c\u0ccd\u0cb5\u0cb0',
+    '\u0ca1\u0c82\u0c95', '\u0c95\u0c9a\u0ccd\u0ccd\u0cc1',
+    '\u0cb9\u0cbe\u0cb5\u0cc1',
+    # Body parts
+    '\u0ca4\u0cb2\u0cc6', '\u0cc7\u0ca6\u0cc6',
+    '\u0cb9\u0cc1\u0c95\u0ccd', '\u0c95\u0c95\u0ccd\u0ca8\u0ccd\u0ca8\u0cc1',
+    '\u0c95\u0cbf\u0cb5\u0cbf', '\u0c97\u0c82\u0c9f\u0cb2\u0cc1',
+    # Emergency
+    '\u0ca4\u0cc1\u0cb0\u0ccd\u0ca4\u0cc1',
+    '\u0c86\u0cb8\u0ccd\u0caa\u0ca4\u0ccd\u0cb0\u0cc6',
+    '\u0cb5\u0cc8\u0ca6\u0ccd\u0caf',
+    '\u0ca8\u0cbe\u0caf', '\u0ca1\u0cc2\u0cac\u0cc1',
+    '\u0cb9\u0cc3\u0ca6\u0caf\u0cbe\u0c98\u0cbe\u0caf\u0ca4',
+    '\u0cb2\u0c95\u0cb5\u0cbe',
+    # General medical
+    '\u0c97\u0cbe\u0caf',    '\u0cb8\u0cc1\u0c9f\u0ccd\u0c9f\u0cc1',
+    '\u0c9c\u0cbe\u0cb5\u0cc6', '\u0c86\u0c97\u0cc1',
+    '\u0cb5\u0cbf\u0cb7 \u0c9f\u0cc6\u0c97\u0cc6\u0ca6\u0cc1',
+    '\u0cb8\u0cbe\u0c82\u0c95\u0cc6 \u0c95\u0ca3\u0ccd\u0ca8\u0cc1',
+]
+
+# Hinglish / Kanglish transliterated keywords (Roman script)
+# These catch queries written in Roman letters with Hindi/Kannada words
+TRANSLITERATED_KEYWORDS = [
+    # Common Hindi/Roman medical terms
+    "dard", "dard ho raha", "dard hai",
+    "khoon", "khoon beh raha", "khoon beh rahe",
+    "chot", "chot lagi",
+    "ghaav", "ghaav ho gaya",
+    "jal gaya", "jala hua", "jalan",
+    "toot gaya", "toota hua", "fracture hua",
+    "moch aayi", "moch",
+    "sujan", "soojh gaya", "sujh gaya",
+    "behosh", "behosh ho gaya", "baisosh",
+    "saans", "saans lene mein",
+    "chakkar", "chakkar aa rahe",
+    "ulti", "ulti ho rahi",
+    "bukhar", "bukhar hai", "bukhar aa raha",
+    "saanp", "saanp ne kaat liya", "saanp ne dasa",
+    "bichhoo", "bichhoo ne dasa", "bichhoo ne kaata",
+    "seene mein dard", "chati mein dard",
+    "pet mein dard", "pet dard",
+    "sir dard", "sir mein dard",
+    "aankh", "kaan", "gala",
+    "haath", "paon",
+    "emergency", "hospital", "doctor",
+    "ambulance", "aspatal", "asptal",
+    "jharu", "daag", "rash",
+    "bukhar", "tap",
+    "daant", "daant lag gayi",
+    "kaat liya", "kaat liye", "kutta kaat liya",
+    "gir gaya", "gir ke", "gira hua",
+    "gira",    "girna",
+    # Kanglish / Kannada transliterations (Roman script)
+    "novu", "novu aagide", "novu aagtide",
+    "raktasravava", "rakta",
+    "gaaya", "gaaya aagide",
+    "suttikollu", "suttu",
+    "muritu",
+    "oota",
+    "prajne illa",
+    "usirata",
+    "talisuttu",
+    "vaanti",
+    "jvar", "jwara",
+    "haavu kacci", "haavu hulu",
+    "talleya novu", "ede novu",
+    "hotte novu", "kai novu",
+    "kannu", "kivi", "gantalu",
+    "turtu", "aspatriye", "vaidya",
+    "visha", "hadayaaghaata",
+    "maadbeku", "en maadbeku", "aadmeelu",
+]
+
+
+
 
 def is_first_aid_query(query: str) -> tuple:
     """
@@ -100,7 +222,21 @@ def is_first_aid_query(query: str) -> tuple:
 
     # 3. Positive check — query MUST contain at least one medical keyword
     #    This catches everything else (philosophy, cooking, travel, etc.)
+    #    Detect script and check appropriate keyword lists
+    has_hindi = bool(HINDI_SCRIPT.search(q))
+    has_kannada = bool(KANNADA_SCRIPT.search(q))
+
     has_medical_keyword = any(kw in q for kw in MEDICAL_KEYWORDS)
+
+    if not has_medical_keyword and has_hindi:
+        has_medical_keyword = any(kw in q for kw in HINDI_MEDICAL_KEYWORDS)
+
+    if not has_medical_keyword and has_kannada:
+        has_medical_keyword = any(kw in q for kw in KANNADA_MEDICAL_KEYWORDS)
+
+    if not has_medical_keyword:
+        has_medical_keyword = any(kw in q for kw in TRANSLITERATED_KEYWORDS)
+
     if not has_medical_keyword:
         return (
             False,
