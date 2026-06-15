@@ -148,7 +148,9 @@ def detect_language(text: str) -> dict:
     has_hindi   = bool(HINDI_PATTERN.search(text))
     has_english = bool(ASCII_PATTERN.search(text))
     has_unsupported_script = bool(UNSUPPORTED_SCRIPT_PATTERN.search(text))
-    words_lower = text.lower().split()
+    # Strip punctuation before splitting so word matching works reliably
+    stripped = re.sub(r'[^a-zA-Z\s]', ' ', text.lower())
+    words_lower = stripped.split()
     text_lower  = text.lower()
 
     # Emergency detection
