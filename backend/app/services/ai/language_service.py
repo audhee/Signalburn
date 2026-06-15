@@ -1,4 +1,5 @@
 import re
+import string
 import logging
 
 logger = logging.getLogger(__name__)
@@ -55,21 +56,32 @@ HINDI_ROMAN_WORDS = [
 ]
 
 KANNADA_ROMAN_WORDS = [
-    "nanna", "nanu", "nimma", "avaru", "illi", "alli", "hogi",
-    "banni", "thumba", "swalpa", "novedu", "novedutte", "kai",
-    "kalu", "tale", "hotte", "bekku", "beda", "ide", "illa",
-    "enu", "yenu", "yaake", "hege", "onde", "eradu", "madappa",
-    "taale", "tal",
-    "bayi", "kivi", "mukha", "bitta", "hedaru",
-    "sari", "chennagi", "olleya",
-    "nodi", "madi", "maadi", "kodi",
-    "bartini", "hogu", "bande", "bandide",
-    "beku", "bedi", "bedava",
-    "sakka",
-    "kel", "keli", "hel", "heli",
-    "tago", "tagondu",
-    "haku", "noyi",
-    "nodappa", "helappa",
+    # Pronouns & particles
+    "nanna", "nanu", "nanage", "nimma", "nimge", "avaru",
+    "illi", "alli", "hogi", "banni",
+    # Common verbs & verb roots
+    "beku", "beda", "bekku", "bedava", "bedi",
+    "madi", "maadi", "madu", "madbeku", "madoke",
+    "hogu", "bartini", "bande", "bandide", "barutte",
+    "nodi", "nodappa",
+    "helu", "heli", "helappa", "helbeku",
+    "kelu", "keli", "kelbeku",
+    "tago", "tagondu", "tagobeku",
+    "haku", "hakbeku",
+    "kodi", "kodbeku",
+    # Descriptors & adjectives
+    "thumba", "swalpa", "novedu", "novedutte", "sari",
+    "chennagi", "olleya", "olle",
+    # Body parts
+    "kai", "kalu", "tale", "hotte", "bayi", "kivi",
+    "mukha", "bitta", "hedaru", "noyi",
+    # Existence & identity
+    "ide", "illa", "ideya", "ittu",
+    "enu", "yenu", "yaake", "yake", "hege",
+    "ondu", "onde", "eradu", "mooru",
+    "madappa", "taale", "tal",
+    # Misc common
+    "sakka", "benki",
 ]
 
 SUPPORTED_LANGUAGE_CODES = {"en-IN", "hi-IN", "kn-IN"}
@@ -156,8 +168,11 @@ def detect_language(text: str) -> dict:
         lang_name = "Hindi"
         lang_code = "hi-IN"
     else:
-        hindi_count   = sum(1 for w in words_lower if w in HINDI_ROMAN_WORDS)
-        kannada_count = sum(1 for w in words_lower if w in KANNADA_ROMAN_WORDS)
+        # Strip punctuation for accurate word matching (e.g. "ide," -> "ide")
+        clean_words = [w.strip(string.punctuation) for w in words_lower]
+        hindi_count   = sum(1 for w in clean_words if w in HINDI_ROMAN_WORDS)
+        kannada_count = sum(1 for w in clean_words if w in KANNADA_ROMAN_WORDS)
+
         # Single unmistakeably Indian-language word is enough to detect mixed mode
         if hindi_count >= 1:
             lang_name = "Hinglish"

@@ -1,14 +1,13 @@
 """
 llm_service.py — Arohan AI Text Generation (Groq API)
 Uses Groq llama-3.1-8b-instant for low-latency first-aid responses.
+Uses sashwat_optimized RAG for context retrieval.
 Responds in SAME language as user query.
 3-layer script protection — no wrong language passes through.
 
-Refactored to use shared prompt_utils.py and centralized config.py Settings.
-
 NOTE: Fine-tuned Ollama model is DISABLED. All responses come from
-Groq LLM + sashwat_optimized RAG. See ollama_service.py for the
-disabled code (kept for future reference).
+Groq LLM + sashwat_optimized RAG only. See ollama_service.py for
+the disabled code (kept for future reference).
 """
 
 import os
@@ -60,7 +59,7 @@ def process_voice_with_llm(
     If prefetched_rag_context is provided, skips the internal RAG retrieval
     and uses the given context directly (avoids double-RAG for /chat endpoint).
     """
-    # Always use Groq path — fine-tuned model is disabled
+    # Always use Groq — fine-tuned model is disabled
     return _process_voice_with_groq(text, context, language, "sashwat_optimized", prefetched_rag_context)
 
 
@@ -85,11 +84,12 @@ def _process_voice_with_groq(
     logger.info(f"Language: {language_name} | Emergency: {is_emergency}")
 
     # Use prefetched RAG context if provided (avoids double-RAG for /chat endpoint)
+    # Truncate to 3000 chars for faster prompt processing
     if prefetched_rag_context:
-        rag_context = prefetched_rag_context[:6000]
+        rag_context = prefetched_rag_context[:3000]
     else:
-        rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
-        rag_context = rag_context_raw[:6000] if rag_context_raw else ""
+        rag_context_raw = rag_service.retrieve_context(text, k=3, source=rag_source)
+        rag_context = rag_context_raw[:3000] if rag_context_raw else ""
 
     groq_client = _get_groq_client()
     if not groq_client:

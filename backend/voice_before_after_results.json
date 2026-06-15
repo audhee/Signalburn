@@ -1,0 +1,87 @@
+[
+  {
+    "query": "Mere pair mein bahut dard hai, kya karu?",
+    "before_groq": {
+      "response": "Beta, mere paas kuchh sujhav hain. \n\n1. Apne pair ko thanda pani se dhoye. Yeh aapke pair ko thanda karke dard ko kam kar sakta hai.\n2. Apne pair ko garam kompress se lagaye. Yeh aapke pair ko garam karke dard ko kam kar sakta hai.\n3. Apne pair ko rest dein. Yeh aapke pair ko thoda thoda karke dard ko kam kar sakta hai.\n4. Apne pair ko ache se dhoye aur sabun se dhoye. Yeh aapke pair ko saaf karke dard ko kam kar sakta hai.\n5. Apne pair ko ache se cover karein. Yeh aapke pair ko surakshit rakhega.\n6. Agar dard bahut jyada ho to, Call 112 or 108 immediately karein.\n\nYeh sab kuchh aap kar sakte hain. Agar dard abhi bhi jyada ho to, to apne doctor se milne ka plan banayein.",
+      "language": "Hinglish",
+      "latency_s": 0.79,
+      "success": true,
+      "model": "Groq llama-3.1-8b-instant",
+      "rag_source": "sashwat_optimized"
+    },
+    "after_ollama": {
+      "response": "HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=120)",
+      "success": false,
+      "latency_s": 0,
+      "model": "Ollama arohan-medical"
+    }
+  },
+  {
+    "query": "Saans lene mein takleef ho rahi hai",
+    "before_groq": {
+      "response": "Babu/Didi, aapko saans lene mein takleef ho rahi hai? Yeh bahut chinta ka vishay hai. Kuchh cheezon ka dhyan rakhna zaroori hai:\n\n1. Aapko thoda thoda saans lena chahiye. Isse aapke shareer ko thoda thoda saans milne ki avashyakta hogi.\n2. Aapko paani pilana chahiye. Paani se aapka shareer thoda thoda saans lena seekh sakta hai.\n3. Aapko ek cool aur aaramdayak sthaan par baithna chahiye. Isse aapko saans lena asaan ho jayega.\n4. Aapko koi bhi dard ya takleef ka anubhav nahin hona chahiye. Agar aapko koi bhi dard ya takleef ka anubhav ho raha hai, to aapko taur-taur se doctor se sampark karna chahiye.\n5. Aapko apne doctor se sampark karna chahiye. Vah aapko sahi tareeke se saans lena seekhane mein madad kar sakte hain.\n\nAgar aapko saans lene mein bahut takleef ho rahi hai, to Call 112 or 108 immediately karein.",
+      "language": "Hinglish",
+      "latency_s": 2.07,
+      "success": true,
+      "model": "Groq llama-3.1-8b-instant",
+      "rag_source": "sashwat_optimized"
+    },
+    "after_ollama": {
+      "response": "HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=120)",
+      "success": false,
+      "latency_s": 0,
+      "model": "Ollama arohan-medical"
+    }
+  },
+  {
+    "query": "Sar mein bahut dard hai aur ulti ho rahi hai",
+    "before_groq": {
+      "response": "Arre beta, main tumhein kuchh sahi tareeke se madad karne ka prayaas karta hoon. \n\n1. Sabse pehle, tumhein koi bhi dawa nahin leni chahiye. \n2. Apne sar ko thanda karne ke liye ek cold pack ya ice pack ka upyog karein. \n3. Ek garam kapde pehnein, jaise ki ek garam sweater ya garam kapde ka phanta. \n4. Apne sar ko ek garam komodee mein rakhein. \n5. Apne sar ko ek garam komodee mein rakhein aur apne haath ko apne sar par rakhein. \n6. Agar tumhein lagta hai ki tumhein koi bhi dard hai, to tum apne doctor se sampark karein.\n\nYeh sab kuchh karein, aur tumhara dard kam ho jayega. Agar tumhein lagta hai ki tumhein koi bhi dard hai, to Call 112 or 108 immediately.",
+      "language": "Hinglish",
+      "latency_s": 0.87,
+      "success": true,
+      "model": "Groq llama-3.1-8b-instant",
+      "rag_source": "sashwat_optimized"
+    },
+    "after_ollama": {
+      "response": "HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=120)",
+      "success": false,
+      "latency_s": 0,
+      "model": "Ollama arohan-medical"
+    }
+  },
+  {
+    "query": "Hath mein kat laga hai aur khoon bah raha hai",
+    "before_groq": {
+      "response": "Arre bhai, aapko hath mein kuchh ghat hua hai. Sabse pehle aapko thanda paani aur bandhana bandhna chahiye. Agar khoon bah raha hai, to aapko immediately doctor ke paas jana chahiye. Call 112 or 108 immediately.\n\nYahaan kuchh pehle kadam hain jo aap apne hath ko theek karne ke liye kar sakte hain:\n\n1. Hath ko thanda paani se dhona.\n2. Hath ko bandhana bandhna.\n3. Hath ko ek kapde se dhakna.\n4. Aapko hath ko rest dene ki zaroorat hai.\n5. Agar khoon bah raha hai, to aapko immediately doctor ke paas jana chahiye.\n6. Agar aapko koi bhi dard ya anubhav ho raha hai, to aapko doctor ke paas jana chahiye.\n\nYeh sab kuchh karein, aur aapka hath theek ho jayega.",
+      "language": "Hinglish",
+      "latency_s": 0.84,
+      "success": true,
+      "model": "Groq llama-3.1-8b-instant",
+      "rag_source": "sashwat_optimized"
+    },
+    "after_ollama": {
+      "response": "HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=120)",
+      "success": false,
+      "latency_s": 0,
+      "model": "Ollama arohan-medical"
+    }
+  },
+  {
+    "query": "Gir gaya hai aur pair toot gaya lagta hai",
+    "before_groq": {
+      "response": "Arre bhai, tumhara pair toot gaya hai? Kya hua tha? Kya tumne koi cheez pehni thi jo pair ko tootne ki wajah ban sakti hai?\n\n**6 Steps:**\n\n1. **Bachao**: Pair ko thanda pani se dhokar lete hain. Isse pair ki tangi kam hogi.\n2. **Bandhan**: Pair ko bandhan ke liye ek bandhan ka upyog karein. Isse pair ki tangi kam hogi.\n3. **Dhokar lete hain**: Pair ko thanda pani se dhokar lete hain. Isse pair ki tangi kam hogi.\n4. **Dawa lena**: Agar pair ki tangi bahut jyada ho, to doctor se sampark karein. Vah aapko dawa dengi.\n5. **Aaram karna**: Pair ko thoda aaram dena. Isse pair ki tangi kam hogi.\n6. **Doctor se sampark karna**: Agar pair ki tangi bahut jyada ho, to doctor se sampark karein. Vah aapko dawa dengi.\n\n**Yadi aapko lagta hai ki aapko emergency hai, to:**\n\nCall 112 or 108 immediately.",
+      "language": "Hinglish",
+      "latency_s": 1.19,
+      "success": true,
+      "model": "Groq llama-3.1-8b-instant",
+      "rag_source": "sashwat_optimized"
+    },
+    "after_ollama": {
+      "response": "HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=120)",
+      "success": false,
+      "latency_s": 0,
+      "model": "Ollama arohan-medical"
+    }
+  }
+]
