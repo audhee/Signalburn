@@ -11,10 +11,7 @@ Refactored to use shared prompt_utils.py and centralized config.py Settings.
 """
 
 import logging
-import os
-import re
 import requests
-from collections import Counter
 from typing import Dict, Any, Optional
 
 from app.core.config import settings
@@ -42,26 +39,8 @@ def is_local_mode() -> bool:
     return settings.USE_LOCAL_MODEL
 
 
-def _is_degenerate_response(text: str) -> bool:
-    """Detect looping/degenerate model output.
-    Checks if the response repeats the same phrase or sentence multiple times.
-    """
-    if not text:
-        return True
-    # Check if a sentence or phrase repeats 3+ times
-    sentences = re.split(r'[.!?]\s+', text)
-    if len(sentences) > 2:
-        normalized = [s.strip().lower()[:60] for s in sentences if len(s.strip()) > 10]
-        if normalized:
-            most_common_count = Counter(normalized).most_common(1)[0][1]
-            if most_common_count >= 3:
-                logger.warning(f"Degenerate response detected: phrase repeats {most_common_count} times")
-                return True
-    return False
-
-
-def call_ollama_model(text: str, system_prompt: str, num_predict: int = 400) -> Optional[str]:
-    """Call the fine-tuned Ollama model with optimized settings for low latency."""
+def call_ollama_model(text: str, system_prompt: str, max_tokens: int = 900) -> Optional[str]:
+    """Call the fine-tuned Ollama model."""
     try:
         payload = {
             "model": settings.OLLAMA_MODEL,
@@ -71,27 +50,21 @@ def call_ollama_model(text: str, system_prompt: str, num_predict: int = 400) -> 
             ],
             "stream": False,
             "options": {
-                "temperature": 0.0,
-                "top_p": 0.8,
-                "repeat_penalty": 1.4,
-                "num_predict": num_predict,
-                "num_thread": min(os.cpu_count() or 4, 8),
+                "temperature": 0.1,
+                "top_p": 0.9,
+                "repeat_penalty": 1.1,
             },
         }
 
         response = requests.post(
             f"{settings.OLLAMA_URL}/api/chat",
             json=payload,
-            timeout=180,
+            timeout=30,
         )
 
         if response.status_code == 200:
             result = response.json()
-            content = result["message"]["content"].strip()
-            if _is_degenerate_response(content):
-                logger.warning("Ollama returned degenerate/looping response")
-                return None
-            return content
+            return result["message"]["content"].strip()
         else:
             logger.error(f"Ollama API error: {response.status_code} - {response.text}")
             return None
@@ -105,19 +78,14 @@ def call_ollama_model(text: str, system_prompt: str, num_predict: int = 400) -> 
 
 
 def process_voice_with_ollama(
-    text: str, context: str = "", language: str = "en", rag_source: str = "sashwat_optimized",
-    prefetched_rag_context: str = "",
+    text: str, context: str = "", language: str = "en", rag_source: str = "all"
 ) -> Dict[str, Any]:
     """
-    Process voice input using the fine-tuned Ollama model + sashwat_optimized RAG.
+    Process voice input using the fine-tuned Ollama model.
     Uses shared prompt_utils.build_system_prompt() for consistency with Groq path.
-
-    If prefetched_rag_context is provided, skips internal RAG retrieval
-    and uses the given context directly (avoids double-RAG for /chat endpoint).
     """
     if not settings.USE_LOCAL_MODEL:
-        # Return consistent dict shape so callers accessing ["response_text"] don't crash
-        return {"error": "Local model not enabled", "response_text": "", "language_code": language or "hi-IN"}
+        return {"error": "Local model not enabled"}
 
     # Language detection
     requested_lang = normalize_supported_language(language)
@@ -134,13 +102,9 @@ def process_voice_with_ollama(
 
     logger.info(f"Ollama Language: {language_name} | Emergency: {is_emergency}")
 
-    # RAG context — use prefetched if provided, otherwise retrieve
-    # Truncate to 3000 chars: enough for first-aid, fast enough for CPU inference
-    if prefetched_rag_context:
-        rag_context = prefetched_rag_context[:3000]
-    else:
-        rag_context_raw = rag_service.retrieve_context(text, k=3, source=rag_source)
-        rag_context = rag_context_raw[:3000] if rag_context_raw else ""
+    # RAG context
+    rag_context_raw = rag_service.retrieve_context(text, k=5, source=rag_source)
+    rag_context = rag_context_raw[:2000] if rag_context_raw else ""
 
     # Build system prompt (shared with llm_service.py Groq path)
     system_prompt = build_system_prompt(language_name, rag_context, is_emergency)
@@ -148,7 +112,7 @@ def process_voice_with_ollama(
     # Build messages content — merge conversation context with latest text if available
     if context:
         user_content = (
-            f"Patient details (conversation so far):\n{context[:1500]}\n\n"
+            f"Patient details (conversation so far):\n{context[:4000]}\n\n"
             f"Latest response from patient:\n{text}"
         )
     else:
@@ -158,23 +122,12 @@ def process_voice_with_ollama(
     response_text = call_ollama_model(user_content, system_prompt)
 
     if not response_text:
-        logger.warning("Ollama model returned empty/degenerate response — falling back to Groq")
-        # Fallback to Groq cloud when Ollama fails
-        try:
-            from app.services.ai.llm_service import _process_voice_with_groq
-            fallback_result = _process_voice_with_groq(
-                text, context, language, "sashwat_optimized", prefetched_rag_context
-            )
-            fallback_result["model_used"] = "groq-fallback"
-            return fallback_result
-        except Exception as groq_err:
-            logger.error(f"Groq fallback also failed: {groq_err}")
-            return {
-                "error": "ollama_unavailable",
-                "response_text": get_hardcoded_response(is_emergency, language_name),
-                "language_code": language_code,
-                "model_used": "hardcoded-fallback",
-            }
+        logger.error("Ollama model returned empty response")
+        return {
+            "error": "ollama_unavailable",
+            "response_text": "",
+            "language_code": language_code,
+        }
 
     # Language validation
     if needs_retry(response_text, language_name):
@@ -193,7 +146,6 @@ def process_voice_with_ollama(
     return {
         "response_text": response_text,
         "language_code": language_code,
-        "model_used": "ollama-arohan-medical",
     }
 
 

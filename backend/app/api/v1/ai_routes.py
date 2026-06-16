@@ -53,191 +53,56 @@ def _sanitize_guided_context(context: str, locked_language: str) -> str:
     return "\n".join(cleaned_lines)
 
 
-# ==================== GUIDED QUESTIONS (multi-language) ====================
+# ==================== GUIDED QUESTIONS (English only) ====================
 
-# Fixed questions indexed by answer count.
-# Keys are language_name values from detect_language().
-FIXED_QUESTIONS = {
-    "English": [
-        "What happened?",
-        "What is the age and gender of the person?",
-        "Do they have any medical conditions or take regular medication?",
-    ],
-    "Hindi": [
-        "Kya hua hai?",
-        "Umar aur gender kya hai?",
-        "Koi bimari hai ya regularly dawai lete hain?",
-    ],
-    "Kannada": [
-        "Enaythu?",
-        "Vayassu matte linga enu?",
-        "Yavude arogaya samasye ideya, athava regularly oudha tegedukolluttira?",
-    ],
-    "Hinglish": [
-        "Kya hua hai?",
-        "Umar aur gender kya hai?",
-        "Koi medical condition hai ya regular dawai lete hain?",
-    ],
-    "Kanglish": [
-        "Enaythu?",
-        "Vayassu matte gender enu?",
-        "Yavude medical problem ideya, athava regularly medicine tegedukolluttira?",
-    ],
-}
-
-# Filler-sound indicators only — legitimate short answers like
-# "no", "nahi", "yes", "haan" are NOT blocked.
-FILLER_SOUNDS = {"ah", "um", "uh", "hmm", "hm", "eh", "oh", "aa", "mm", "err"}
-
-def is_unclear_answer(answer_text: str, language_name: str = "") -> bool:
-    """Check if an answer is just filler noise with no useful information.
-    Only blocks actual filler sounds, NOT legitimate short answers.
-    Returns True if the answer should be re-asked.
-    """
-    cleaned = answer_text.strip().lower().strip(".,!?\"' ")
-    # Empty or whitespace-only is unclear
-    if not cleaned:
-        return True
-    # Block filler sounds only
-    if cleaned in FILLER_SOUNDS:
-        return True
-    # Block single non-alphabetic noise (e.g. "...", "---", punctuation only)
-    if len(cleaned) < 3 and not any(c.isalpha() for c in cleaned):
-        return True
-    return False
+FIXED_QUESTIONS = [
+    "What happened?",
+    "What is the age and gender of the person?",
+    "Do they have any medical conditions or take regular medication?",
+]
 
 
-# Re-ask prompts when answer is unclear
-REASK_PROMPTS = {
-    "English": "I did not understand. Can you please explain more?",
-    "Hindi": "Samajh nahi aaya. Kripya aur vistar se bataiye?",
-    "Kannada": "Arthaaglilla. Dayavittu innu heli?",
-    "Hinglish": "Samajh nahi aaya. Kripya aur detail mein bataiye?",
-    "Kanglish": "Arthaaglilla. Dayavittu innu heli?",
-}
-
-
-DYNAMIC_QUESTIONS = {
-    "stroke": {
-        "English": ["Is there weakness or numbness on one side of the body?",
-                     "Is the person having difficulty speaking or understanding speech?"],
-        "Hindi": ["Kya sharir ke ek taraf kamzori ya sunnapan hai?",
-                   "Kya vyakti ko bolne ya samajhne mein dikkat ho rahi hai?"],
-        "Kannada": ["Deege ondu bagealli alisiri athava saaviri ideya?",
-                     "Maatadalli athava arthaagollalli togagu ideya?"],
-        "Hinglish": ["Kya body ke ek taraf weakness ya sunnapan hai?",
-                      "Kya bolne ya samajhne mein difficulty ho rahi hai?"],
-        "Kanglish": ["Deege ondu bagealli weakness athava numbness ideya?",
-                      "Maatadalli athava arthaagollalli problem ideya?"],
-    },
-    "chest_pain": {
-        "English": ["Is the pain radiating to the arm, neck, or jaw?",
-                     "Is the person experiencing shortness of breath or sweating?"],
-        "Hindi": ["Kya dard haath, gardan ya jabde mein ja raha hai?",
-                   "Kya saans lene mein dikkat ya paseena aa raha hai?"],
-        "Kannada": ["Novu kai, kattige athava avadi ge hoguttideya?",
-                     "Ussiradu kashi athava biyale ideya?"],
-        "Hinglish": ["Kya pain haath, neck ya jaw mein ja raha hai?",
-                      "Kya saans lene mein problem ya paseena aa raha hai?"],
-        "Kanglish": ["Novu kai, kattige athava jaw ge hoguttideya?",
-                      "Kya shortness of breath athava sweating ideya?"],
-    },
-    "collapse": {
-        "English": ["Is the person breathing properly?", "Is the person conscious?"],
-        "Hindi": ["Kya vyakti saans sahi se le raha hai?", "Kya vyakti hosh mein hai?"],
-        "Kannada": ["Uttamaavagi ussiradu tegedukolluttida?", "Pragneyaalli ideya?"],
-        "Hinglish": ["Kya saans sahi se le raha hai?", "Kya person hosh mein hai?"],
-        "Kanglish": ["Saans sahi se tegedukolluttida?", "Pragneyaalli ideya?"],
-    },
-    "poison": {
-        "English": ["Is the person vomiting?", "Is the person conscious?"],
-        "Hindi": ["Kya vyakti ulti kar raha hai?", "Kya vyakti hosh mein hai?"],
-        "Kannada": ["Vanti baruttideya?", "Pragneyaalli ideya?"],
-        "Hinglish": ["Kya vomit ho raha hai?", "Kya person hosh mein hai?"],
-        "Kanglish": ["Vanti baruttideya?", "Pragneyaalli ideya?"],
-    },
-    "burn": {
-        "English": ["Is the burn large or deep?", "Is there blistering?"],
-        "Hindi": ["Kya jalan badi ya gehri hai?", "Kya phaphole pad rahe hain?"],
-        "Kannada": ["Suyadu doddathava aadideya?", "Blister aaguttideya?"],
-        "Hinglish": ["Kya burn badi ya deep hai?", "Kya blister ho raha hai?"],
-        "Kanglish": ["Suyadu doddathava deep ideya?", "Blister aaguttideya?"],
-    },
-    "bleeding": {
-        "English": ["Is the bleeding heavy?", "Has it stopped?"],
-        "Hindi": ["Kya khoon zyada aa raha hai?", "Kya ruk gaya hai?"],
-        "Kannada": ["Rakta hechalagu baaru aguttideya?", "Nillittideya?"],
-        "Hinglish": ["Kya bleeding zyada hai?", "Kya ruk gaya hai?"],
-        "Kanglish": ["Bleeding hechalagu aguttideya?", "Nillittideya?"],
-    },
-    "breathing": {
-        "English": ["Is breathing getting worse?", "Is there chest tightness?"],
-        "Hindi": ["Kya saans aur kharab ho rahi hai?", "Kya chhati sakat ho rahi hai?"],
-        "Kannada": ["Ussiradu innavu kettaguttideya?", "Hotte alli bittu kattu aguttideya?"],
-        "Hinglish": ["Kya breathing aur kharab ho rahi hai?", "Kya chest tight ho raha hai?"],
-        "Kanglish": ["Ussiradu innavu kettaguttideya?", "Chest alli tightness ideya?"],
-    },
-    "dizzy": {
-        "English": ["Is the person feeling weak or about to faint?", "When did this start?"],
-        "Hindi": ["Kya vyakti kamzor feel kar raha hai ya behosh hone wala hai?", "Yeh kab shuru hua?"],
-        "Kannada": ["Alisaraguttideya athava mopadu hoguttideya?", "Idu yaavag shuru aytu?"],
-        "Hinglish": ["Kya person weak feel kar raha hai ya behosh hone wala hai?", "Yeh kab shuru hua?"],
-        "Kanglish": ["Alisaraguttideya athava mopadu hoguttideya?", "Idu yaavag shuru aytu?"],
-    },
-}
-
-DYNAMIC_FALLBACK = {
-    "English": ["Is the person conscious?", "Is the person breathing properly?"],
-    "Hindi": ["Kya vyakti hosh mein hai?", "Kya saans sahi se le raha hai?"],
-    "Kannada": ["Pragneyaalli ideya?", "Ussiradu tegedukolluttida?"],
-    "Hinglish": ["Kya person hosh mein hai?", "Kya saans sahi se le raha hai?"],
-    "Kanglish": ["Pragneyaalli ideya?", "Saans sahi se tegedukolluttida?"],
-}
-
-REASK_FALLBACK = {
-    "English": "When did this start?",
-    "Hindi": "Yeh kab shuru hua?",
-    "Kannada": "Idu yaavag shuru aytu?",
-    "Hinglish": "Yeh kab shuru hua?",
-    "Kanglish": "Idu yaavag shuru aytu?",
-}
-
-
-def _get_dynamic_category(context_lower: str) -> str | None:
-    """Map accumulated context to a dynamic-question category."""
+def get_dynamic_question(context: str, already_asked: list) -> str:
     import re
-    if re.search(r"\b(stroke|paralysis|numb|droop|slur|facial|speech)\b", context_lower):
-        return "stroke"
-    if re.search(r"\b(chest\s*pain|heart\s*attack|cardiac|angina)\b", context_lower):
-        return "chest_pain"
-    if re.search(r"\b(collapse|unconscious|faint|passed\s*out|responsive)\b", context_lower):
-        return "collapse"
-    if re.search(r"\b(poison|swallowed|toxin|chemical|ingest)\b", context_lower):
-        return "poison"
-    if re.search(r"\b(burn|scald|fire|acid\s*burn)\b", context_lower):
-        return "burn"
-    if re.search(r"\b(bleeding|bleed|cut|cuts|wound|injury|laceration|blood)\b", context_lower):
-        return "bleeding"
-    if re.search(r"\b(breathing|breath|asthma|choke|suffocate|wheez)\b", context_lower):
-        return "breathing"
-    if re.search(r"\b(dizzy|sweat|giddy|lighthead|weakness)\b", context_lower):
-        return "dizzy"
-    return None
-
-
-def get_dynamic_question(context: str, already_asked: list, language_name: str = "English") -> str:
     context_lower = context.lower()
-    category = _get_dynamic_category(context_lower)
-
-    if category and category in DYNAMIC_QUESTIONS:
-        candidates = DYNAMIC_QUESTIONS[category].get(language_name, DYNAMIC_QUESTIONS[category]["English"])
+    
+    # 1. Stroke / Paralysis
+    if re.search(r"\b(stroke|paralysis|numb|droop|slur|facial|speech)\b", context_lower):
+        candidates = [
+            "Is there weakness or numbness on one side of the body?",
+            "Is the person having difficulty speaking or understanding speech?"
+        ]
+    # 2. Chest Pain / Cardiac / Heart Attack
+    elif re.search(r"\b(chest\s*pain|heart\s*attack|cardiac|angina)\b", context_lower):
+        candidates = [
+            "Is the pain radiating to the arm, neck, or jaw?",
+            "Is the person experiencing shortness of breath or sweating?"
+        ]
+    # 3. Collapse / Unconscious
+    elif re.search(r"\b(collapse|unconscious|faint|passed\s*out|responsive)\b", context_lower):
+        candidates = ["Is the person breathing properly?", "Is the person conscious?"]
+    # 4. Poison / Swallowed
+    elif re.search(r"\b(poison|swallowed|toxin|chemical|ingest)\b", context_lower):
+        candidates = ["Is the person vomiting?", "Is the person conscious?"]
+    # 5. Burn
+    elif re.search(r"\b(burn|scald|fire|acid\s*burn)\b", context_lower):
+        candidates = ["Is the burn large or deep?", "Is there blistering?"]
+    # 6. Bleeding / Cut (with word boundaries to prevent matching 'acute')
+    elif re.search(r"\b(bleeding|bleed|cut|cuts|wound|injury|laceration|blood)\b", context_lower):
+        candidates = ["Is the bleeding heavy?", "Has it stopped?"]
+    # 7. Breathing / Asthma
+    elif re.search(r"\b(breathing|breath|asthma|choke|suffocate|wheez)\b", context_lower):
+        candidates = ["Is breathing getting worse?", "Is there chest tightness?"]
+    # 8. Dizzy / Sweating
+    elif re.search(r"\b(dizzy|sweat|giddy|lighthead|weakness)\b", context_lower):
+        candidates = ["Is the person feeling weak or about to faint?", "When did this start?"]
     else:
-        candidates = DYNAMIC_FALLBACK.get(language_name, DYNAMIC_FALLBACK["English"])
-
+        candidates = ["Is the person conscious?", "Is the person breathing properly?"]
+    
     for q in candidates:
         if q not in already_asked:
             return q
-    return REASK_FALLBACK.get(language_name, REASK_FALLBACK["English"])
+    return "When did this start?"
 
 
 MAX_QUESTIONS = 5
@@ -489,35 +354,11 @@ async def guided_query(payload: VoicePromptPayload):
     already_asked = [l.replace("Q: ", "").strip() for l in lines if l.startswith("Q: ")]
     accumulated   = text + " " + " ".join([l.replace("A: ", "").replace("Q: ", "") for l in lines])
 
-    logger.info(f"Guided query - answer_count: {answer_count} | language: {locked_language_name}")
+    logger.info(f"Guided query - answer_count: {answer_count}")
 
-    # Detect unclear / too-short answers — re-ask instead of advancing
-    if answer_count > 0:
-        last_answer = text.strip()
-        if is_unclear_answer(last_answer, locked_language_name):
-            reask_text = REASK_PROMPTS.get(locked_language_name, REASK_PROMPTS["English"])
-            logger.info(f"Unclear answer detected: '{last_answer}' — re-asking")
-            audio_b64 = None
-            try:
-                audio_bytes = await run_in_threadpool(synthesize_speech, reask_text, locked_language)
-                audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
-            except Exception as e:
-                logger.error(f"TTS for re-ask failed: {e}")
-            return JSONResponse(content={
-                "success":           True,
-                "mode":              "question",
-                "question":          reask_text,
-                "question_num":      answer_count,
-                "total_questions":   MAX_QUESTIONS,
-                "audio_base64":      audio_b64,
-                "detected_language": locked_language,
-                "unclear":           True,
-            })
-
-    # Step 1 — Fixed questions (localized)
-    fixed_qs = FIXED_QUESTIONS.get(locked_language_name, FIXED_QUESTIONS["English"])
-    if answer_count < len(fixed_qs):
-        question_text = fixed_qs[answer_count]
+    # Step 1 — Fixed questions (English only)
+    if answer_count < len(FIXED_QUESTIONS):
+        question_text = FIXED_QUESTIONS[answer_count]
         # Generate TTS audio for the question
         audio_b64 = None
         try:
@@ -535,10 +376,10 @@ async def guided_query(payload: VoicePromptPayload):
             "detected_language": locked_language,
         })
 
-    # Step 2 — Dynamic questions (localized)
-    dynamic_done = answer_count - len(fixed_qs)
-    if dynamic_done < (MAX_QUESTIONS - len(fixed_qs)):
-        question_text = get_dynamic_question(accumulated, already_asked, locked_language_name)
+    # Step 2 — Dynamic questions (English only)
+    dynamic_done = answer_count - len(FIXED_QUESTIONS)
+    if dynamic_done < (MAX_QUESTIONS - len(FIXED_QUESTIONS)):
+        question_text = get_dynamic_question(accumulated, already_asked)
         # Generate TTS audio for the question
         audio_b64 = None
         try:

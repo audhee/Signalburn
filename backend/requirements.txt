@@ -32,4 +32,3 @@ faiss-cpu==1.13.2
 langchain-huggingface
 
 google-generativeai
-gdown==6.1.0

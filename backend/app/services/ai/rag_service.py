@@ -210,7 +210,11 @@ class RAGService:
                 if not context:
                     return []
                 return [
-                    (Document(page_content=context, metadata={"source": "sashwat_optimized_mmr"}), 1.0)
+                    (
+                        Document(page_content=node.text, metadata=node.metadata),
+                        float(node.score) if node.score is not None else 0.0
+                    )
+                    for node in nodes
                 ]
 
             if store_name == "optimized":
@@ -224,8 +228,17 @@ class RAGService:
             # ChromaDB supports similarity_search_with_relevance_scores (cosine sim: higher = better)
             if hasattr(store, "similarity_search_with_relevance_scores"):
                 results = store.similarity_search_with_relevance_scores(query, k=k)
-                logger.info(f"{store_name.title()} DB: {len(results)} scored chunks.")
-                return results
+
+                cleaned_results = [
+                    (doc, float(score))
+                    for doc, score in results
+                ]
+
+                logger.info(
+                    f"{store_name.title()} DB: {len(cleaned_results)} scored chunks."
+                )
+
+                return cleaned_results
 
             # Fallback: use similarity_search without scores — assume moderate relevance
             docs = store.similarity_search(query, k=k)
@@ -272,7 +285,7 @@ class RAGService:
             scored = self._search_store_with_scores(store_name, store, query, k)
             for doc, score in scored:
                 all_docs.append(doc)
-                all_scores.append(score)
+                all_scores.append(float(score))
 
         if not all_docs:
             return ("", [])
@@ -316,7 +329,7 @@ class RAGService:
                 for doc, score in scored:
                     chunk_info: dict = {
                         "content": doc.page_content[:500],
-                        "score": round(score, 4),
+                        "score": float(round(float(score), 4)),
                         "metadata": doc.metadata or {},
                     }
                     chunks.append(chunk_info)
