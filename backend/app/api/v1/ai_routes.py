@@ -217,15 +217,28 @@ async def rag_debug(payload: RagDebugQuery):
         return {"error": "Query cannot be empty."}
 
     try:
+        from fastapi.responses import JSONResponse
+        import json
+
         debug_result = await run_in_threadpool(
             rag_service.retrieve_debug,
             query_text,
             payload.k,
             payload.source,
         )
-        return debug_result
+
+        logger.error(f"DEBUG RESULT TYPE: {type(debug_result)}")
+        logger.error(f"DEBUG RESULT KEYS: {list(debug_result.keys())}")
+        logger.error("ABOUT TO SERIALIZE DEBUG RESULT")
+
+        json.dumps(debug_result)
+
+        logger.error("JSON.DUMPS SUCCEEDED")
+
+        return JSONResponse(content=debug_result)
+
     except Exception as e:
-        logger.error(f"RAG debug retrieval failed: {e}")
+        logger.error(f"RAG DEBUG RETRIEVAL FAILED: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
