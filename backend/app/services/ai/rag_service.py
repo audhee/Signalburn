@@ -389,8 +389,9 @@ class RAGService:
                 "geshna": self.geshna_db,
             }.items()
         }
+      
 
-        return {
+        response = {
             "query": query,
             "k": k,
             "source_filter": source,
@@ -398,6 +399,39 @@ class RAGService:
             "results": all_sources,
         }
 
+        try:
+            import json
+            json.dumps(response)
+
+            logger.info("RAG DEBUG JSON VALID")
+            logger.info(str(response)[:2000])
+
+            return response
+
+        except Exception as e:
+            logger.error(f"JSON SERIALIZATION FAILED: {e}")
+
+            import numpy as np
+
+            def find_numpy(obj, path="root"):
+                if isinstance(obj, np.generic):
+                    logger.error(
+                        f"NUMPY FOUND AT {path}: {type(obj)} value={obj}"
+                    )
+                    return
+
+                if isinstance(obj, dict):
+                    for k, v in obj.items():
+                        find_numpy(v, f"{path}.{k}")
+
+                elif isinstance(obj, (list, tuple)):
+                    for i, v in enumerate(obj):
+                        find_numpy(v, f"{path}[{i}]")
+
+            find_numpy(response)
+
+            raise
+        
 
 def get_rag_context(query: str, k: int = 3, source: Optional[str] = "all") -> str:
     return rag_service.retrieve_context(query, k=k, source=source)
