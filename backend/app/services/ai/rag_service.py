@@ -211,10 +211,12 @@ class RAGService:
                     return []
                 return [
                     (
-                        Document(page_content=node.text, metadata=node.metadata),
-                        float(node.score) if node.score is not None else 0.0
+                        Document(
+                            page_content=context,
+                            metadata={"source": "sashwat_optimized_mmr"}
+                        ),
+                        1.0
                     )
-                    for node in nodes
                 ]
 
             if store_name == "optimized":
@@ -324,20 +326,48 @@ class RAGService:
 
         for store_name, store in enabled_stores:
             try:
-                scored = self._search_store_with_scores(store_name, store, query, k)
+                scored = self._search_store_with_scores(
+                    store_name,
+                    store,
+                    query,
+                    k
+                )
+
                 chunks = []
+
                 for doc, score in scored:
+
+                    def _json_safe(obj):
+                        import numpy as np
+
+                        if isinstance(obj, dict):
+                            return {str(k): _json_safe(v) for k, v in obj.items()}
+
+                        if isinstance(obj, (list, tuple)):
+                            return [_json_safe(v) for v in obj]
+
+                        if isinstance(obj, np.generic):
+                            return obj.item()
+
+                        if isinstance(obj, np.ndarray):
+                            return obj.tolist()
+
+                        return obj
+
                     chunk_info: dict = {
-                        "content": doc.page_content[:500],
+                        "content": str(doc.page_content[:500]),
                         "score": float(round(float(score), 4)),
-                        "metadata": doc.metadata or {},
+                        "metadata": _json_safe(doc.metadata or {}),
                     }
+
                     chunks.append(chunk_info)
+
                 all_sources[store_name] = {
                     "available": True,
                     "chunk_count": len(chunks),
                     "chunks": chunks,
                 }
+
             except Exception as e:
                 logger.error(f"Debug retrieval failed for '{store_name}': {e}")
                 all_sources[store_name] = {
