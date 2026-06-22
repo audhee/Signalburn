@@ -1,4 +1,4 @@
-# Arohan - Emergency Response App for the Elderly care
+# Arohan - Emergency Response App for the Elderly care...
 
 Arohan is a mobile application designed to provide immediate assistance to elderly individuals during medical emergencies. Built with **React Native**, **Expo**, and **FastAPI**, it focuses on speed, accessibility, and reliability, ensuring that help is just a tap away.
 
